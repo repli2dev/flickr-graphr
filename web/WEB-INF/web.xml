@@ -1,13 +1,18 @@
+
 <web-app xmlns="http://java.sun.com/xml/ns/j2ee"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_5.xsd"
-         version="2.5">
-    <servlet>
-        <servlet-name>TestServlet</servlet-name>
-        <servlet-class>cz.muni.fi.pb138.flickrgraphr.TestServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>TestServlet</servlet-name>
-        <url-pattern>/muj/*</url-pattern>
-    </servlet-mapping>
+	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	 xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_5.xsd"
+	 version="2.5">
+	<servlet>
+		<servlet-name>TestServlet</servlet-name>
+		<servlet-class>cz.muni.fi.pb138.flickrgraphr.TestServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>TestServlet</servlet-name>
+		<url-pattern>/muj/*</url-pattern>
+	</servlet-mapping>
+	<listener>
+		<display-name>Task scheduler (via cron4j)</display-name>
+		<listener-class>cz.muni.fi.pb138.flickrgraphr.backend.TaskSchedulerServletContextListener</listener-class>
+	</listener>
 </web-app>

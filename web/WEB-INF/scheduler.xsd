@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	<!-- Elements -->
+	<xs:element name="tasks">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="task" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+		<xs:unique name="task">
+			<xs:selector xpath="./task"/>
+			<xs:field xpath="@id"/>
+		</xs:unique>
+	</xs:element>
+
+	<xs:element name="task">
+		<xs:complexType>
+			<xs:all>
+				<xs:element name="name" type="xs:string" />
+				<xs:element name="time" type="xs:string"/>
+			</xs:all>
+			<xs:attribute name="id" type="idType" />
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:simpleType name="idType">
+		<xs:restriction base="xs:integer">
+			<xs:minInclusive value="1" />
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

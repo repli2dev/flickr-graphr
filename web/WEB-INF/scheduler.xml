@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tasks xsi:noNamespaceSchemaLocation="scheduler.xsd" xmlns="" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<task id="1">
+		<name>cz.muni.fi.pb138.flickrgraphr.backend.tasks.TestTask</name>
+		<time>* * * * *</time>
+	</task>
+	<task id="2">
+		<name>cz.muni.fi.pb138.flickrgraphr.backend.tasks.TestTask</name>
+		<time>* * * * *</time>
+	</task>
+</tasks>
