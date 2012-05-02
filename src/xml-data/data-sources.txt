@@ -1,0 +1,30 @@
+-- Graphr Log File --
+
+Flickr API calls for 500 best photos of the day
+
+filename  |  API request
+-----------------------------------------------------
+best_photos_2012-04-30.xml http://api.flickr.com/services/rest/?method=flickr.interestingness.getList&api_key=ed6204a240a139921dbbc30c1a1e6f65&date=2012-04-30&extras=owner_name%2Cviews&per_page=500&format=rest
+best_photos_2012-04-29.xml http://api.flickr.com/services/rest/?method=flickr.interestingness.getList&api_key=ed6204a240a139921dbbc30c1a1e6f65&date=2012-04-29&extras=owner_name%2Cviews&per_page=500&format=rest
+best_photos_2012-04-28.xml http://api.flickr.com/services/rest/?method=flickr.interestingness.getList&api_key=ed6204a240a139921dbbc30c1a1e6f65&date=2012-04-28&extras=owner_name%2Cviews&per_page=500&format=rest
+best_photos_2012-04-27.xml http://api.flickr.com/services/rest/?method=flickr.interestingness.getList&api_key=ed6204a240a139921dbbc30c1a1e6f65&date=2012-04-27&extras=owner_name%2Cviews&per_page=500&format=rest
+best_photos_2012-04-26.xml http://api.flickr.com/services/rest/?method=flickr.interestingness.getList&api_key=ed6204a240a139921dbbc30c1a1e6f65&date=2012-04-26&extras=owner_name%2Cviews&per_page=500&format=rest
+best_photos_2012-04-25.xml http://api.flickr.com/services/rest/?method=flickr.interestingness.getList&api_key=ed6204a240a139921dbbc30c1a1e6f65&date=2012-04-25&extras=owner_name%2Cviews&per_page=500&format=rest
+best_photos_2012-04-24.xml http://api.flickr.com/services/rest/?method=flickr.interestingness.getList&api_key=ed6204a240a139921dbbc30c1a1e6f65&date=2012-04-24&extras=owner_name%2Cviews&per_page=500&format=rest
+best_photos_2012-04-30.xml http://api.flickr.com/services/rest/?method=flickr.interestingness.getList&api_key=ed6204a240a139921dbbc30c1a1e6f65&date=2012-04-30&extras=owner_name%2Cviews&per_page=500&format=rest
+best_photos_2012-04-29.xml http://api.flickr.com/services/rest/?method=flickr.interestingness.getList&api_key=ed6204a240a139921dbbc30c1a1e6f65&date=2012-04-29&extras=owner_name%2Cviews&per_page=500&format=rest
+best_photos_2012-04-28.xml http://api.flickr.com/services/rest/?method=flickr.interestingness.getList&api_key=ed6204a240a139921dbbc30c1a1e6f65&date=2012-04-28&extras=owner_name%2Cviews&per_page=500&format=rest
+best_photos_2012-04-27.xml http://api.flickr.com/services/rest/?method=flickr.interestingness.getList&api_key=ed6204a240a139921dbbc30c1a1e6f65&date=2012-04-27&extras=owner_name%2Cviews&per_page=500&format=rest
+best_photos_2012-04-26.xml http://api.flickr.com/services/rest/?method=flickr.interestingness.getList&api_key=ed6204a240a139921dbbc30c1a1e6f65&date=2012-04-26&extras=owner_name%2Cviews&per_page=500&format=rest
+best_photos_2012-04-25.xml http://api.flickr.com/services/rest/?method=flickr.interestingness.getList&api_key=ed6204a240a139921dbbc30c1a1e6f65&date=2012-04-25&extras=owner_name%2Cviews&per_page=500&format=rest
+best_photos_2012-04-24.xml http://api.flickr.com/services/rest/?method=flickr.interestingness.getList&api_key=ed6204a240a139921dbbc30c1a1e6f65&date=2012-04-24&extras=owner_name%2Cviews&per_page=500&format=rest
+best_photos_2012-04-23.xml http://api.flickr.com/services/rest/?method=flickr.interestingness.getList&api_key=ed6204a240a139921dbbc30c1a1e6f65&date=2012-04-23&extras=owner_name%2Cviews&per_page=500&format=rest
+best_photos_2012-04-22.xml http://api.flickr.com/services/rest/?method=flickr.interestingness.getList&api_key=ed6204a240a139921dbbc30c1a1e6f65&date=2012-04-22&extras=owner_name%2Cviews&per_page=500&format=rest
+best_photos_2012-04-21.xml http://api.flickr.com/services/rest/?method=flickr.interestingness.getList&api_key=ed6204a240a139921dbbc30c1a1e6f65&date=2012-04-21&extras=owner_name%2Cviews&per_page=500&format=rest
+best_photos_2012-04-20.xml http://api.flickr.com/services/rest/?method=flickr.interestingness.getList&api_key=ed6204a240a139921dbbc30c1a1e6f65&date=2012-04-20&extras=owner_name%2Cviews&per_page=500&format=rest
+best_photos_2012-04-19.xml http://api.flickr.com/services/rest/?method=flickr.interestingness.getList&api_key=ed6204a240a139921dbbc30c1a1e6f65&date=2012-04-19&extras=owner_name%2Cviews&per_page=500&format=rest
+best_photos_2012-04-18.xml http://api.flickr.com/services/rest/?method=flickr.interestingness.getList&api_key=ed6204a240a139921dbbc30c1a1e6f65&date=2012-04-18&extras=owner_name%2Cviews&per_page=500&format=rest
+best_photos_2012-04-17.xml http://api.flickr.com/services/rest/?method=flickr.interestingness.getList&api_key=ed6204a240a139921dbbc30c1a1e6f65&date=2012-04-17&extras=owner_name%2Cviews&per_page=500&format=rest
+best_photos_2012-04-30.xml http://api.flickr.com/services/rest/?method=flickr.interestingness.getList&api_key=ed6204a240a139921dbbc30c1a1e6f65&date=2012-04-30&extras=owner_name%2Cviews&per_page=500&format=rest
+best_photos_2012-04-30.xml http://api.flickr.com/services/rest/?method=flickr.interestingness.getList&api_key=ed6204a240a139921dbbc30c1a1e6f65&date=2012-04-30&extras=owner_name%2Cviews&per_page=500&format=rest
+best_photos_2012-04-30.xml http://api.flickr.com/services/rest/?method=flickr.interestingness.getList&api_key=ed6204a240a139921dbbc30c1a1e6f65&date=2012-04-30&extras=owner_name%2Cviews&per_page=500&format=rest
