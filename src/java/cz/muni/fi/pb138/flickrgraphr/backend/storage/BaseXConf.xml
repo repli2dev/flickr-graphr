@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+    <entry key="hostname">localhost</entry>
+    <entry key="port">1984</entry>
+    <entry key="username">admin</entry>
+    <entry key="password">admin</entry>
+</properties>

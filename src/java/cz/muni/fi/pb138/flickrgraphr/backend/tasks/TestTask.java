@@ -1,6 +1,6 @@
 package cz.muni.fi.pb138.flickrgraphr.backend.tasks;
 
-import cz.muni.fi.pb138.flickrgraphr.backend.TaskInContext;
+import cz.muni.fi.pb138.flickrgraphr.backend.cron.TaskInContext;
 import it.sauronsoftware.cron4j.TaskExecutionContext;
 import java.util.Date;
 

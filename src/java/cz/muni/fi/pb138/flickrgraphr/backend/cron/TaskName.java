@@ -1,4 +1,4 @@
-package cz.muni.fi.pb138.flickrgraphr.backend;
+package cz.muni.fi.pb138.flickrgraphr.backend.cron;
 
 /**
  * Envelope for name and id of task as both should be cared in hashCode (due using HashMap)

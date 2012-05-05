@@ -1,4 +1,4 @@
-package cz.muni.fi.pb138.flickrgraphr.backend;
+package cz.muni.fi.pb138.flickrgraphr.backend.cron;
 
 import it.sauronsoftware.cron4j.Scheduler;
 import java.io.File;

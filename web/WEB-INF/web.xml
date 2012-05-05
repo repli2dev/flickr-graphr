@@ -1,18 +1,19 @@
-
-<web-app xmlns="http://java.sun.com/xml/ns/j2ee"
-	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	 xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_5.xsd"
-	 version="2.5">
-	<servlet>
-		<servlet-name>TestServlet</servlet-name>
-		<servlet-class>cz.muni.fi.pb138.flickrgraphr.TestServlet</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>TestServlet</servlet-name>
-		<url-pattern>/muj/*</url-pattern>
-	</servlet-mapping>
-	<listener>
-		<display-name>Task scheduler (via cron4j)</display-name>
-		<listener-class>cz.muni.fi.pb138.flickrgraphr.backend.TaskSchedulerServletContextListener</listener-class>
-	</listener>
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_5.xsd">
+    <servlet>
+        <servlet-name>TestServlet</servlet-name>
+        <servlet-class>cz.muni.fi.pb138.flickrgraphr.TestServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>TestServlet</servlet-name>
+        <url-pattern>/muj/*</url-pattern>
+    </servlet-mapping>
+    <listener>
+        <display-name>Task scheduler (via cron4j)</display-name>
+        <listener-class>cz.muni.fi.pb138.flickrgraphr.backend.cron.TaskSchedulerServletContextListener</listener-class>
+    </listener>
+    <listener>
+        <display-name>Database session init</display-name>
+        <listener-class>cz.muni.fi.pb138.flickrgraphr.backend.storage.DatabaseServletContextListener</listener-class>
+    </listener>
 </web-app>
