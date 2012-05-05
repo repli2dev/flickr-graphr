@@ -1,0 +1,8 @@
+input[type='text']{
+    border-radius:5px;
+    border:1px solid #ddd;
+    font-size:10pt;
+    padding:5px;
+    font-family:Verdana, sans-serif;
+    color:#444;
+}
