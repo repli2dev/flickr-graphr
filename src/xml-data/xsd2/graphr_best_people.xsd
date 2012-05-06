@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Graphr -->
+<!-- XMLSchema for Graphr DB best_people -->
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+    
+    <xsd:element name="best-people" type="xsd:anyType">
+    </xsd:element>
+    
+</xsd:schema>

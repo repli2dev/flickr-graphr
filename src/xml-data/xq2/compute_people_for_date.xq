@@ -1,3 +1,7 @@
+(: Graphr - computes best people for given date:)
+(: input format: Graphr DB best_photos (graphr_best_photos.xsd) :)
+(: output format: Graphr DB best_people (graphr_best_people.xsd) :)
+
 (: date to process in string form YYYY-MM-DD :)
 declare variable $date_processed as xs:string external;
 
@@ -7,7 +11,6 @@ declare variable $max_delay as xs:integer external;
 (: database file to store the result to -- must exist! :)
 (: filename in format "<db-name>/<path-to-doc>" :)
 declare variable $output_file as xs:string external;
-
 
 (: 
 computes delay of two dates in string format YYYY-MM-DD

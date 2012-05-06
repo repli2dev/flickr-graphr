@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Graphr -->
+<!-- XMLSchema for flickr.interestingness.getList API result -->
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+    
+    <xsd:element name="rsp" type="xsd:anyType">
+    </xsd:element>
+    
+</xsd:schema>
