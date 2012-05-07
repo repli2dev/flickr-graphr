@@ -81,4 +81,23 @@ public class BaseXSession {
 		}
 		return session;
 	}
+	
+	public static void enableWriteback(ClientSession session) {
+		try {
+			if (session.execute("GET WRITEBACK").equals("WRITEBACK: false\n")) {
+				session.execute("SET WRITEBACK true");
+			}
+		} catch (IOException ex) {
+			logger.log(Level.SEVERE, "Cannot enable writeback.", ex);
+		}
+	}
+	public static void disableWriteback(ClientSession session) {
+		try {
+			if (session.execute("GET WRITEBACK").equals("WRITEBACK: true\n")) {
+				session.execute("SET WRITEBACK false");
+			}
+		} catch (IOException ex) {
+			logger.log(Level.SEVERE, "Cannot disable writeback.", ex);
+		}
+	}
 }

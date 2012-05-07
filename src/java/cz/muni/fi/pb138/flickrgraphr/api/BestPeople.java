@@ -1,4 +1,4 @@
-package cz.muni.fi.pb138.flickrgraphr;
+package cz.muni.fi.pb138.flickrgraphr.api;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class TestServlet extends HttpServlet {
+public class BestPeople extends HttpServlet {
 
 	/**
 	 * Processes requests for both HTTP
@@ -31,10 +31,10 @@ public class TestServlet extends HttpServlet {
 			 */
 			out.println("<html>");
 			out.println("<head>");
-			out.println("<title>Servlet TestServlet</title>");			
+			out.println("<title>Servlet BestPeople</title>");			
 			out.println("</head>");
 			out.println("<body>");
-			out.println("<h1>Servlet TestServlet at " + request.getContextPath() + "</h1>");
+			out.println("<h1>Servlet BestPeople at " + request.getContextPath() + "</h1>");
 			out.println("</body>");
 			out.println("</html>");
 		} finally {			
