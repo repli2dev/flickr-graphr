@@ -15,7 +15,14 @@
                     </xsd:complexType>
                 </xsd:element>
             </xsd:sequence>
+            <xsd:attribute name="date" type="xad:date"/>
         </xsd:complexType>
+        
+    <!-- user ID must be unique in document -->
+        <xsd:key name="key-user-id">
+            <xsd:selector xpath="user"/>
+            <xsd:field xpath="@user-id"/>
+        </xsd:key>
     </xsd:element>
     
 </xsd:schema>

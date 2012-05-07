@@ -74,7 +74,7 @@ public class DbTest {
                 // Create new db file -- bad solution, but works for now
                 session.execute("ADD TO best_people/best_people_2012-04-30.xml "+docPath+"empty_db_file.xml");
                 // Read query from file
-                String query = FileUtils.readFileToString(new File(xqPath+"compute_people_for_date.xq"), "UTF-8");
+                String query = FileUtils.readFileToString(new File(xqPath+"best_people_from_best_photos.xq"), "UTF-8");
                 ClientQuery cq = session.query(query);
                 // Bind needed variables, run query
                 cq.bind("date_processed", "2012-04-30");
@@ -82,11 +82,44 @@ public class DbTest {
                 cq.bind("output_file", "graphr/best_people/best_people_2012-04-30.xml");
                 System.out.println(cq.execute());
                 
+                // Count data for people for 2012-04-29
+                // Create new db file -- bad solution, but works for now
+                session.execute("ADD TO best_people/best_people_2012-04-29.xml "+docPath+"empty_db_file.xml");
+                // Read query from file
+                String query2 = FileUtils.readFileToString(new File(xqPath+"best_people_from_best_photos.xq"), "UTF-8");
+                ClientQuery cq2 = session.query(query2);
+                // Bind needed variables, run query
+                cq2.bind("date_processed", "2012-04-29");
+                cq2.bind("max_delay", "7");
+                cq2.bind("output_file", "graphr/best_people/best_people_2012-04-29.xml");
+                System.out.println(cq2.execute());
+                
 		// Make simple query and print result
 		System.out.println(session.execute("XQUERY count(collection('graphr')//photo)"));
                 
 		// Drop database, close connection
-                session.execute("DROP DB graphr");
+                //session.execute("DROP DB graphr");
 		session.close();
 	}
 }
+
+/*
+ * context: connection 'ClientSession session'
+ *          date 'String date'
+ * to do:
+ *  - construct Flickr API query
+ *  - run Flickr API query
+ *  - valitade against 'flickr_interestingness.xsd'
+ *     - if failed, log message, save original API output and exit
+ * 
+ *  - run transformation 'flickr_interestingness2best_photos.xslt'
+ *  - validate result against 'graphr_best_photos.xsd'
+ *     - if failed, log message & result contents
+ *  - ADD result into DB best_photos/date.xml
+ *  - run XQuery 'compute_people_for_date.xq'
+ * 
+ *  - run transformation 'flickr_interestingness2users.xslt'
+ *  - validate result against 'graphr_users.xsd'
+ *     - if failed, log message & result contents
+ *  - ADD result into DB users/date.xml
+ */

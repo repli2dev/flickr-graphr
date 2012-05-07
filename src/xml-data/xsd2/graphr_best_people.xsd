@@ -5,7 +5,31 @@
 
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
     
-    <xsd:element name="best-people" type="xsd:anyType">
+    <xsd:element name="best-people">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="person" minOccurs="0" maxOccurs="unbounded">
+                    <xsd:complexType>
+                        <xsd:attribute name="person-id" type="xsd:string"/>
+                        <xsd:attribute name="score" type="positive-integer"/>
+                        </xsd:complexType>
+                    </xsd:element>
+            </xsd:sequence>
+            <xsd:attribute name="date" type="xsd:date"/>
+        </xsd:complexType>
+        
+    <!-- person ID must be unique in document -->
+        <xsd:key name="key-person-id">
+            <xsd:selector xpath="person"/>
+            <xsd:field xpath="@person-id"/>
+        </xsd:key>
     </xsd:element>
+    
+    <!-- positive integer type -->
+    <xsd:simpleType name="positive-integer" >
+        <xsd:restriction base="xsd:integer">
+            <xsd:minInclusive value="0"/>
+        </xsd:restriction>
+    </xsd:simpleType>
     
 </xsd:schema>

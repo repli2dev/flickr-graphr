@@ -1,4 +1,4 @@
-(: Graphr - computes best people for given date:)
+(: Graphr - computes best people for given date :)
 (: input format: Graphr DB best_photos (graphr_best_photos.xsd) :)
 (: output format: Graphr DB best_people (graphr_best_people.xsd) :)
 
@@ -36,7 +36,7 @@ replace node doc($output_file)/* with
   for $photo in $photos_in_range
     let $delay := local:delay($date_processed,$photo/../@date)
     let $qualified_score := $photo/@score * ($max_delay - $delay)
-    let $person_id := $photo/@ownerid
+    let $person_id := $photo/@owner-id
   group by $person_id
   return <person person-id="{$person_id}" score="{sum($qualified_score)}"/>
 }
