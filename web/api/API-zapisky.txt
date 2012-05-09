@@ -1,0 +1,88 @@
+Moduly:
+- kolik fotek se dostalo na flickr // v budoucnu
+
+
+TOP USERS 
+  
+  
+Request:
+=============
+usersScores?start-date=....&end-date=...........&user=....
+
+Parametr muze byt:
+ID, e-mail, "display name" = "username"
+
+
+String startDate = 
+String endDate = 
+
+<request>
+    <user>....</user>
+    <user>....</user>
+    <user>....</user>
+    <user>....</user>
+    <user>....</user>
+    <user>....</user>
+</request>
+
+--- response ----
+{
+    "stat" : "ok",
+    "data": [
+        {
+            "ownerid": "50896609@N04",
+            "date": "2012-04-24",
+            "score": 1000,
+            "photoid": "7130174149"
+        },
+        {
+            "ownerid": "50896609@N04",
+            "date": "2012-04-25",
+            "score": 1500,
+            "photoid": "7130174149"
+        },
+        {
+            "ownerid": "50896609@N04",
+            "date": "2012-04-26",
+            "score": 2500,
+            "photoid": "7127732155"
+        },
+        {
+            "ownerid": "50896609@N04",
+            "date": "2012-04-27",
+            "score": 1500,
+            "photoid": "7127732155"
+        }    
+    ]
+}
+
+--- responses with error ----
+{
+    "stat" : "fail",
+    "error" : {
+        "code": 1,
+        "message": "User not found"    
+    }
+}
+
+
+{
+    "stat" : "fail",
+    "error" : {
+        "code": 2,
+        "message": "The date string passed did not validate. All dates must be formatted : YYYY-MM-DD"    
+    }
+}
+
+
+
+====================
+
+topUsersScores?start-date=....&end-date=...........
+
+String startDate = 
+String endDate = 
+
+---- response ----
+stejna jako nahore
+
