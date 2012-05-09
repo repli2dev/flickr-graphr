@@ -4,6 +4,10 @@
         <servlet-name>TestServlet</servlet-name>
         <servlet-class>cz.muni.fi.pb138.flickrgraphr.TestServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>BestPeople</servlet-name>
+        <servlet-class>cz.muni.fi.pb138.flickrgraphr.api.BestPeople</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>TestServlet</servlet-name>
         <url-pattern>/muj/*</url-pattern>
@@ -16,4 +20,8 @@
         <display-name>Database session init</display-name>
         <listener-class>cz.muni.fi.pb138.flickrgraphr.backend.storage.DatabaseServletContextListener</listener-class>
     </listener>
+    <servlet-mapping>
+        <servlet-name>BestPeople</servlet-name>
+        <url-pattern>/api/best-people/</url-pattern>
+    </servlet-mapping>
 </web-app>
