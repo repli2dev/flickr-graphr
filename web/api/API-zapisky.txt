@@ -1,5 +1,4 @@
 Moduly:
-- kolik fotek se dostalo na flickr // v budoucnu
 
 
 TOP USERS 
@@ -7,7 +6,7 @@ TOP USERS
   
 Request:
 =============
-usersScores?start-date=....&end-date=...........&user=....
+userScore?start-date=....&end-date=...........&user=....
 
 Parametr muze byt:
 ID, e-mail, "display name" = "username"
