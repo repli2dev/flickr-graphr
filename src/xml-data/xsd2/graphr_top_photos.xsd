@@ -5,13 +5,13 @@
 
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
     
-    <xsd:element name="best-photos">
+    <xsd:element name="top-photos">
         <xsd:complexType>
             <xsd:sequence>
                 <xsd:element name="photo" minOccurs="0" maxOccurs="unbounded">
                     <xsd:complexType>
                         <xsd:attribute name="photo-id" type="xsd:string" use="required"/>
-                        <xsd:attribute name="owner-id" type="xsd:string" use="required"/>
+                        <xsd:attribute name="user-id" type="xsd:string" use="required"/>
                         <xsd:attribute name="score" type="positive-integer" use="required"/>
                         <xsd:attribute name="views" type="positive-integer" use="required"/>
                     </xsd:complexType>

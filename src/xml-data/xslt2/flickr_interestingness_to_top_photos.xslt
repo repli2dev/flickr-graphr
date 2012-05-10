@@ -3,7 +3,7 @@
 <!-- Graphr -->
 <!-- transforms data about best photos for given day -->
 <!-- input format: flickr.interestingness.getList API result (flickr_interestingness.xsd) -->
-<!-- output format: Graphr DB best_photos (graphr_best_photos.xsd) -->
+<!-- output format: Graphr DB top_photos (graphr_top_photos.xsd) -->
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
     <xsl:output method="xml" encoding="UTF-8" indent="yes"/>
@@ -39,7 +39,7 @@
     
     <!-- successfull query: creates root document structure -->
     <xsl:template match="rsp[@stat='ok']">
-        <best-photos>
+        <top-photos>
             <xsl:attribute name="date">
                 <xsl:value-of select="$DATE"/>
             </xsl:attribute>
@@ -47,7 +47,7 @@
                 <xsl:value-of select="count(./photos/photo)"/>
             </xsl:attribute>
             <xsl:apply-templates select="./photos/photo"/>
-        </best-photos>
+        </top-photos>
     </xsl:template>
     
     <!-- creates the element photo -->
@@ -56,7 +56,7 @@
             <xsl:attribute name="photo-id"> 
                 <xsl:value-of select="./@id"/>
             </xsl:attribute>
-            <xsl:attribute name="owner-id"> 
+            <xsl:attribute name="user-id"> 
                 <xsl:value-of select="./@owner"/>
             </xsl:attribute>
             <xsl:attribute name="score"> 

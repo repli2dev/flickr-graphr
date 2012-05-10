@@ -12,6 +12,13 @@ import org.basex.core.cmd.CreateDB;
 import org.basex.server.ClientQuery;
 import org.basex.server.ClientSession;
 import org.apache.commons.io.FileUtils;
+import cz.muni.fi.pb138.flickrgraphr.backend.storage.BaseXSession;
+import java.io.*;
+import javax.xml.validation.*;
+import javax.xml.transform.*;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.XMLConstants;
 
 /**
  * Test class working with BaseX database
@@ -30,76 +37,74 @@ public class DbTest {
                 //String rootPath = "/home/jan/TEMP/flickr-graphr/";
                 
                 // Set other paths
-                String dbPath = rootPath+"src/db/";
-                String docPath = rootPath+"src/xml-data/temp2/";
+                // String dbPath = rootPath+"src/db/";
+                String docPath = rootPath+"src/xml-data/temp3/";
                 String xqPath = rootPath+"src/xml-data/xq2/";
+                String xsdPath = rootPath+"src/xml-data/xsd2/";
+                String xsltPath = rootPath+"src/xml-data/xslt2/";
+                String apiPath = rootPath+"src/xml-data/api_original/";
                 
-                // Clean db folders
-                FileUtils.deleteDirectory(new File(dbPath+"best_people"));
-                FileUtils.deleteDirectory(new File(dbPath+"best_photos"));
+                BaseXSession bxs = new BaseXSession("localhost",1984,"admin","admin");
+                ClientSession cs;
+                //cs = bxs.get("users",true);
+                //BaseXSession.enableWriteback(cs);
+                //cs = bxs.get("top_photos",true);
+                //BaseXSession.enableWriteback(cs);
+                //cs = bxs.get("top_users",true);
+                //BaseXSession.enableWriteback(cs);
                 
-                // Create connection
-		ClientSession session = null;
-		try {
-			session = new ClientSession("localhost", 1984, "admin", "admin");
-		} catch (IOException ex) {
-			System.out.println("Server connetion failed.");
-			Logger.getLogger(DbTest.class.getName()).log(Level.SEVERE, null, ex);
-                        throw new IOException("Not connected to server. Exiting.");
-		}
-		System.out.println("Server connection established.");
-                
-		// Check if database exists. If yes, drop it to avoid collisions.
-                // Then create fresh db named graphr
-		if(session.execute("XQUERY db:exists('graphr')").equals("true")) {
-                        System.out.println("Database 'graphr' existed. Now dropped.");
-                        session.execute("DROP DB graphr");
-                }
-                session.execute("CREATE DB graphr " + dbPath);
-                
-		// Open database, set otions
-		session.execute("OPEN graphr");
-                if (session.execute("GET WRITEBACK").equals("WRITEBACK: false\n")) {
-                        session.execute("SET WRITEBACK true");
-                        System.out.println("WRITEBACK now set TRUE.");
-                }
-                
-		// Add documents (temporary solution)
+		// Add documents with photos (temporary solution)
+                /*
+                cs = bxs.get("top_photos");
                 for(int i=17; i<=30; i++) {
-                       session.execute("ADD TO best_photos/best_photos_2012-04-"+i+".xml "+
-                               docPath+"best_photos_2012-04-"+i+".xml");
+                       cs.execute("ADD "+docPath+"top_photos_2012-04-"+i+".xml");
+                }*/
+                
+                // Count data for top users
+                
+                /*cs = bxs.get("top_users");
+                for (int i=24; i<=30; i++) {
+                    cs.execute("ADD TO top_users_2012-04-"+i+".xml <root/>");
+                    // Read query from file
+                    String query = FileUtils.readFileToString(new File(xqPath +
+                        "topusers_from_topphotos.xq"), "UTF-8");
+                    ClientQuery cq = cs.query(query);
+                    // Bind needed variables, run query
+                    cq.bind("date_processed", "2012-04-"+i);
+                    cq.bind("max_delay", "7");
+                    cq.bind("output_file", "top_users/top_users_2012-04-"+i+".xml");
+                    System.out.println(cq.execute());
+                }*/
+                
+                // for transforming outputStream into inputStream see
+                // http://stackoverflow.com/questions/5778658/java-converting-from-outputstream-to-inputstream
+                
+                cs = bxs.get("users");
+                TransformerFactory tfactory = TransformerFactory.newInstance();
+                Source xslt = new StreamSource(new File(xsltPath+"flickr_interestingness_to_users.xslt"));
+                SchemaFactory sFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+                OutputStream tempOutput = new ByteArrayOutputStream();
+                
+                Source dataSource = new StreamSource(new File(apiPath+"api_best_photos_2012-04-30_invalid.xml"));
+                Result dataResult = new StreamResult(tempOutput);
+                try {
+                    Schema schema = sFactory.newSchema(new File(xsdPath+"flickr_interestingness.xsd"));
+                    Validator validator = schema.newValidator();
+                    validator.validate(dataSource);
+                    Transformer transformer = tfactory.newTransformer(xslt);
+                    transformer.setParameter("DATE", "2012-04-30");
+                    //transformer.setParameter("DATE", "2012-04-31");
+                    transformer.transform(dataSource, dataResult);
+                    InputStream tempInput = new ByteArrayInputStream(
+                        ((ByteArrayOutputStream) tempOutput).toByteArray());
+                    cs.add("users_2012-04-30.xml", tempInput);
+                } catch (Exception e) {
+                    System.err.println("Error happened:\n" + e.getMessage());
                 }
                 
-                // Count data for people for 2012-04-30
-                // Create new db file -- bad solution, but works for now
-                session.execute("ADD TO best_people/best_people_2012-04-30.xml "+docPath+"empty_db_file.xml");
-                // Read query from file
-                String query = FileUtils.readFileToString(new File(xqPath+"best_people_from_best_photos.xq"), "UTF-8");
-                ClientQuery cq = session.query(query);
-                // Bind needed variables, run query
-                cq.bind("date_processed", "2012-04-30");
-                cq.bind("max_delay", "7");
-                cq.bind("output_file", "graphr/best_people/best_people_2012-04-30.xml");
-                System.out.println(cq.execute());
                 
-                // Count data for people for 2012-04-29
-                // Create new db file -- bad solution, but works for now
-                session.execute("ADD TO best_people/best_people_2012-04-29.xml "+docPath+"empty_db_file.xml");
-                // Read query from file
-                String query2 = FileUtils.readFileToString(new File(xqPath+"best_people_from_best_photos.xq"), "UTF-8");
-                ClientQuery cq2 = session.query(query2);
-                // Bind needed variables, run query
-                cq2.bind("date_processed", "2012-04-29");
-                cq2.bind("max_delay", "7");
-                cq2.bind("output_file", "graphr/best_people/best_people_2012-04-29.xml");
-                System.out.println(cq2.execute());
-                
-		// Make simple query and print result
-		System.out.println(session.execute("XQUERY count(collection('graphr')//photo)"));
-                
-		// Drop database, close connection
-                //session.execute("DROP DB graphr");
-		session.close();
+		// close connection
+                //cs.close();
 	}
 }
 
@@ -113,13 +118,13 @@ public class DbTest {
  *     - if failed, log message, save original API output and exit
  * 
  *  - run transformation 'flickr_interestingness2best_photos.xslt'
- *  - validate result against 'graphr_best_photos.xsd'
- *     - if failed, log message & result contents
+ *  - if exception thrown
+ *     - log message & result contents
  *  - ADD result into DB best_photos/date.xml
  *  - run XQuery 'compute_people_for_date.xq'
  * 
  *  - run transformation 'flickr_interestingness2users.xslt'
- *  - validate result against 'graphr_users.xsd'
- *     - if failed, log message & result contents
+ *  - if exception thrown
+ *     - log message & result contents
  *  - ADD result into DB users/date.xml
  */

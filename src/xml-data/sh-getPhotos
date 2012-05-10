@@ -5,6 +5,7 @@ LINK_WEB2="?method=flickr.interestingness.getList&api_key=ed6204a240a139921dbbc3
 LINK_WEB3="&extras=owner_name%2Cviews&per_page=500&format=rest"
 LINK_FILE3="&extras=owner_name,views&per_page=500&format=rest"
 FILE_PREFIX="best_photos_"
+FILE_PREFIX1="top_photos_"
 FILE_PREFIX2="users_"
 FILE_SUFIX=".xml"
 LOG_FILE="data-sources.txt"
@@ -17,11 +18,12 @@ do
     LINK=$LINK_WEB1$LINK_WEB2$DATE$LINK_WEB3
     LINK_FILE=index.html$LINK_WEB2$DATE$LINK_FILE3
     FILE=$FILE_PREFIX$DATE$FILE_SUFIX
+    FILE1=$FILE_PREFIX1$DATE$FILE_SUFIX
     FILE2=$FILE_PREFIX2$DATE$FILE_SUFIX
 #    wget $LINK
 #    mv $LINK_FILE api_original/api_$FILE
 #    echo $FILE $LINK >> $LOG_FILE
-#    xsltproc --stringparam DATE $DATE xslt2/flickr_interestingness2best_photos.xslt api_original/api_$FILE > temp2/$FILE
-     xsltproc --stringparam DATE $DATE xslt2/flickr_interestingness2users.xslt api_original/api_$FILE > temp2/$FILE2
+     xsltproc --stringparam DATE $DATE xslt2/flickr_interestingness_to_top_photos.xslt api_original/api_$FILE > temp3/$FILE1
+#    xsltproc --stringparam DATE $DATE xslt2/flickr_interestingness_to_users.xslt api_original/api_$FILE > temp3/$FILE2
   done
 done

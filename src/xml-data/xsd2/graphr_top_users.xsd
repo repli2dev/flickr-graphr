@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!-- Graphr -->
-<!-- XMLSchema for Graphr DB best_people -->
+<!-- XMLSchema for Graphr DB top_users -->
 
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
     
-    <xsd:element name="best-people">
+    <xsd:element name="top-users">
         <xsd:complexType>
             <xsd:sequence>
-                <xsd:element name="person" minOccurs="0" maxOccurs="unbounded">
+                <xsd:element name="user" minOccurs="0" maxOccurs="unbounded">
                     <xsd:complexType>
-                        <xsd:attribute name="person-id" type="xsd:string"/>
+                        <xsd:attribute name="user-id" type="xsd:string"/>
                         <xsd:attribute name="score" type="positive-integer"/>
                         </xsd:complexType>
                     </xsd:element>
@@ -18,10 +18,10 @@
             <xsd:attribute name="date" type="xsd:date"/>
         </xsd:complexType>
         
-    <!-- person ID must be unique in document -->
-        <xsd:key name="key-person-id">
-            <xsd:selector xpath="person"/>
-            <xsd:field xpath="@person-id"/>
+    <!-- user ID must be unique in document -->
+        <xsd:key name="key-user-id">
+            <xsd:selector xpath="user"/>
+            <xsd:field xpath="@user-id"/>
         </xsd:key>
     </xsd:element>
     

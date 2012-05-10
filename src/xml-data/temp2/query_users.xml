@@ -1,7 +1,7 @@
 <query>
-  <person person-id="32113531@N05"/>
-  <person person-id="26849514@N06"/>
-  <person person-id="29158804@N06"/>
-  <person person-id="47181226@N05"/>
-  <person person-id="15747892@N05"/>
+  <user userid="32113531@N05"/>
+  <user userid="26849514@N06"/>
+  <user userid="29158804@N06"/>
+  <user userid="47181226@N05"/>
+  <user userid="15747892@N05"/>
 </query>

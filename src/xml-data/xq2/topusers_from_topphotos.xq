@@ -1,6 +1,6 @@
-(: Graphr - computes best people for given date :)
-(: input format: Graphr DB best_photos (graphr_best_photos.xsd) :)
-(: output format: Graphr DB best_people (graphr_best_people.xsd) :)
+(: Graphr - computes top users for given date :)
+(: input format: Graphr DB top_photos (graphr_top_photos.xsd) :)
+(: output format: Graphr DB top_users (graphr_top_users.xsd) :)
 
 (: date to process in string form YYYY-MM-DD :)
 declare variable $date_processed as xs:string external;
@@ -30,14 +30,14 @@ declare function local:delay($date_current_str as xs:string, $date_old_str as xs
 
 replace node doc($output_file)/* with
 
-<best-people date="{$date_processed}">
+<top-users date="{$date_processed}">
 {
-  let $photos_in_range := collection("graphr/best_photos")/best-photos[local:delay($date_processed,@date) < $max_delay]/photo
+  let $photos_in_range := db:open("top_photos")/top-photos[local:delay($date_processed,@date) < $max_delay]/photo
   for $photo in $photos_in_range
     let $delay := local:delay($date_processed,$photo/../@date)
     let $qualified_score := $photo/@score * ($max_delay - $delay)
-    let $person_id := $photo/@owner-id
-  group by $person_id
-  return <person person-id="{$person_id}" score="{sum($qualified_score)}"/>
+    let $user_id := $photo/@user-id
+  group by $user_id
+  return <user user-id="{$user_id}" score="{sum($qualified_score)}"/>
 }
-</best-people>
+</top-users>
