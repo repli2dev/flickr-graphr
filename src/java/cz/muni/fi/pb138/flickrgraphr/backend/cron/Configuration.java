@@ -1,13 +1,20 @@
 package cz.muni.fi.pb138.flickrgraphr.backend.cron;
 
+import java.io.FileReader;
 import java.io.IOException;
 import java.net.URI;
+import java.net.URL;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Source;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -36,11 +43,14 @@ public class Configuration {
 	 * @throws SAXException If parsing failed
 	 * @throws IOException  If any I/O error is done
 	 */
-	public static Configuration loadConfiguration(URI uri) throws ParserConfigurationException, SAXException, IOException{
+	public static Configuration loadConfiguration(URI uri, URL schemaLocation) throws ParserConfigurationException, SAXException, IOException{
 		// Get DOM
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		// FIXME: Ensure that only valid XML are processed
-		//factory.setValidating(true);
+		SchemaFactory sFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+		Schema schema = sFactory.newSchema(schemaLocation);
+		Source source = new StreamSource(new FileReader(uri.getPath()));
+		schema.newValidator().validate(source);
 		DocumentBuilder builder = factory.newDocumentBuilder();
 		Document doc = builder.parse(uri.toString());
 		// Parse the string and get it into internal format

@@ -1,0 +1,63 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	<!-- Elements -->
+	<xs:element name="rsp">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="hottags" />
+			</xs:sequence>
+			<xs:attribute name="stat" type="statType" />
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="hottags">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="tag" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+			<xs:attribute name="period" type="periodType" use="required" />
+			<xs:attribute name="count" type="countType" use="required" />
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:element name="tag">
+		<xs:complexType>
+			<xs:simpleContent>
+				<xs:extension base="nonEmptyString">
+					<xs:attribute name="score" use="required" type="scoreType" />
+				</xs:extension>
+			</xs:simpleContent>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:simpleType name="statType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="ok" />
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:simpleType name="periodType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="day" />
+			<xs:enumeration value="week" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="countType">
+		<xs:restriction base="xs:integer">
+			<xs:minInclusive value="1" />
+			<xs:maxInclusive value="200" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="scoreType">
+		<xs:restriction base="xs:integer">
+			<xs:minInclusive value="0" />
+			<xs:maxInclusive value="100" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="nonEmptyString">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1" />
+		</xs:restriction>
+	</xs:simpleType>
+
+</xs:schema>

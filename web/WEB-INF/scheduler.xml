@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tasks xsi:noNamespaceSchemaLocation="scheduler.xsd" xmlns="" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<tasks>
 	<task id="1">
-		<name>cz.muni.fi.pb138.flickrgraphr.backend.tasks.TestTask</name>
+		<name>cz.muni.fi.pb138.flickrgraphr.backend.tasks.WeekHotListTask</name>
 		<time>* * * * *</time>
 	</task>
 	<task id="2">

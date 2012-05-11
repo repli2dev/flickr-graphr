@@ -14,7 +14,7 @@ import org.basex.server.ClientSession;
 public class BaseXSession {
 	
 	/** @var Identification for storing into context variables */
-	final static String BASE_X_SESSION = "BASE_X_SESSION";
+	public final static String BASE_X_SESSION = "BASE_X_SESSION";
 	
 	/** Credentials */
 	private String hostname;
