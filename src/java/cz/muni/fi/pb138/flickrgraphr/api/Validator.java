@@ -4,9 +4,14 @@
  */
 package cz.muni.fi.pb138.flickrgraphr.api;
 
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.apache.commons.validator.routines.DateValidator;
 import org.apache.commons.validator.routines.EmailValidator;
+
+
+
 
 /**
  * This class can recognize type of user identification
@@ -14,13 +19,10 @@ import org.apache.commons.validator.routines.EmailValidator;
  */
 public class Validator {
 
-    /**
-     * Enum with supported id types
-     */
-    public enum IdType {
-
-        flickrId, name, email, invalidId
-    }
+    
+  
+    
+    public static final String DATE_FORMAT = "yyyy-MM-dd";
     
     /**
      * This method recognizes id type from string
@@ -67,5 +69,16 @@ public class Validator {
         Matcher matcher = uIdPattern.matcher(id);
 
         return matcher.matches();
+    }
+    
+    public static boolean isDate(String date){
+        DateValidator dv = DateValidator.getInstance();
+        return dv.isValid(date, DATE_FORMAT);
+    }
+    
+    public static Date getDate(String date){
+        DateValidator dv = DateValidator.getInstance();
+        return dv.validate(date, DATE_FORMAT);
+        
     }
 }
