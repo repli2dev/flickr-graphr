@@ -59,6 +59,9 @@ public class BestPeople extends HttpServlet {
                     case name:
                         userId = FlickAPI.getIdFromName(user);
                         break;
+                    case flickrId:
+                        userId = user;
+                        break;
                 }
 
                 out.println("user id is: " + userId);
