@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Graphr -->
+<!-- XMLSchema for Graphr DB top_photos -->
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+    
+    <xsd:element name="top-photos">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="photo" minOccurs="1" maxOccurs="unbounded">
+                    <xsd:complexType>
+                        <xsd:attribute name="photo-id" type="xsd:string" use="required"/>
+                        <xsd:attribute name="user-id" type="xsd:string" use="required"/>
+                        <xsd:attribute name="score" type="positive-integer" use="required"/>
+                        <xsd:attribute name="views" type="positive-integer" use="required"/>
+                    </xsd:complexType>
+                </xsd:element>
+            </xsd:sequence>
+            <xsd:attribute name="date" type="xsd:date"/>
+            <xsd:attribute name="count" type="positive-integer"/>
+        </xsd:complexType>
+        
+    <!-- photo ID must be unique in document -->
+        <xsd:key name="key-photo-id">
+            <xsd:selector xpath="photo"/>
+            <xsd:field xpath="@photo-id"/>
+        </xsd:key>
+    </xsd:element>
+    
+    <!-- positive integer type -->
+    <xsd:simpleType name="positive-integer" >
+        <xsd:restriction base="xsd:integer">
+            <xsd:minInclusive value="0"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    
+</xsd:schema>

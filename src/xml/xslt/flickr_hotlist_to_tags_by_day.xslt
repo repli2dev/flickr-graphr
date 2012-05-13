@@ -13,16 +13,8 @@
     <xsl:param name="DATE">undefined</xsl:param>
     
     <!-- root element template -->
-    <!-- checks if the parameter DATE was specified -->
     <xsl:template match="/">
-        <xsl:choose>
-            <xsl:when test="$DATE='undefined'">
-                <error code="-1" message="Parameter date was not set."/>
-            </xsl:when>
-            <xsl:otherwise>
-                <xsl:apply-templates select="rsp"/>
-            </xsl:otherwise>
-        </xsl:choose>
+        <xsl:apply-templates select="rsp"/>
     </xsl:template>
     
     <!-- successfull query: creates root document structure -->

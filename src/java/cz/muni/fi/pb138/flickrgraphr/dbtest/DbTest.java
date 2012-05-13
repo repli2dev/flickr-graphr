@@ -85,7 +85,7 @@ public class DbTest {
                 SchemaFactory sFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
                 OutputStream tempOutput = new ByteArrayOutputStream();
                 
-                Source dataSource = new StreamSource(new File(apiPath+"api_best_photos_2012-04-30_invalid.xml"));
+                Source dataSource = new StreamSource(new File(apiPath+"api_best_photos_2012-04-30.xml"));
                 Result dataResult = new StreamResult(tempOutput);
                 try {
                     Schema schema = sFactory.newSchema(new File(xsdPath+"flickr_interestingness.xsd"));

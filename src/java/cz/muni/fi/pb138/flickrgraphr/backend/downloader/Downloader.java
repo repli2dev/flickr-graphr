@@ -51,7 +51,7 @@ public class Downloader {
 			String inputLine;
 
 			while ((inputLine = bfr.readLine()) != null) {
-				result.append(inputLine);
+				result.append(inputLine+"\n");
 			}
 
 			return result.toString();

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Graphr -->
+<!-- XMLSchema for Graphr DB hot-list -->
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+    
+    <!-- TODO specify XML Schema -->
+    <xsd:element name="tags" type="xsd:anyType">
+    </xsd:element>
+    
+</xsd:schema>

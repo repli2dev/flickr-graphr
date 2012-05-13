@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Graphr -->
+<!-- XMLSchema for Graphr DB users -->
+
+<!-- TODO uncomment uniqueness bound when xslt processor configured properly -->
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+    
+    <xsd:element name="users">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="user" minOccurs="1" maxOccurs="unbounded">
+                    <xsd:complexType>
+                        <xsd:attribute name="user-id" type="xsd:string" use="required"/>
+                        <xsd:attribute name="display-name" type="xsd:string" use="required"/>
+                    </xsd:complexType>
+                </xsd:element>
+            </xsd:sequence>
+            <xsd:attribute name="date" type="xsd:date"/>
+        </xsd:complexType>
+        
+    <!-- user ID must be unique in document -->
+<!--
+        <xsd:key name="key-user-id">
+            <xsd:selector xpath="user"/>
+            <xsd:field xpath="@user-id"/>
+        </xsd:key>
+-->
+    </xsd:element>
+    
+</xsd:schema>

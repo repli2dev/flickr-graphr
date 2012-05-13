@@ -20,49 +20,61 @@ import org.basex.server.ClientSession;
 import org.xml.sax.SAXException;
 
 /**
- * Represents one page of Flickr API - Hot list->hot-list
+ * Represents one processing of Flickr API - interestingness->top-photos
  * It takes care of downloading, validation and transforming the received data and its (de)storing into database
- * @author Jan Drabek
+ * Produces 'top-photos' of the day
+ * @author Martin Ukrop
  */
-public class HotList extends AbstractFlickrEntity {
+public class TopPhotos extends AbstractFlickrEntity {
 	
 	// Constants
-	/** @var URL for query with placeholders */
+	/** @var URL for query with place-holders */
 	private final String URL = "http://api.flickr.com/services/rest/"
-                + "?method=flickr.tags.getHotList&api_key=<!--API_KEY-->"
-                + "&period=<!--TYPE-->&count=100&format=rest";
-	/** @var Name of database used for storing data */
-	private final String DATABASE = "hot-list";	
+                + "?method=flickr.interestingness.getList&api_key=<!--API_KEY-->&date=<!--DATE-->"
+                + "&extras=views&per_page=500&format=rest";
+        /** @var Name of database used for storing data */
+        private final String DATABASE = "top-photos";
 	
 	// Inner data
 	private String data;
 	private String outputData;
-        private String type;
+        private String date;
 
+        // FIXME Give 'date' as String or Date?
 	/**
-	 * Create new hot list object
+	 * Create new TopPhotos object with the date specified
 	 * @param context 
-	 * @param type week | day
+	 * @param date date to process
 	 */
-	public HotList(ServletContext context, String type) {
+	public TopPhotos(ServletContext context, String date) {
 		this.context = context;
-		this.type = type;
+		this.date = date;
 	}
-	
+        
+	/**
+	 * Create new TopPhotos object and sets yesterday as date
+	 * @param context 
+	 */
+	public TopPhotos(ServletContext context) {
+		this.context = context;
+		this.date = getYesterdayDate();
+	}
 
 	@Override
 	public void load() throws FlickrEntityException {
 		getData();
-                validateXML(data,"/xml/scheme/flickr_api_hot_list.xsd","flickr.hotList");
-                transform();
+                validateXML(data,"/xml/scheme/flickr_api_interestingness.xsd",
+                            "flickr.interestingness");
+		transform();
                 //just double-checking, to preserve db consistency
-                validateXML(outputData,"/xml/scheme/graphr_db_tags.xsd","graphr.hot-list");
-                saveToDababase(DATABASE, getCurrentDate(), getOutputAsInputStream());
+                validateXML(outputData,"/xml/scheme/graphr_db_top_photos.xsd", 
+                            "graphr.top-photos");
+                saveToDababase(DATABASE, date, getOutputAsInputStream());
 	}
 
+        // FIXME Why enabling writeback here?
 	@Override
 	public void unload() throws FlickrEntityException {
-		// Remove data older than 14 days
                 deleteFromDatabase(DATABASE, getOldDate());
 	}
 	
@@ -74,7 +86,7 @@ public class HotList extends AbstractFlickrEntity {
 	private String getUrl() {
 		// Prepare URL and fetch result
 		String finalURL = URL.replaceAll("<!--API_KEY-->", Downloader.API_KEY);
-		finalURL = finalURL.replaceAll("<!--TYPE-->", type);
+		finalURL = finalURL.replaceAll("<!--DATE-->", date);
 		return finalURL;
 	}
 	
@@ -82,7 +94,7 @@ public class HotList extends AbstractFlickrEntity {
 		try {
 			data = Downloader.download(getUrl());
 		} catch (DownloaderException ex) {
-			throw new FlickrEntityException("Downloading of 'hot list' failed.", ex);
+			throw new FlickrEntityException("Downloading of 'interestingness' failed.", ex);
 		}
 	}
 	
@@ -91,28 +103,29 @@ public class HotList extends AbstractFlickrEntity {
 		Source source = new StreamSource(new StringReader(data));
                 Source xslt = null;
 		try {
-			xslt = new StreamSource(getPath("/xml/xslt/flickr_hotlist_to_tags_by_day.xslt").openStream());
+			xslt = new StreamSource(getPath("/xml/xslt/flickr_interestingness_to_top_photos.xslt").openStream());
 		} catch (MalformedURLException ex) {
-			throw new FlickrEntityException("XSLT tranformation of downloaded  'hot list' failed.", ex);
+			throw new FlickrEntityException("XSLT tranformation of downloaded  'interestingness' failed.", ex);
 		} catch (IOException ex) {
-			throw new FlickrEntityException("XSLT tranformation of downloaded  'hot list' failed.", ex);
+			throw new FlickrEntityException("XSLT tranformation of downloaded  'interestingness' failed.", ex);
 		}
 		StringWriter outputData = new StringWriter();
 		Result result = new StreamResult(outputData);
 		Transformer transformer;
 		try {
 			transformer = tfactory.newTransformer(xslt);
-			transformer.setParameter("DATE", getCurrentDate());
+			transformer.setParameter("DATE", date);
 			transformer.transform(source, result);
 		} catch (TransformerException ex) {
-                        // FIXME Why not chaining 'ex' as cause?
-			throw new FlickrEntityException("XSLT transformation of downloaded 'hot list' failed (check the input).");
+			throw new FlickrEntityException("XSLT transformation of downloaded 'hot list' failed (check the input).",ex);
 		}
 		this.outputData = outputData.toString();
 	}
 	
-	private String getCurrentDate() {
-		return formatDate(now());
+	private String getYesterdayDate() {
+                Date date = now();
+                date.setTime(date.getTime()-24*3600*1000);
+		return formatDate(date);
 	}
 	
 	private String getOldDate() {
@@ -126,4 +139,5 @@ public class HotList extends AbstractFlickrEntity {
 		BaseXSession bxs = getDatabaseSession();
 		return bxs.get(DATABASE, true);
 	}*/
+
 }
