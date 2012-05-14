@@ -4,9 +4,45 @@
 <!-- XMLSchema for Graphr DB hot-list -->
 
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
-    
-    <!-- TODO specify XML Schema -->
-    <xsd:element name="tags" type="xsd:anyType">
-    </xsd:element>
-    
+	<xsd:element name="tags">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="tag" minOccurs="1" maxOccurs="unbounded" />
+			</xsd:sequence>
+			<xsd:attribute name="date" type="xsd:date" />
+			<xsd:attribute name="period" type="periodType" />
+			<xsd:attribute name="count" type="countType" />
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="tag">
+		<xsd:complexType>
+			<xsd:attribute name="value" type="nonEmptyString" />
+			<xsd:attribute name="score" type="scoreType" />
+			<xsd:attribute name="position" type="countType" />
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:simpleType name="periodType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="day" />
+			<xsd:enumeration value="week" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="countType">
+		<xsd:restriction base="xsd:integer">
+			<xsd:minInclusive value="1" />
+			<xsd:maxInclusive value="200" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="scoreType">
+		<xsd:restriction base="xsd:integer">
+			<xsd:minInclusive value="0" />
+			<xsd:maxInclusive value="100" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="nonEmptyString">
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="1" />
+		</xsd:restriction>
+	</xsd:simpleType>
 </xsd:schema>

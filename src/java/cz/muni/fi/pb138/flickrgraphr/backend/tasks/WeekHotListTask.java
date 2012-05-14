@@ -3,7 +3,7 @@ package cz.muni.fi.pb138.flickrgraphr.backend.tasks;
 import cz.muni.fi.pb138.flickrgraphr.backend.cron.TaskInContext;
 import cz.muni.fi.pb138.flickrgraphr.flickr.api.FlickrEntity;
 import cz.muni.fi.pb138.flickrgraphr.flickr.api.FlickrEntityException;
-import cz.muni.fi.pb138.flickrgraphr.flickr.api.HotList;
+import cz.muni.fi.pb138.flickrgraphr.flickr.api.TopTags;
 import it.sauronsoftware.cron4j.TaskExecutionContext;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -21,7 +21,7 @@ public class WeekHotListTask extends TaskInContext{
 		if(context == null) {
 			throw new RuntimeException("No context, cannot continue;");
 		}
-		FlickrEntity entity = new HotList(context, "week");
+		FlickrEntity entity = new TopTags(context, "week");
 		try {
 			entity.unload();
 			entity.load();

@@ -2,51 +2,48 @@ package cz.muni.fi.pb138.flickrgraphr.flickr.api;
 
 import cz.muni.fi.pb138.flickrgraphr.backend.downloader.Downloader;
 import cz.muni.fi.pb138.flickrgraphr.backend.downloader.DownloaderException;
-import cz.muni.fi.pb138.flickrgraphr.backend.storage.BaseXSession;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletContext;
-import javax.xml.XMLConstants;
 import javax.xml.transform.*;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
-import javax.xml.validation.Validator;
-import org.basex.server.ClientSession;
-import org.xml.sax.SAXException;
 
 /**
  * Represents one page of Flickr API - Hot list->hot-list
  * It takes care of downloading, validation and transforming the received data and its (de)storing into database
  * @author Jan Drabek
  */
-public class HotList extends AbstractFlickrEntity {
+public class TopTags extends AbstractFlickrEntity {
 	
 	// Constants
 	/** @var URL for query with placeholders */
 	private final String URL = "http://api.flickr.com/services/rest/"
                 + "?method=flickr.tags.getHotList&api_key=<!--API_KEY-->"
-                + "&period=<!--TYPE-->&count=100&format=rest";
+                + "&period=<!--TYPE-->&count=200&format=rest";
 	/** @var Name of database used for storing data */
-	private final String DATABASE = "hot-list";	
+	private final String DATABASE = "tags";	
 	
 	// Inner data
 	private String data;
 	private String outputData;
         private String type;
+	private Date date;
 
 	/**
 	 * Create new hot list object
 	 * @param context 
 	 * @param type week | day
 	 */
-	public HotList(ServletContext context, String type) {
+	public TopTags(ServletContext context, String type) {
 		this.context = context;
 		this.type = type;
+	}
+	
+	public TopTags(String type, String data) {
+		this.type = type;
+		this.data = data;
 	}
 	
 
@@ -57,13 +54,13 @@ public class HotList extends AbstractFlickrEntity {
                 transform();
                 //just double-checking, to preserve db consistency
                 validateXML(outputData,"/xml/scheme/graphr_db_tags.xsd","graphr.hot-list");
-                saveToDababase(DATABASE, getCurrentDate(), getOutputAsInputStream());
+                saveToDababase(DATABASE+ "-" + type, getFormattedDate(), getOutputAsInputStream());
 	}
 
 	@Override
 	public void unload() throws FlickrEntityException {
 		// Remove data older than 14 days
-                deleteFromDatabase(DATABASE, getOldDate());
+                deleteFromDatabase(DATABASE+ "-" + type, getOldDate());
 	}
 	
 	private InputStream getOutputAsInputStream() {
@@ -79,6 +76,8 @@ public class HotList extends AbstractFlickrEntity {
 	}
 	
 	private void getData() throws FlickrEntityException {
+		// Skip fetching data if they are already there
+		if(data != null) return;
 		try {
 			data = Downloader.download(getUrl());
 		} catch (DownloaderException ex) {
@@ -91,7 +90,7 @@ public class HotList extends AbstractFlickrEntity {
 		Source source = new StreamSource(new StringReader(data));
                 Source xslt = null;
 		try {
-			xslt = new StreamSource(getPath("/xml/xslt/flickr_hotlist_to_tags_by_day.xslt").openStream());
+			xslt = new StreamSource(getPath("/xml/xslt/flickr_hotlist_to_tags_by_week.xslt").openStream());
 		} catch (MalformedURLException ex) {
 			throw new FlickrEntityException("XSLT tranformation of downloaded  'hot list' failed.", ex);
 		} catch (IOException ex) {
@@ -102,7 +101,7 @@ public class HotList extends AbstractFlickrEntity {
 		Transformer transformer;
 		try {
 			transformer = tfactory.newTransformer(xslt);
-			transformer.setParameter("DATE", getCurrentDate());
+			transformer.setParameter("DATE", getFormattedDate());
 			transformer.transform(source, result);
 		} catch (TransformerException ex) {
 			throw new FlickrEntityException("XSLT transformation of downloaded 'hot list' failed (check the input).",ex);
@@ -110,14 +109,25 @@ public class HotList extends AbstractFlickrEntity {
 		this.outputData = outputData.toString();
 	}
 	
-	private String getCurrentDate() {
-		return formatDate(now());
+	private String getFormattedDate() {
+		return formatDate(getDate());
 	}
 	
 	private String getOldDate() {
 		Date date = now();
 		date.setTime(date.getTime()-14*24*3600*1000);
 		return formatDate(date);
+	}
+	
+	public Date getDate() {
+		if(date == null) {
+			date = getDate();
+		}
+		return date;
+	}
+	
+	public void setDate(Date date) {
+		this.date = date;
 	}
 	
         /*
