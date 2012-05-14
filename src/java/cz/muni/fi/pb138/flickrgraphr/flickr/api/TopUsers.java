@@ -66,7 +66,6 @@ public class TopUsers extends AbstractFlickrEntity {
                 saveToDababase(DATABASE, date, getOutputAsInputStream());
 	}
 
-        // FIXME Why enabling writeback here?
 	@Override
 	public void unload() throws FlickrEntityException {
 		// Remove data older than 14 days
@@ -78,7 +77,6 @@ public class TopUsers extends AbstractFlickrEntity {
 		return new ByteArrayInputStream(barray); 
 	}
 	
-        // FIXME BaseX does not throw exception here after e.g. java.lang.OutOfMemoryError
 	private void computeData() throws FlickrEntityException {
                 ClientSession session = getDatabase();
                 try {
@@ -94,7 +92,6 @@ public class TopUsers extends AbstractFlickrEntity {
 		}
 	}
 	
-        // FIXME Copied code, to be reviewed by others
         private static String readFileToString(URL filePath) throws java.io.IOException {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(filePath.openStream()));
                 String line;

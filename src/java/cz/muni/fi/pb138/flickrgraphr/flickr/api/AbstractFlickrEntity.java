@@ -128,13 +128,11 @@ public abstract class AbstractFlickrEntity implements FlickrEntity {
 			validator.validate(source);
 		} catch (Exception ex) { //IOEXception, SAXException, MalformedURLException
                         try {
-                            // FIXME date formatting in filename
                             URL url = getPath("/xml/error/"+formatDateTime(now()) +"_"+description+".xml");
                             PrintWriter errorOut = new PrintWriter(url.getPath());
                             errorOut.println(xml);
                             errorOut.close();
                         } catch (IOException subEx) {
-                            // FIXME using loggers? Report error during logging error.
                             throw new FlickrEntityException("Validation of "+description+" failed. (file not saved)", ex);
                         }
                         throw new FlickrEntityException("Validation of "+description+" failed. (file saved to xml/error)", ex);

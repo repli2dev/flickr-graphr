@@ -40,7 +40,6 @@ public class TopPhotos extends AbstractFlickrEntity {
 	private String outputData;
         private String date;
 
-        // FIXME Give 'date' as String or Date?
 	/**
 	 * Create new TopPhotos object with the date specified
 	 * @param context 
@@ -72,7 +71,6 @@ public class TopPhotos extends AbstractFlickrEntity {
                 saveToDababase(DATABASE, date, getOutputAsInputStream());
 	}
 
-        // FIXME Why enabling writeback here?
 	@Override
 	public void unload() throws FlickrEntityException {
                 deleteFromDatabase(DATABASE, getOldDate());

@@ -31,7 +31,7 @@ let $single_result :=
   for $date in $all_users/@date
 	let $score := max((0,$all_users[@date=$date]/user[@user-id=$requested_userid]/@score))
 	let $display_name_db := distinct-values(collection("users")/users[local:in_range(@date,7)]/user[@user-id=$requested_userid]/@display-name)[1]
-	let $display_name := if (empty($display_name_db)) then "name unknown" else $display_name_db
+	let $display_name := if (empty($display_name_db)) then $requested_userid else $display_name_db
 	return concat("
     {
       ""user-id:"": """,$requested_userid,""",

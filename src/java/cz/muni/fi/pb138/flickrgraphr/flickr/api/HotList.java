@@ -105,8 +105,7 @@ public class HotList extends AbstractFlickrEntity {
 			transformer.setParameter("DATE", getCurrentDate());
 			transformer.transform(source, result);
 		} catch (TransformerException ex) {
-                        // FIXME Why not chaining 'ex' as cause?
-			throw new FlickrEntityException("XSLT transformation of downloaded 'hot list' failed (check the input).");
+			throw new FlickrEntityException("XSLT transformation of downloaded 'hot list' failed (check the input).",ex);
 		}
 		this.outputData = outputData.toString();
 	}

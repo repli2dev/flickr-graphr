@@ -77,7 +77,6 @@ public class Users extends AbstractFlickrEntity {
                 deleteFromDatabase(DATABASE, getOldDate());
 	}
 	
-        // FIXME What about moving to AbstractFlickrEntity?
 	private InputStream getOutputAsInputStream() {
 		byte[] barray = outputData.getBytes();
 		return new ByteArrayInputStream(barray); 
@@ -98,7 +97,6 @@ public class Users extends AbstractFlickrEntity {
 		}
 	}
 	
-        // FIXME xslt: when parameter not set, Exception is not raised
 	private void transform() throws FlickrEntityException {
 		TransformerFactory tfactory = TransformerFactory.newInstance();
 		Source source = new StreamSource(new StringReader(data));
