@@ -3,6 +3,8 @@ package cz.muni.fi.pb138.flickrgraphr.backend.cron;
 import it.sauronsoftware.cron4j.Scheduler;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletContext;
@@ -30,7 +32,9 @@ public class TaskSchedulerServletContextListener implements ServletContextListen
 		Configuration conf = null;
 		logger.log(Level.FINE,"Loading scheduler configuration.");
 		try {
-			conf = Configuration.loadConfiguration(new File(context.getRealPath("/") + "/WEB-INF/scheduler.xml").toURI(),context.getResource("/xml/scheme/scheduler.xsd"));
+			conf = Configuration.loadConfiguration(new URI(context.getRealPath("/WEB-INF/scheduler.xml")),context.getResource("/xml/scheme/scheduler.xsd"));
+		} catch (URISyntaxException ex) {
+			logger.log(Level.SEVERE,"Scheduler configuration parser failed (wrong uri).", ex);
 		} catch (ParserConfigurationException ex) {
 			logger.log(Level.SEVERE,"Scheduler configuration parser failed (wrong config).", ex);
 		} catch (SAXException ex) {

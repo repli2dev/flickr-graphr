@@ -23,7 +23,7 @@ public class DatabaseServletContextListener implements ServletContextListener {
 		Properties properties = null;
 		try {
 			properties = new Properties();
-			properties.loadFromXML(getClass().getResourceAsStream("BaseXConf.xml"));
+			properties.loadFromXML(context.getResourceAsStream("/WEB-INF/BaseXConf.xml"));
 		} catch (IOException ex) {
 			logger.log(Level.SEVERE, "Cannot read database credentials.", ex);
 		}
