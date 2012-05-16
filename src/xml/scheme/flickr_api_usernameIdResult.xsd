@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Graphr -->
+<!-- XMLSchema for flickr.people.findByUsername API result -->
+<!-- note: only valid results are accepted, i.e. rsp[@stat='ok'] -->
+
+<!-- TODO: id and nsid should be the same, format of ID (also in pther xsd) -->
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+    
+    <!-- root 'rsp' element -->
+    <xsd:element name="rsp">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element ref="user"/>
+            </xsd:sequence>
+            <xsd:attribute name="stat" use="required" fixed="ok"/>
+        </xsd:complexType>
+    </xsd:element>
+    
+    <!-- user element -->
+    <xsd:element name="user">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="username" type="xsd:string"/>
+            </xsd:sequence>
+            <xsd:attribute name="id" type="xsd:string" use="required"/>
+            <xsd:attribute name="nsid" type="xsd:string" use="required"/>
+        </xsd:complexType>
+    </xsd:element>
+    
+</xsd:schema>

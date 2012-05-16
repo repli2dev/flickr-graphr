@@ -7,13 +7,6 @@ import cz.muni.fi.pb138.flickrgraphr.backend.storage.BaseXSession;
  * @author Martin Ukrop
  */
 public class QueryExample {
-    
-        /*
-         * 2 veci, co chcem prebrat zajtra:
-         * - nevytvorit balik cz.muni.fi.pb138.flickrgraphr.api.dbquery ? (prehladnost kodu)
-         * - vytvorit podtriedy QueryException, ktore budu rozlisovat, co sa stalo?
-         *   (akoze ParameterNotSetException, DataNotInDatabaseException, CouldNotConnectToDatabaseException, ...)
-         */
 
     	// FIXME temporary solution, set your own home when running
 	private static final String ROOT_PATH = "file:///home/martin/Documents/flickr-graphr/src";	

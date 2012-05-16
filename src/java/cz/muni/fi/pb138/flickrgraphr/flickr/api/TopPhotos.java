@@ -2,22 +2,15 @@ package cz.muni.fi.pb138.flickrgraphr.flickr.api;
 
 import cz.muni.fi.pb138.flickrgraphr.backend.downloader.Downloader;
 import cz.muni.fi.pb138.flickrgraphr.backend.downloader.DownloaderException;
-import cz.muni.fi.pb138.flickrgraphr.backend.storage.BaseXSession;
-import java.io.*;
+import java.io.IOException;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletContext;
-import javax.xml.XMLConstants;
 import javax.xml.transform.*;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
-import javax.xml.validation.Validator;
-import org.basex.server.ClientSession;
-import org.xml.sax.SAXException;
 
 /**
  * Represents one processing of Flickr API - interestingness->top-photos
@@ -68,7 +61,7 @@ public class TopPhotos extends AbstractFlickrEntity {
                 //just double-checking, to preserve db consistency
                 validateXML(outputData,"/xml/scheme/graphr_db_top_photos.xsd", 
                             "graphr.top-photos");
-                saveToDababase(DATABASE, date, getOutputAsInputStream());
+                saveToDababase(DATABASE, date, getAsInputStream(outputData));
 	}
 
 	@Override
@@ -76,11 +69,10 @@ public class TopPhotos extends AbstractFlickrEntity {
                 deleteFromDatabase(DATABASE, getOldDate());
 	}
 	
-	private InputStream getOutputAsInputStream() {
-		byte[] barray = outputData.getBytes();
-		return new ByteArrayInputStream(barray); 
-	}
-	
+        /**
+         * returns URL for specific API request (replaces place-holders of parameters)
+         * @return 
+         */
 	private String getUrl() {
 		// Prepare URL and fetch result
 		String finalURL = URL.replaceAll("<!--API_KEY-->", Downloader.API_KEY);
@@ -88,6 +80,10 @@ public class TopPhotos extends AbstractFlickrEntity {
 		return finalURL;
 	}
 	
+        /**
+         * Downloads the API response from Flickr
+         * @throws FlickrEntityException 
+         */
 	private void getData() throws FlickrEntityException {
 		try {
 			data = Downloader.download(getUrl());
@@ -96,6 +92,12 @@ public class TopPhotos extends AbstractFlickrEntity {
 		}
 	}
 	
+        /**
+         * runs the needed XSLT transformation on data saved in attribute 'data'
+         * bind XSLT parameters according to class attribute values
+         * puts resulting string to 'outputData'
+         * @throws FlickrEntityException 
+         */
 	private void transform() throws FlickrEntityException {
 		TransformerFactory tfactory = TransformerFactory.newInstance();
 		Source source = new StreamSource(new StringReader(data));
@@ -120,22 +122,25 @@ public class TopPhotos extends AbstractFlickrEntity {
 		this.outputData = outputData.toString();
 	}
 	
+        /**
+         * returns yesterday date in format YYYY-MM-DD
+         * @return 
+         */
 	private String getYesterdayDate() {
                 Date date = now();
                 date.setTime(date.getTime()-24*3600*1000);
 		return formatDate(date);
 	}
 	
+        /**
+         * returns the latest "old" date for TopPhotos
+         * TopPhotos data before this date (inclusive) are no longer needed
+         * @return 
+         */
 	private String getOldDate() {
 		Date date = now();
 		date.setTime(date.getTime()-14*24*3600*1000);
 		return formatDate(date);
 	}
-	
-        /*
-	private ClientSession getDatabase() {
-		BaseXSession bxs = getDatabaseSession();
-		return bxs.get(DATABASE, true);
-	}*/
 
 }

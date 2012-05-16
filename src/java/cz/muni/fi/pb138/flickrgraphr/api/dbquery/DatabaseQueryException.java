@@ -1,7 +1,7 @@
 package cz.muni.fi.pb138.flickrgraphr.api.dbquery;
 
 /**
- * //TODO documentation
+ * Exception to be raised when error occurs in Graphr API functionality while querying the database for data
  * @author Martin Ukrop
  */
 public class DatabaseQueryException extends Exception{

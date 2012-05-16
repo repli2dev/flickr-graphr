@@ -1,25 +1,15 @@
 package cz.muni.fi.pb138.flickrgraphr.flickr.api;
 
-import cz.muni.fi.pb138.flickrgraphr.backend.downloader.Downloader;
-import cz.muni.fi.pb138.flickrgraphr.backend.downloader.DownloaderException;
 import cz.muni.fi.pb138.flickrgraphr.backend.storage.BaseXSession;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.MalformedURLException;
-import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.servlet.ServletContext;
-import javax.xml.XMLConstants;
-import javax.xml.transform.*;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
-import javax.xml.validation.Validator;
-import org.basex.server.ClientSession;
-import org.xml.sax.SAXException;
 import java.net.URL;
+import java.util.Date;
+import javax.servlet.ServletContext;
 import org.basex.server.ClientQuery;
+import org.basex.server.ClientSession;
 
 /**
  * Represents processing of top-photos->top-users
@@ -63,7 +53,7 @@ public class TopUsers extends AbstractFlickrEntity {
                 //just double-checking, to preserve db consistency
                 validateXML(outputData,"/xml/scheme/graphr_db_top_users.xsd", 
                             "graphr.top-users");
-                saveToDababase(DATABASE, date, getOutputAsInputStream());
+                saveToDababase(DATABASE, date, getAsInputStream(outputData));
 	}
 
 	@Override
@@ -72,11 +62,10 @@ public class TopUsers extends AbstractFlickrEntity {
                 deleteFromDatabase(DATABASE, getOldDate());
 	}
 	
-	private InputStream getOutputAsInputStream() {
-		byte[] barray = outputData.getBytes();
-		return new ByteArrayInputStream(barray); 
-	}
-	
+        /**
+         * Computes the needed data according to class attribute settings
+         * @throws FlickrEntityException 
+         */
 	private void computeData() throws FlickrEntityException {
                 ClientSession session = getDatabase();
                 try {
@@ -92,6 +81,12 @@ public class TopUsers extends AbstractFlickrEntity {
 		}
 	}
 	
+        /**
+         * helper function to read file contents to String
+         * @param filePath
+         * @return
+         * @throws java.io.IOException 
+         */
         private static String readFileToString(URL filePath) throws java.io.IOException {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(filePath.openStream()));
                 String line;
@@ -106,12 +101,21 @@ public class TopUsers extends AbstractFlickrEntity {
                 return results;
         }
         
+        /**
+         * returns yesterday date in format YYYY-MM-DD
+         * @return 
+         */
 	private String getYesterdayDate() {
                 Date date = now();
                 date.setTime(date.getTime()-24*3600*1000);
 		return formatDate(date);
 	}
 	
+        /**
+         * returns the latest "old" date for TopPhotos
+         * TopPhotos data before this date (inclusive) are no longer needed
+         * @return 
+         */
 	private String getOldDate() {
 		Date date = now();
 		date.setTime(date.getTime()-14*24*3600*1000);

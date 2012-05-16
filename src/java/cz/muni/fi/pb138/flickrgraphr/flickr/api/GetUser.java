@@ -2,57 +2,45 @@ package cz.muni.fi.pb138.flickrgraphr.flickr.api;
 
 import cz.muni.fi.pb138.flickrgraphr.backend.downloader.Downloader;
 import cz.muni.fi.pb138.flickrgraphr.backend.downloader.DownloaderException;
-import cz.muni.fi.pb138.flickrgraphr.backend.storage.BaseXSession;
-import java.io.*;
-import java.net.MalformedURLException;
-import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.io.IOException;
 import javax.servlet.ServletContext;
-import javax.xml.XMLConstants;
-import javax.xml.transform.*;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
-import javax.xml.validation.Validator;
-import org.basex.server.ClientSession;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.*;
+import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 /**
- * Represents one processing of Flickr API - interestingness->top-photos
- * It takes care of downloading, validation and transforming the received data and its (de)storing into database
- * Produces 'top-photos' of the day
- * @author Martin Ukrop
+ * Represents one processing of Flickr API - getting 'user-id' from either email or displayName
+ * It takes care of downloading, validation and transforming the received data
+ * Produces instance of 'User' with 'id' and 'displayName' set
+ * @author Martin Ukrop, Josef Ludvicek
  */
 public class GetUser extends AbstractFlickrEntity {
 	
 	// Constants
-	/** @var URL for query with place-holders */
+	/** @var URL for querying 'display-name' to get 'user-id' with place-holders */
 	private final String URL_NAME2ID = "http://api.flickr.com/services/rest/"
                 + "?method=flickr.people.findByUsername&api_key=<!--API_KEY-->&username=<!--NAME-->"
                 + "&format=rest";
-        /** @var URL for query with place-holders */
+        /** @var URL for querying 'email' to get 'user-id' and 'display-name' with place-holders */
 	private final String URL_EMAIL2ID = "http://api.flickr.com/services/rest/"
                 + "?method=flickr.people.findByEmail&api_key=<!--API_KEY-->&find_email=<!--EMAIL-->"
-                + "&format=rest";
-       /** @var URL for query with place-holders */
-	private final String URL_ID2NAME = "http://api.flickr.com/services/rest/"
-                + "?method=flickr.people.getInfo&api_key=<!--API_KEY-->&user_id=<!--ID-->"
                 + "&format=rest";
 	
 	// Inner data
 	private String data;
-	private String outputData;
         private String id;
         private String displayName;
         private String email;
 
-	/**
-	 * // todo
-	 * @param context 
-	 * @param date date to process
-	 */
+        /**
+         * Create new GetUser object with the value of email XOR displayName specified
+         * @param context
+         * @param value     either email String or displayName String
+         * @param isEmail   true, if 'value' is email | false if 'value' is displeyName
+         */
 	public GetUser(ServletContext context, String value, Boolean isEmail) {
 		this.context = context;
                 if (isEmail) {
@@ -61,109 +49,126 @@ public class GetUser extends AbstractFlickrEntity {
                         this.displayName = value;
                 }
 	}
-
-        public User fromEmail(String email) {
-            return new User(null,null);
+    
+        /**
+         * Determines 'user-id' and 'display-name' of a user based on his email
+         * @return User entity with 'id' and 'displayName' set (if user exists)
+         *                     or both 'id' and 'displeyName' as null (if user does not exist)
+         * @throws FlickrEntityException 
+         */
+        public User fromEmail() throws FlickrEntityException {
+            getData(true);
+            try {
+                validateXML(data,"/xml/scheme/flickr_api_usernameIdResult.xsd",
+                            "flickr.findByEmail");
+            } catch (FlickrEntityException ex) {
+                try {
+                    validateXML(data, "/xml/scheme/flickr_api_userNotFound.xsd",
+                            "flickr.userNotFound");
+                } catch (FlickrEntityException subEx) {
+                    throw ex;
+                }
+                return new User(null,null);
+            }
+            this.id = getStringByXPath(data,"/rsp/user/@nsid");
+            this.displayName = getStringByXPath(data,"/rsp/user/username/text()");
+            return new User(id,displayName);
         }
         
-        public User fromName(String email) {
-            //getData(1);
-            
-            return new User(null,null);
+        /**
+         * Determines 'user-id' of a user based on his 'display-name'
+         * @return User entity with 'id' and 'displayName' set (if user exists)
+         *                     or both 'id' and 'displeyName' as null (if user does not exist)
+         * @throws FlickrEntityException 
+         */
+        public User fromName() throws FlickrEntityException {
+            getData(false);
+            try {
+                validateXML(data,"/xml/scheme/flickr_api_usernameIdResult.xsd",
+                            "flickr.findByUsername");
+            } catch (FlickrEntityException ex) {
+                try {
+                    validateXML(data, "/xml/scheme/flickr_api_userNotFound.xsd",
+                            "flickr.userNotFound");
+                } catch (FlickrEntityException subEx) {
+                    throw ex;
+                }
+                return new User(null,null);
+            }
+            this.id = getStringByXPath(data,"/rsp/user/@id");
+            return new User(id,displayName);
+        }
+        
+        /**
+         * extracts String from input data according to given XPath expression
+         * @param input         input to process by XPath
+         * @param xpathString   XPath expression to execute (return type is String Strictly!)
+         * @return
+         * @throws FlickrEntityException 
+         */
+        private String getStringByXPath(String input, String xpathString) throws FlickrEntityException {
+            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+            XPath xpath = XPathFactory.newInstance().newXPath();
+            try {
+                    DocumentBuilder builder = dbf.newDocumentBuilder();
+                    Document doc = builder.parse(getAsInputStream(input));
+                    XPathExpression xpathExpr = xpath.compile(xpathString);
+                    return (String) xpathExpr.evaluate(doc,XPathConstants.STRING);
+            } catch (XPathExpressionException ex) {
+                throw new FlickrEntityException("XPath failed - incorrect expression.", ex);
+            } catch (SAXException ex) {
+                throw new FlickrEntityException("XPath failed - problem with evaluating", ex);
+            } catch (ParserConfigurationException ex) {
+                throw new FlickrEntityException("XPath failed - parser is not configured properly.", ex);
+            } catch (IOException ex) {
+                throw new FlickrEntityException("Xpath failed - IO problems.", ex);
+            }
         }
         
 	@Override
 	public void load() throws FlickrEntityException {
 		//does nothing
-                //getData();
-                validateXML(data,"/xml/scheme/flickr_api_interestingness.xsd",
-                            "flickr.interestingness");
-		transform();
-                //just double-checking, to preserve db consistency
-                validateXML(outputData,"/xml/scheme/graphr_db_top_photos.xsd", 
-                            "graphr.top-photos");
-                //saveToDababase(DATABASE, date, getOutputAsInputStream());
 	}
 
 	@Override
 	public void unload() throws FlickrEntityException {
                 // does nothing
 	}
-	
-	private InputStream getOutputAsInputStream() {
-		byte[] barray = outputData.getBytes();
-		return new ByteArrayInputStream(barray); 
-	}
-	
-	private String getUrl(int method) {
-		// Prepare URL and fetch result
+        
+        /**
+         * returns URL for specific API request (replaces place-holders of parameters)
+         * @param isEmail  true, if 'value' is email | false if 'value' is displeyName
+         * @return
+         * @throws FlickrEntityException 
+         */
+	private String getUrl(boolean isEmail) throws FlickrEntityException {
                 String finalURL;
-                switch (method) {
-                    case 1 :
-                        finalURL = URL_NAME2ID;
-                        break;
-                    case 2 :
+                if (isEmail) {
                         finalURL = URL_EMAIL2ID;
-                        break;
-                    default :
-                        finalURL = URL_ID2NAME;
-                        break;
+                } else {
+                        finalURL = URL_NAME2ID;
                 }
-                finalURL = finalURL.replaceAll("<!--API_KEY-->", Downloader.API_KEY);
-		finalURL = finalURL.replaceAll("<!--NAME-->", displayName);
-                finalURL = finalURL.replaceAll("<!--EMAIL-->", email);
-                finalURL = finalURL.replaceAll("<!--ID-->", id);
+                try {
+                    finalURL = finalURL.replaceAll("<!--API_KEY-->", Downloader.API_KEY);
+                    finalURL = finalURL.replaceAll("<!--NAME-->", displayName);
+                    finalURL = finalURL.replaceAll("<!--EMAIL-->", email);
+                } catch (NullPointerException ex) {
+                    throw new FlickrEntityException("Wrong method called or paramaters not set.", ex);
+                }
 		return finalURL;
 	}
         
-	private void getData(int method) throws FlickrEntityException {
+        /**
+         * Downloads the API response from Flickr
+         * @param isEmail   true, if 'value' is email | false if 'value' is displeyName
+         * @throws FlickrEntityException 
+         */
+	private void getData(boolean isEmail) throws FlickrEntityException {
 		try {
-			data = Downloader.download(getUrl(method));
+			data = Downloader.download(getUrl(isEmail));
 		} catch (DownloaderException ex) {
-			throw new FlickrEntityException("Downloading of 'interestingness' failed.", ex);
+			throw new FlickrEntityException("Downloading of user data failed.", ex);
 		}
 	}
-	
-	private void transform() throws FlickrEntityException {
-		TransformerFactory tfactory = TransformerFactory.newInstance();
-		Source source = new StreamSource(new StringReader(data));
-                Source xslt = null;
-		try {
-			xslt = new StreamSource(getPath("/xml/xslt/flickr_interestingness_to_top_photos.xslt").openStream());
-		} catch (MalformedURLException ex) {
-			throw new FlickrEntityException("XSLT tranformation of downloaded  'interestingness' failed.", ex);
-		} catch (IOException ex) {
-			throw new FlickrEntityException("XSLT tranformation of downloaded  'interestingness' failed.", ex);
-		}
-		StringWriter outputData = new StringWriter();
-		Result result = new StreamResult(outputData);
-		Transformer transformer;
-		try {
-			transformer = tfactory.newTransformer(xslt);
-			transformer.setParameter("DATE", id);
-			transformer.transform(source, result);
-		} catch (TransformerException ex) {
-			throw new FlickrEntityException("XSLT transformation of downloaded 'hot list' failed (check the input).",ex);
-		}
-		this.outputData = outputData.toString();
-	}
-	
-	/*private String getYesterdayDate() {
-                Date date = now();
-                date.setTime(date.getTime()-24*3600*1000);
-		return formatDate(date);
-	}
-	
-	private String getOldDate() {
-		Date date = now();
-		date.setTime(date.getTime()-14*24*3600*1000);
-		return formatDate(date);
-	}*/
-	
-        /*
-	private ClientSession getDatabase() {
-		BaseXSession bxs = getDatabaseSession();
-		return bxs.get(DATABASE, true);
-	}*/
 
 }

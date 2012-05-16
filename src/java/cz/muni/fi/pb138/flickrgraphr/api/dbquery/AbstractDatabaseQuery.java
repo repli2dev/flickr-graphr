@@ -12,8 +12,8 @@ import java.util.logging.Logger;
 import javax.servlet.ServletContext;
 
 /**
- * //TODO documentation
- * @author martin
+ * Implements some general methods for DatabaseQuery
+ * @author MArtin Ukrop
  */
 public abstract class AbstractDatabaseQuery implements DatabaseQuery {
     

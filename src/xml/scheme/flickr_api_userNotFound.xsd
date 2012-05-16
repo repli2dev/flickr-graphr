@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Graphr -->
+<!-- XMLSchema for flickr.people.findByUsername API result -->
+<!-- XMLSchema for flickr.people.findByEmail API result -->
+<!-- note: only invalid results where user was not found are accepted -->
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+    
+    <!-- root 'rsp' element -->
+    <xsd:element name="rsp">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="err" minOccurs="1" maxOccurs="1">
+                    <xsd:complexType>
+                        <xsd:attribute name="code" use="required" fixed="1"/>
+                        <xsd:attribute name="msg" use="required" fixed="User not found"/>
+                    </xsd:complexType>
+                </xsd:element>
+            </xsd:sequence>
+            <xsd:attribute name="stat" use="required" fixed="fail"/>
+        </xsd:complexType>
+    </xsd:element>
+    
+</xsd:schema>

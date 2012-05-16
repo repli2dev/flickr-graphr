@@ -16,10 +16,9 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 import org.basex.server.ClientSession;
-import org.xml.sax.SAXException;
 
 /**
- *
+ * Implements some general methods for FlickrEntity
  * @author Jan Drabek, Martin Ukrop
  */
 public abstract class AbstractFlickrEntity implements FlickrEntity {
@@ -93,6 +92,12 @@ public abstract class AbstractFlickrEntity implements FlickrEntity {
 		}
         }
 	
+        /**
+         * Deletes given file from given database
+         * @param dbName
+         * @param dbFileName
+         * @throws FlickrEntityException 
+         */
         protected void deleteFromDatabase(String dbName, String dbFileName) 
                                           throws FlickrEntityException {
                 ClientSession session = getDatabaseSession().get(dbName, true);
@@ -137,6 +142,16 @@ public abstract class AbstractFlickrEntity implements FlickrEntity {
                         }
                         throw new FlickrEntityException("Validation of "+description+" failed. (file saved to xml/error)", ex);
 		}
+	}
+        
+        /**
+         * returns given String as InputStream
+         * @param input
+         * @return 
+         */
+        protected static InputStream getAsInputStream(String input) {
+		byte[] barray = input.getBytes();
+		return new ByteArrayInputStream(barray); 
 	}
         
 	/**
