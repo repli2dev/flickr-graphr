@@ -1,6 +1,5 @@
-package cz.muni.fi.pb138.flickrgraphr.api;
+package cz.muni.fi.pb138.flickrgraphr.api.dbquery;
 
-import cz.muni.fi.pb138.flickrgraphr.api.Exceptions.DatabaseQueryException;
 import cz.muni.fi.pb138.flickrgraphr.backend.storage.BaseXSession;
 
 /**

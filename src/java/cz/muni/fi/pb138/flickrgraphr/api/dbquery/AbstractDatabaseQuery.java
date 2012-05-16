@@ -1,4 +1,4 @@
-package cz.muni.fi.pb138.flickrgraphr.api;
+package cz.muni.fi.pb138.flickrgraphr.api.dbquery;
 
 import cz.muni.fi.pb138.flickrgraphr.backend.storage.BaseXSession;
 import java.net.MalformedURLException;

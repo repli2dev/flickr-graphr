@@ -1,21 +1,20 @@
-package cz.muni.fi.pb138.flickrgraphr.api;
+package cz.muni.fi.pb138.flickrgraphr.api.dbquery;
 
-import cz.muni.fi.pb138.flickrgraphr.api.Exceptions.DatabaseQueryException;
 import javax.servlet.ServletContext;
 
 /**
  * //TODO documentation
  * @author martin
  */
-public class QueryTopIdsForDay extends AbstractDatabaseQuery {
+public class GetUserId extends AbstractDatabaseQuery {
     
-    	public QueryTopIdsForDay(ServletContext context) {
+    	public GetUserId(ServletContext context) {
 		this.context = context;
 	}
     
         @Override
         public String execute() throws DatabaseQueryException{
-            return "top ids here.";
+            return "38177739@N05";
         }
 
         @Override

@@ -1,4 +1,4 @@
-package cz.muni.fi.pb138.flickrgraphr.api.Exceptions;
+package cz.muni.fi.pb138.flickrgraphr.api.dbquery;
 
 /**
  * //TODO documentation

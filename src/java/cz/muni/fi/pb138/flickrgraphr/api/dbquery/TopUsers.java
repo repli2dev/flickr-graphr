@@ -1,21 +1,20 @@
-package cz.muni.fi.pb138.flickrgraphr.api;
+package cz.muni.fi.pb138.flickrgraphr.api.dbquery;
 
-import cz.muni.fi.pb138.flickrgraphr.api.Exceptions.DatabaseQueryException;
 import javax.servlet.ServletContext;
 
 /**
  * //TODO documentation
  * @author martin
  */
-public class QueryAddUser extends AbstractDatabaseQuery {
+public class TopUsers extends AbstractDatabaseQuery {
     
-    	public QueryAddUser(ServletContext context) {
+    	public TopUsers(ServletContext context) {
 		this.context = context;
 	}
     
         @Override
         public String execute() throws DatabaseQueryException{
-            return "user successfully added.";
+            return "top users here.";
         }
 
         @Override

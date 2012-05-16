@@ -1,6 +1,5 @@
-package cz.muni.fi.pb138.flickrgraphr.api;
+package cz.muni.fi.pb138.flickrgraphr.api.dbquery;
 
-import cz.muni.fi.pb138.flickrgraphr.api.Exceptions.DatabaseQueryException;
 import cz.muni.fi.pb138.flickrgraphr.backend.storage.BaseXSession;
 
 /**
@@ -24,7 +23,7 @@ public class QueryExample {
                 String result;
                 
                 // query for top-users
-                DatabaseQuery query1 = new QueryTopUsers(null);
+                DatabaseQuery query1 = new TopUsers(null);
                 query1.setDatabaseSession(dbSession);
                 // temporary solution, to be removed
                 ((AbstractDatabaseQuery) query1).setPath(ROOT_PATH);
@@ -40,7 +39,7 @@ public class QueryExample {
                 }
                 
                 // query for top-tags
-                DatabaseQuery query2 = new QueryTopTags(null);
+                DatabaseQuery query2 = new TopTags(null);
                 query2.setDatabaseSession(dbSession);
                 // temporary solution, to be removed
                 ((AbstractDatabaseQuery) query2).setPath(ROOT_PATH);
@@ -55,7 +54,7 @@ public class QueryExample {
                 }
                 
                 // query to save new display name to database
-                DatabaseQuery query3 = new QueryAddUser(null);
+                DatabaseQuery query3 = new AddUser(null);
                 query1.setDatabaseSession(dbSession);
                 // temporary solution, to be removed
                 ((AbstractDatabaseQuery) query3).setPath(ROOT_PATH);
@@ -70,7 +69,7 @@ public class QueryExample {
                 }
                 
                 // query to get top ids for given day
-                DatabaseQuery query4 = new QueryTopIdsForDay(null);
+                DatabaseQuery query4 = new TopIdsForDay(null);
                 query4.setDatabaseSession(dbSession);
                 // temporary solution, to be removed
                 ((AbstractDatabaseQuery) query3).setPath(ROOT_PATH);
@@ -86,7 +85,7 @@ public class QueryExample {
                 
                 // query to retrieve user-id based on display-name
                 // zatial nemusis pouzivat, ale myslim si, ze bude strasne pomale pytat sa Flickru
-                DatabaseQuery query5 = new QueryGetUserId(null);
+                DatabaseQuery query5 = new GetUserId(null);
                 query5.setDatabaseSession(dbSession);
                 // temporary solution, to be removed
                 ((AbstractDatabaseQuery) query5).setPath(ROOT_PATH);
