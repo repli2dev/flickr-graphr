@@ -17,8 +17,8 @@
 	<xsd:element name="tag">
 		<xsd:complexType>
 			<xsd:attribute name="value" type="nonEmptyString" />
-			<xsd:attribute name="score" type="scoreType" />
-			<xsd:attribute name="position" type="countType" />
+			<xsd:attribute name="theirScore" type="scoreType" />
+			<xsd:attribute name="ourScore" type="ourScoreType" />
 		</xsd:complexType>
 	</xsd:element>
 	
@@ -36,6 +36,12 @@
 	</xsd:simpleType>
 	<xsd:simpleType name="scoreType">
 		<xsd:restriction base="xsd:integer">
+			<xsd:minInclusive value="0" />
+			<xsd:maxInclusive value="100" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="ourScoreType">
+		<xsd:restriction base="xsd:float">
 			<xsd:minInclusive value="0" />
 			<xsd:maxInclusive value="100" />
 		</xsd:restriction>

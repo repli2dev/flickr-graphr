@@ -39,10 +39,10 @@
             <xsl:attribute name="value"> 
                 <xsl:value-of select="./text()"/>
             </xsl:attribute>
-            <xsl:attribute name="position"> 
-                <xsl:value-of select="position()"/>
+            <xsl:attribute name="ourScore"> 
+                <xsl:value-of select="100 - (100 div count(../tag)) * position()"/>
             </xsl:attribute>
-            <xsl:attribute name="score"> 
+	    <xsl:attribute name="theirScore"> 
                 <xsl:value-of select="./@score"/>
             </xsl:attribute>
         </tag>
