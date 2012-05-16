@@ -125,6 +125,7 @@ public abstract class AbstractFlickrEntity implements FlickrEntity {
          */
         protected void validateXML(String xml, String xmlSchema, String description) throws FlickrEntityException {
 		SchemaFactory sFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+		//File test = new File(context.getResource("/").getPath());
 		try {
 			Source source = new StreamSource(new StringReader(xml));
 			Schema schema = null;
@@ -132,8 +133,13 @@ public abstract class AbstractFlickrEntity implements FlickrEntity {
 			Validator validator = schema.newValidator();
 			validator.validate(source);
 		} catch (Exception ex) { //IOEXception, SAXException, MalformedURLException
-                        try {
-                            URL url = getPath("/xml/error/"+formatDateTime(now()) +"_"+description+".xml");
+                        try {			
+			    URL url = null;
+			    if(context != null) {
+				    url = new URL("file://" + context.getRealPath("/xml/error") + "/" + formatDateTime(now()) +"_"+description+".xml");
+			    } else {
+				    url = getPath("/xml/error/" + formatDateTime(now()) +"_"+description+".xml");
+			    }
                             PrintWriter errorOut = new PrintWriter(url.getPath());
                             errorOut.println(xml);
                             errorOut.close();

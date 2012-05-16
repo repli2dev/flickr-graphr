@@ -2,10 +2,6 @@
 <tasks>
 	<task id="1">
 		<name>cz.muni.fi.pb138.flickrgraphr.backend.tasks.WeekHotListTask</name>
-		<time>* * * * *</time>
-	</task>
-	<task id="2">
-		<name>cz.muni.fi.pb138.flickrgraphr.backend.tasks.TestTask</name>
-		<time>* * * * *</time>
+		<time>20 20 * * *</time>
 	</task>
 </tasks>

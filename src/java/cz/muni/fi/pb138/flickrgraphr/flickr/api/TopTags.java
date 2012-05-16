@@ -142,7 +142,7 @@ public class TopTags extends AbstractFlickrEntity {
 	
 	public Date getDate() {
 		if(date == null) {
-			date = getDate();
+			date = now();
 		}
 		return date;
 	}
