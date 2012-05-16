@@ -30,7 +30,7 @@ public class TaskSchedulerServletContextListener implements ServletContextListen
 		Configuration conf = null;
 		logger.log(Level.FINE,"Loading scheduler configuration.");
 		try {
-			conf = Configuration.loadConfiguration(new File(context.getRealPath("/") + "/WEB-INF/scheduler.xml").toURI(),context.getResource("/XML/scheme/scheduler.xsd"));
+			conf = Configuration.loadConfiguration(new File(context.getRealPath("/") + "/WEB-INF/scheduler.xml").toURI(),context.getResource("/xml/scheme/scheduler.xsd"));
 		} catch (ParserConfigurationException ex) {
 			logger.log(Level.SEVERE,"Scheduler configuration parser failed (wrong config).", ex);
 		} catch (SAXException ex) {

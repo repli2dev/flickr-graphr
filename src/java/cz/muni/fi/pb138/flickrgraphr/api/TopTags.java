@@ -1,14 +1,18 @@
-package cz.muni.fi.pb138.flickrgraphr;
+package cz.muni.fi.pb138.flickrgraphr.api;
 
+import cz.muni.fi.pb138.flickrgraphr.api.dbquery.DatabaseQuery;
+import cz.muni.fi.pb138.flickrgraphr.api.dbquery.DatabaseQueryException;
+import cz.muni.fi.pb138.flickrgraphr.backend.storage.BaseXSession;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class TestServlet extends HttpServlet {
+public class TopTags extends HttpServlet {
 
 	/**
 	 * Processes requests for both HTTP
@@ -22,22 +26,37 @@ public class TestServlet extends HttpServlet {
 	 */
 	protected void processRequest(HttpServletRequest request, HttpServletResponse response)
 		throws ServletException, IOException {
+		// Set proper encoding and prepare to output
 		response.setContentType("text/html;charset=UTF-8");
 		PrintWriter out = response.getWriter();
 		try {
-			/*
-			 * TODO output your page here. You may use following
-			 * sample code.
-			 */
-			out.println("<html>");
-			out.println("<head>");
-			out.println("<title>Servlet TestServlet</title>");			
-			out.println("</head>");
-			out.println("<body>");
-			out.println("<h1>Servlet TestServlet at " + request.getContextPath() + "</h1>");
-			out.println("</body>");
-			out.println("</html>");
-		} finally {			
+			String tag = null;
+			String method = null;
+			// Fetch parameters
+			try {
+				tag = request.getParameter("tag").toString();
+				method = request.getParameter("method").toString();
+				if (!method.equals("our") && !method.equals("their")) {
+					throw new IllegalArgumentException();
+				}
+				if(tag.equals("")) {
+					throw new IllegalArgumentException();
+				}
+				// Query the database
+				DatabaseQuery query = new cz.muni.fi.pb138.flickrgraphr.api.dbquery.TopTags(getServletContext());
+				try {
+					query.setParameter("tag", tag);
+					query.setParameter("method", method);
+					out.println(query.execute());
+				} catch (DatabaseQueryException ex) {
+					out.print(JsonBuilder.getErrorJson(2, "Invalid arguments"));
+				}
+			} catch (NullPointerException ex) {
+				out.print(JsonBuilder.getErrorJson(2, "Missing parameter"));
+			} catch (IllegalArgumentException ex) {
+				out.print(JsonBuilder.getErrorJson(2, "Invalid arguments"));
+			}
+		} finally {
 			out.close();
 		}
 	}
