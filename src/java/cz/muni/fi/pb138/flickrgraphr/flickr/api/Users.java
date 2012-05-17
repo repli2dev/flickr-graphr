@@ -56,11 +56,11 @@ public class Users extends AbstractFlickrEntity {
 	public void load() throws FlickrEntityException {
 		getData();
                 validateXML(data,"/xml/scheme/flickr_api_interestingness.xsd",
-                            "flickr.interestingness");
+                            "flickr.interestingness",true);
 		transform();
                 //just double-checking, to preserve db consistency
                 validateXML(outputData,"/xml/scheme/graphr_db_users.xsd", 
-                            "graphr.users");
+                            "graphr.users",true);
                 saveToDababase(DATABASE, date, getAsInputStream(outputData));
 	}
 

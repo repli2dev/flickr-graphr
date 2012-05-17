@@ -57,10 +57,10 @@ public class TopTags extends AbstractFlickrEntity {
 	@Override
 	public void load() throws FlickrEntityException {
 		getData();
-                validateXML(data,"/xml/scheme/flickr_api_hot_list.xsd","flickr.hotList");
+                validateXML(data,"/xml/scheme/flickr_api_hot_list.xsd","flickr.hotList",true);
                 transform();
                 //just double-checking, to preserve db consistency
-                validateXML(outputData,"/xml/scheme/graphr_db_tags.xsd","graphr.hot-list");
+                validateXML(outputData,"/xml/scheme/graphr_db_tags.xsd","graphr.hot-list",true);
                 saveToDababase(DATABASE+ "-" + type, getFormattedDate(), getAsInputStream(outputData));
 	}
 

@@ -52,7 +52,7 @@ public class TopUsers extends AbstractFlickrEntity {
 		computeData();
                 //just double-checking, to preserve db consistency
                 validateXML(outputData,"/xml/scheme/graphr_db_top_users.xsd", 
-                            "graphr.top-users");
+                            "graphr.top-users",true);
                 saveToDababase(DATABASE, date, getAsInputStream(outputData));
 	}
 

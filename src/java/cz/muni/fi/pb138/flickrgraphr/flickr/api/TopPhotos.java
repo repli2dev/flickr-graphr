@@ -56,11 +56,11 @@ public class TopPhotos extends AbstractFlickrEntity {
 	public void load() throws FlickrEntityException {
 		getData();
                 validateXML(data,"/xml/scheme/flickr_api_interestingness.xsd",
-                            "flickr.interestingness");
+                            "flickr.interestingness",true);
 		transform();
                 //just double-checking, to preserve db consistency
                 validateXML(outputData,"/xml/scheme/graphr_db_top_photos.xsd", 
-                            "graphr.top-photos");
+                            "graphr.top-photos",true);
                 saveToDababase(DATABASE, date, getAsInputStream(outputData));
 	}
 

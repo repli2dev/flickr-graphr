@@ -12,8 +12,8 @@ public class GetUserExample {
 	private static final String ROOT_PATH = "file:///home/martin/Documents/flickr-graphr/src";	
     
 	public static void main(String [] args){
-                //FlickrEntity entity = new GetUser(null,"Brad.Wagnner",false);
-                FlickrEntity entity = new GetUser(null,"dandelion8888@gmail.com",true);
+                //FlickrEntity entity = new GetUser(null,"Chris(C) & Sue (S) M-T",false);
+                FlickrEntity entity = new GetUser(null,"email@gmail.com",true);
                 ((GetUser) entity).setPath(ROOT_PATH);
                 try {
                     //User user = ((GetUser) entity).fromName();

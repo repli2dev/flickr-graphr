@@ -3,6 +3,7 @@ package cz.muni.fi.pb138.flickrgraphr.flickr.api;
 import cz.muni.fi.pb138.flickrgraphr.backend.downloader.Downloader;
 import cz.muni.fi.pb138.flickrgraphr.backend.downloader.DownloaderException;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import javax.servlet.ServletContext;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -10,6 +11,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.*;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
+import java.net.URLEncoder;
 
 /**
  * Represents one processing of Flickr API - getting 'user-id' from either email or displayName
@@ -60,11 +62,11 @@ public class GetUser extends AbstractFlickrEntity {
             getData(true);
             try {
                 validateXML(data,"/xml/scheme/flickr_api_usernameIdResult.xsd",
-                            "flickr.findByEmail");
+                            "flickr.findByEmail",false);
             } catch (FlickrEntityException ex) {
                 try {
                     validateXML(data, "/xml/scheme/flickr_api_userNotFound.xsd",
-                            "flickr.userNotFound");
+                            "flickr.userNotFound",true);
                 } catch (FlickrEntityException subEx) {
                     throw ex;
                 }
@@ -85,11 +87,11 @@ public class GetUser extends AbstractFlickrEntity {
             getData(false);
             try {
                 validateXML(data,"/xml/scheme/flickr_api_usernameIdResult.xsd",
-                            "flickr.findByUsername");
+                            "flickr.findByUsername",false);
             } catch (FlickrEntityException ex) {
                 try {
                     validateXML(data, "/xml/scheme/flickr_api_userNotFound.xsd",
-                            "flickr.userNotFound");
+                            "flickr.userNotFound",true);
                 } catch (FlickrEntityException subEx) {
                     throw ex;
                 }
@@ -150,10 +152,15 @@ public class GetUser extends AbstractFlickrEntity {
                 }
                 try {
                     finalURL = finalURL.replaceAll("<!--API_KEY-->", Downloader.API_KEY);
-                    finalURL = finalURL.replaceAll("<!--NAME-->", displayName);
-                    finalURL = finalURL.replaceAll("<!--EMAIL-->", email);
+                    if (isEmail) {
+                        finalURL = finalURL.replaceAll("<!--EMAIL-->", URLEncoder.encode(email,"UTF-8"));
+                    } else {
+                        finalURL = finalURL.replaceAll("<!--NAME-->", URLEncoder.encode(displayName,"UTF-8"));
+                    }
                 } catch (NullPointerException ex) {
                     throw new FlickrEntityException("Wrong method called or paramaters not set.", ex);
+                } catch (UnsupportedEncodingException ex) {
+                    throw new FlickrEntityException("Could not encode name/email to URL safe format (wrong encoding).", ex);
                 }
 		return finalURL;
 	}

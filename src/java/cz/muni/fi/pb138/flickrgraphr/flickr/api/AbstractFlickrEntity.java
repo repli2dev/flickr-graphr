@@ -121,9 +121,11 @@ public abstract class AbstractFlickrEntity implements FlickrEntity {
          * @param xml
          * @param xmlSchema     string path to local resource (e.g. "/xml/...")
          * @param description   for xml identification when exception is thrown
+         * @param saveIfError   determines if the data should be saved to disk, if error occurs
          * @throws FlickrEntityException 
          */
-        protected void validateXML(String xml, String xmlSchema, String description) throws FlickrEntityException {
+        protected void validateXML(String xml, String xmlSchema, String description, boolean saveIfError)
+                                    throws FlickrEntityException {
 		SchemaFactory sFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 		//File test = new File(context.getResource("/").getPath());
 		try {
@@ -133,6 +135,7 @@ public abstract class AbstractFlickrEntity implements FlickrEntity {
 			Validator validator = schema.newValidator();
 			validator.validate(source);
 		} catch (Exception ex) { //IOEXception, SAXException, MalformedURLException
+                    if (saveIfError) {    
                         try {			
 			    URL url = null;
 			    if(context != null) {
@@ -147,6 +150,9 @@ public abstract class AbstractFlickrEntity implements FlickrEntity {
                             throw new FlickrEntityException("Validation of "+description+" failed. (file not saved)", ex);
                         }
                         throw new FlickrEntityException("Validation of "+description+" failed. (file saved to xml/error)", ex);
+                    } else {
+                        throw new FlickrEntityException("Validation of "+description+" failed.", ex);
+                    }
 		}
 	}
         
