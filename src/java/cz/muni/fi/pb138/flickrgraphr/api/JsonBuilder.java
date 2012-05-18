@@ -23,4 +23,49 @@ public class JsonBuilder {
 
         return sb.toString();
     }
+
+    public static enum errorType {
+
+        DataNotExist,
+        UserNotExist,
+        IncorrectParameters
+    }
+
+    public static int getCodeForError(errorType type) {
+        switch (type) {
+            case DataNotExist:
+                return 1;
+            case UserNotExist:
+                return 2;
+            case IncorrectParameters:
+                return 3;
+            default:
+                return 0;
+        }
+    }
+    
+    public static String getMessageForError(errorType type){
+        switch (type) {
+            case DataNotExist:
+                return "Data not existing";
+            case UserNotExist:
+                return "User not existing";
+            case IncorrectParameters:
+                return "Incorrect parameters.";
+            default:
+                return "Undefined error";
+        }
+    }
+    
+    public static String getErrorJsonForError(errorType type){
+        String result = String.format(
+                "{\"stat\" : \"fail\","
+                + "\"error\" : {"
+                + "\"code\" : %d,"
+                + "\"message\" : \"%s\""
+                + "}",
+                getCodeForError(type),
+                getMessageForError(type));
+        return result;
+    }
 }
