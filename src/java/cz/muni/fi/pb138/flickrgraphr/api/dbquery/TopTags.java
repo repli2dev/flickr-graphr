@@ -14,7 +14,7 @@ import org.basex.server.ClientSession;
 /**
  * //TODO documentation
  *
- * @author martin
+ * @author Jan Drabek
  */
 public class TopTags extends AbstractDatabaseQuery {
 
@@ -52,7 +52,7 @@ public class TopTags extends AbstractDatabaseQuery {
 		} else if (name.equals("method")) {
 			method = value;
 		} else {
-			throw new DatabaseQueryException();
+			throw new DatabaseQueryException("Parameter " + name + "does not exist.");
 		}
 	}
 }

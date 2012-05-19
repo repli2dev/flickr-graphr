@@ -7,13 +7,11 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletContext;
 
 /**
  * Implements some general methods for DatabaseQuery
- * @author MArtin Ukrop
+ * @author Martin Ukrop, Jan Drabek
  */
 public abstract class AbstractDatabaseQuery implements DatabaseQuery {
     
@@ -30,13 +28,14 @@ public abstract class AbstractDatabaseQuery implements DatabaseQuery {
 		if(dbSession == null && context != null) {
 			dbSession = (BaseXSession) context.getAttribute(BaseXSession.BASE_X_SESSION);
 		}
-		return dbSession;
-	}
-        
+		return dbSession;        
 	/**
 	 * Inject connection to the database
 	 * @param database 
 	 */
+	}
+
+        @Override
 	public void setDatabaseSession(BaseXSession database) {
 		this.dbSession = database;
 	}
@@ -63,15 +62,15 @@ public abstract class AbstractDatabaseQuery implements DatabaseQuery {
 	protected String getQuery(String name) throws DatabaseQueryException {
 		URL pathToXQuery = null;
 		try {
-			pathToXQuery = getPath("/xml/xquery/api_top_tags.xq");
+			pathToXQuery = getPath(name);
 		} catch (MalformedURLException ex) {
-			throw new DatabaseQueryException();
+			throw new DatabaseQueryException("Cannot load XQuery (wrong URL).",ex);
 		}
 		try {
 			BufferedReader in = new BufferedReader(new InputStreamReader(pathToXQuery.openStream()));
 			return new Scanner(in).useDelimiter("\\A").next();
 		} catch (IOException ex) {
-			throw new DatabaseQueryException();
+			throw new DatabaseQueryException("Cannot load XQuery (IO problems).",ex);
 		}
 	}
 }

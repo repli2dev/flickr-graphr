@@ -23,7 +23,7 @@ public class QueryExample {
                 try {
                     query1.setParameter("beginDate", "2012-04-20");
                     query1.setParameter("endDate", "2012-04-30");
-                    query1.setParameter("userId", "38177739@N05");
+                    query1.setParameter("userId", "00000002@N00");
                     result = query1.execute();
                     System.out.println(result);
                 } catch (DatabaseQueryException ex) {
@@ -38,7 +38,7 @@ public class QueryExample {
                 ((AbstractDatabaseQuery) query2).setPath(ROOT_PATH);
                 try {
                     query2.setParameter("tag", "best-photo-tag");
-                    query2.setParameter("type", "score");
+                    query2.setParameter("method", "score");
                     result = query2.execute();
                     System.out.println(result);
                 } catch (DatabaseQueryException ex) {
@@ -46,14 +46,15 @@ public class QueryExample {
                     System.out.println(ex.getCause().getMessage());
                 }
                 
+                
                 // query to save new display name to database
                 DatabaseQuery query3 = new AddUser(null);
-                query1.setDatabaseSession(dbSession);
+                query3.setDatabaseSession(dbSession);
                 // temporary solution, to be removed
                 ((AbstractDatabaseQuery) query3).setPath(ROOT_PATH);
                 try {
-                    query3.setParameter("userID", "38177739@N05");
-                    query3.setParameter("displayName", "My Wonderful Name");
+                    query3.setParameter("userId", "00000002@N00");
+                    query3.setParameter("displayName", "My Name");
                     result = query3.execute();
                     System.out.println(result);
                 } catch (DatabaseQueryException ex) {
@@ -61,11 +62,12 @@ public class QueryExample {
                     System.out.println(ex.getCause().getMessage());
                 }
                 
+                
                 // query to get top ids for given day
                 DatabaseQuery query4 = new TopIdsForDay(null);
                 query4.setDatabaseSession(dbSession);
                 // temporary solution, to be removed
-                ((AbstractDatabaseQuery) query3).setPath(ROOT_PATH);
+                ((AbstractDatabaseQuery) query4).setPath(ROOT_PATH);
                 try {
                     query4.setParameter("date", "2012-04-30");
                     query4.setParameter("count", "10");
@@ -76,6 +78,7 @@ public class QueryExample {
                     System.out.println(ex.getCause().getMessage());
                 }
                 
+                /*
                 // query to retrieve user-id based on display-name
                 // zatial nemusis pouzivat, ale myslim si, ze bude strasne pomale pytat sa Flickru
                 DatabaseQuery query5 = new GetUserId(null);
@@ -90,5 +93,6 @@ public class QueryExample {
                     System.out.println("DatabaseQueryException: " + ex.getMessage());
                     System.out.println(ex.getCause().getMessage());
                 }
+                */
         }
 }
