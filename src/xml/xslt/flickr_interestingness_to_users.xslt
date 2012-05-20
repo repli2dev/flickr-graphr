@@ -1,7 +1,5 @@
 <?xml version="1.0"?>
 
-<!-- !!!!!!!!! key generation does not work !!!!!!!!!!!!!!! -->
-
 <!-- Graphr -->
 <!-- extracts uder information from today's top photos -->
 <!-- input format: flickr.interestingness.getList API result (flickr_interestingness.xsd) -->
@@ -28,8 +26,7 @@
             <xsl:attribute name="date">
                 <xsl:value-of select="$DATE"/>
             </xsl:attribute>
-            <xsl:apply-templates select="./photos/photo"/>
-            <!--xsl:apply-templates select="./photos/photo[generate-id(@owner)=generate-id(key('user-key',@owner)[1])]"/-->
+            <xsl:apply-templates select="./photos/photo[generate-id(@owner)=generate-id(key('user-key',@owner)[1])]"/>
         </users>
     </xsl:template>
     

@@ -1,7 +1,5 @@
 package cz.muni.fi.pb138.flickrgraphr.flickr.api;
 
-import cz.muni.fi.pb138.flickrgraphr.backend.storage.BaseXSession;
-
 /**
  *
  * @author Martin Ukrop

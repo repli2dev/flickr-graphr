@@ -11,7 +11,9 @@ import org.basex.server.ClientQuery;
 import org.basex.server.ClientSession;
 
 /**
- * //TODO documentation
+ * Represents one DB query needed to process request on Graphr API
+ * Adds userId/displayName pair to the database
+ * Default location is yesterday's data, if not existent, uses the most recent existing date
  * @author martin
  */
 public class AddUser extends AbstractDatabaseQuery {

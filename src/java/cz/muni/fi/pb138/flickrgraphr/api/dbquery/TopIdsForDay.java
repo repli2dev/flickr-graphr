@@ -6,7 +6,8 @@ import org.basex.server.ClientQuery;
 import org.basex.server.ClientSession;
 
 /**
- * //TODO documentation
+ * Represents one DB query needed to process request on Graphr API
+ * Gets the required amount of best user IDs for given day
  * @author martin
  */
 public class TopIdsForDay extends AbstractDatabaseQuery {

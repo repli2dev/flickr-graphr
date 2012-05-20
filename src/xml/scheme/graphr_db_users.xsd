@@ -3,8 +3,6 @@
 <!-- Graphr -->
 <!-- XMLSchema for Graphr DB users -->
 
-<!-- TODO uncomment uniqueness bound when xslt processor configured properly -->
-
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
     
     <xsd:element name="users">
@@ -21,12 +19,11 @@
         </xsd:complexType>
         
     <!-- user ID must be unique in document -->
-<!--
         <xsd:key name="key-user-id">
             <xsd:selector xpath="user"/>
             <xsd:field xpath="@user-id"/>
         </xsd:key>
--->
+        
     </xsd:element>
     
 </xsd:schema>

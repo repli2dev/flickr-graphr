@@ -6,6 +6,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+// TODO unify import classes for older data (now is mostly copy-paste)
+
 /**
  * Downloads user information from Flickr for a given date range and saves it to DB
  * @author Martin Ukrop
@@ -16,8 +18,8 @@ public class ImportUsers {
         private static final String END_DATE = "2012-05-18";
         
     	// FIXME setting for root path to project sources
-	private static final String ROOT_PATH = "file:///home/martin/Documents/flickr-graphr/src";	
-    
+	private static final String ROOT_PATH = "file:///home/martin/Documents/flickr-graphr/src";
+        
 	public static void main(String [] args) throws ParseException {
                 BaseXSession database = new BaseXSession("localhost", 1984, "admin", "admin");
                 

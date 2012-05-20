@@ -12,8 +12,8 @@ import org.basex.server.ClientQuery;
 import org.basex.server.ClientSession;
 
 /**
- * //TODO documentation
- *
+ * Represents one DB query needed to process request on Graphr API
+ * Gets the scores for given tag, score method determined by parameter
  * @author Jan Drabek
  */
 public class TopTags extends AbstractDatabaseQuery {

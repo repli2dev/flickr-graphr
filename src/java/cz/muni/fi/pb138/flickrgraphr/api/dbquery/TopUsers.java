@@ -6,8 +6,8 @@ import org.basex.server.ClientQuery;
 import org.basex.server.ClientSession;
 
 /**
- * //TODO documentation
- *
+ * Represents one DB query needed to process request on Graphr API
+ * Gets scores for given user in given date range
  * @author Martin Ukrop
  */
 public class TopUsers extends AbstractDatabaseQuery {
