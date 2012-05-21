@@ -1,8 +1,15 @@
 package cz.muni.fi.pb138.flickrgraphr.api;
 
 import cz.muni.fi.pb138.flickrgraphr.api.dbquery.DatabaseQuery;
+import cz.muni.fi.pb138.flickrgraphr.api.dbquery.DatabaseQueryException;
+import cz.muni.fi.pb138.flickrgraphr.flickr.api.FlickrEntity;
+import cz.muni.fi.pb138.flickrgraphr.flickr.api.FlickrEntityException;
+import cz.muni.fi.pb138.flickrgraphr.flickr.api.GetUser;
+import cz.muni.fi.pb138.flickrgraphr.flickr.api.User;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -25,22 +32,13 @@ public class TopUsers extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
         try {
-            /*
-             * TODO output your page here. You may use following sample code.
-             */
-//            out.println("<html>");
-//            out.println("<head>");
-//            out.println("<title>Servlet BestPeople</title>");
-//            out.println("</head>");
-//            out.println("<body>");
-//            out.println("<h1>Servlet BestPeople at " + request.getContextPath() + "</h1>");
-//            out.println("hooray");
 
-            String user = request.getParameter("name");
+
+            String userIdentification = request.getParameter("name");
             String startDate = request.getParameter("start-date");
             String endDate = request.getParameter("end-date");
 
-            if (user == null
+            if (userIdentification == null
                     || startDate == null
                     || endDate == null) {
                 out.println(
@@ -56,38 +54,56 @@ public class TopUsers extends HttpServlet {
                 return;
             }
 
-            IdType authType = Validator.getIdType(user);
+            IdType authType = Validator.getIdType(userIdentification);
 
-            String userId = null;
+            User user = null;
+            FlickrEntity entity = null;
 
-            switch (authType) {
-                case email:
-                    userId = FlickAPI.getIdFromEmail(user);
-                    break;
-                case name:
-                    userId = FlickAPI.getIdFromName(user);
-                    break;
-                case flickrId:
-                    userId = user;
-                    break;
+            try {
+                switch (authType) {
+                    case email:
+                        //userId = FlickAPI.getIdFromEmail(user);
+                        entity = new GetUser(getServletContext(), userIdentification, true);
+                        user = ((GetUser) entity).fromEmail();
+                        break;
+                    case name:
+                        entity = new GetUser(getServletContext(), userIdentification, false);
+                        user = ((GetUser) entity).fromName();
+                        break;
+                    case flickrId:
+                        user = new User(userIdentification, null);
+                        break;
+                }
+            } catch (FlickrEntityException ex) {
+                Logger.getLogger(TopUsers.class.getName()).log(Level.SEVERE, null, ex);
+                out.println(ex.toString());
+                return;
             }
 
-            out.println("user id is: " + userId);
+            //out.println will be commented
+            //out.println(user.getId() + ", " + user.getDisplayName());
 
-            out.println();
+            //user not found
+            //TODO??
+            if (user.getId() == null) {
+                out.println(JsonBuilder.getErrorJsonForError(JsonBuilder.errorType.UserNotExist));
+                return;
+            }
 
-
-
-
-            DatabaseQuery query =
+            DatabaseQuery topUsersQuery =
                     new cz.muni.fi.pb138.flickrgraphr.api.dbquery.TopUsers(getServletContext());
 
 
+            topUsersQuery.setParameter("beginDate", startDate);
+            topUsersQuery.setParameter("endDate", endDate);
+            topUsersQuery.setParameter("userId", user.getId());
+
+            out.println(topUsersQuery.execute());
 
 
-//            out.println("</body>");
-//            out.println("</html>");
-
+        } catch (DatabaseQueryException ex) {
+            Logger.getLogger(TopUsers.class.getName()).log(Level.SEVERE, null, ex);
+            response.setStatus(500);
         } finally {
 
             out.close();
