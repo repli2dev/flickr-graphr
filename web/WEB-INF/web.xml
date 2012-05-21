@@ -4,10 +4,6 @@
         <servlet-name>TopTags</servlet-name>
         <servlet-class>cz.muni.fi.pb138.flickrgraphr.api.TopTags</servlet-class>
     </servlet>
-    <servlet>
-        <servlet-name>BestPeople</servlet-name>
-        <servlet-class>cz.muni.fi.pb138.flickrgraphr.api.BestPeople</servlet-class>
-    </servlet>
     <listener>
         <display-name>Task scheduler (via cron4j)</display-name>
         <listener-class>cz.muni.fi.pb138.flickrgraphr.backend.cron.TaskSchedulerServletContextListener</listener-class>
@@ -16,12 +12,24 @@
         <display-name>Database session init</display-name>
         <listener-class>cz.muni.fi.pb138.flickrgraphr.backend.storage.DatabaseServletContextListener</listener-class>
     </listener>
-    <servlet-mapping>
-        <servlet-name>BestPeople</servlet-name>
-        <url-pattern>/api/best-people/</url-pattern>
-    </servlet-mapping>
+    <servlet>
+        <servlet-name>TopUsers</servlet-name>
+        <servlet-class>cz.muni.fi.pb138.flickrgraphr.api.TopUsers</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>TopDayIDs</servlet-name>
+        <servlet-class>cz.muni.fi.pb138.flickrgraphr.api.TopDayIDs</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>TopTags</servlet-name>
-        <url-pattern>/api/top-tags/</url-pattern>
+        <url-pattern>/api/top-tags</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>TopUsers</servlet-name>
+        <url-pattern>/api/top-users</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>TopDayIDs</servlet-name>
+        <url-pattern>/api/top-day-ids</url-pattern>
     </servlet-mapping>
 </web-app>
