@@ -62,7 +62,7 @@ public class JsonBuilder {
                 "{\"stat\" : \"fail\","
                 + "\"error\" : {"
                 + "\"code\" : %d,"
-                + "\"message\" : \"%s\""
+                + "\"message\" : \"%s\"}"
                 + "}",
                 getCodeForError(type),
                 getMessageForError(type));
