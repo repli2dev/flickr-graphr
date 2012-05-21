@@ -1,14 +1,25 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package cz.muni.fi.pb138.flickrgraphr.api;
 
 import cz.muni.fi.pb138.flickrgraphr.api.dbquery.DatabaseQuery;
+import cz.muni.fi.pb138.flickrgraphr.api.dbquery.DatabaseQueryException;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class TopUsers extends HttpServlet {
+/**
+ *
+ * @author mantaexx
+ */
+public class TopDayIDs extends HttpServlet {
 
     /**
      * Processes requests for both HTTP
@@ -25,74 +36,44 @@ public class TopUsers extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
         try {
-            /*
-             * TODO output your page here. You may use following sample code.
-             */
-//            out.println("<html>");
-//            out.println("<head>");
-//            out.println("<title>Servlet BestPeople</title>");
-//            out.println("</head>");
-//            out.println("<body>");
-//            out.println("<h1>Servlet BestPeople at " + request.getContextPath() + "</h1>");
-//            out.println("hooray");
+            
+            String countString = request.getParameter("count");
+            String date = request.getParameter("date");
 
-            String user = request.getParameter("name");
-            String startDate = request.getParameter("start-date");
-            String endDate = request.getParameter("end-date");
-
-            if (user == null
-                    || startDate == null
-                    || endDate == null) {
-                out.println(
-                        JsonBuilder.getErrorJsonForError(
-                        JsonBuilder.errorType.IncorrectParameters));
+            if (countString == null || date == null) {
+                out.println(JsonBuilder.getErrorJsonForError(JsonBuilder.errorType.IncorrectParameters));
                 return;
             }
 
-            if (!Validator.isDate(startDate) || !Validator.isDate(endDate)) {
-                out.println(
-                        JsonBuilder.getErrorJsonForError(
-                        JsonBuilder.errorType.IncorrectParameters));
+
+            try { //just to check if it really is integer
+                Integer.parseInt(countString);
+            } catch (NumberFormatException ex) {
+                out.println(JsonBuilder.getErrorJsonForError(JsonBuilder.errorType.IncorrectParameters));
+                Logger.getLogger(TopDayIDs.class.getName()).log(Level.SEVERE, null, ex);
                 return;
             }
 
-            IdType authType = Validator.getIdType(user);
+            DatabaseQuery query = new cz.muni.fi.pb138.flickrgraphr.api.dbquery.TopIdsForDay(getServletContext());
+            try {
+                query.setParameter("count", countString);
+                query.setParameter("date", date);
 
-            String userId = null;
-
-            switch (authType) {
-                case email:
-                    userId = FlickAPI.getIdFromEmail(user);
-                    break;
-                case name:
-                    userId = FlickAPI.getIdFromName(user);
-                    break;
-                case flickrId:
-                    userId = user;
-                    break;
+            } catch (DatabaseQueryException ex) {
+                Logger.getLogger(TopDayIDs.class.getName()).log(Level.SEVERE, null, ex);
+                response.setStatus(500);
+                return;
             }
-
-            out.println("user id is: " + userId);
-
-            out.println();
-
-
-
-
-            DatabaseQuery query =
-                    new cz.muni.fi.pb138.flickrgraphr.api.dbquery.TopUsers(getServletContext());
-
-
-
-
-//            out.println("</body>");
-//            out.println("</html>");
+            try {
+                out.println(query.execute());
+            } catch (DatabaseQueryException ex) {
+                Logger.getLogger(TopDayIDs.class.getName()).log(Level.SEVERE, null, ex);
+                response.setStatus(500);
+                return;
+            }
 
         } finally {
-
             out.close();
-
-
         }
     }
 
