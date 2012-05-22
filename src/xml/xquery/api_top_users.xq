@@ -14,7 +14,7 @@ let $single_result :=
 	return concat("
     {
       ""userId:"": """,$userid,""",
-      ""date"": """,$date,""",
+      ""date"": """,$date,"""
     }")
 
 return
