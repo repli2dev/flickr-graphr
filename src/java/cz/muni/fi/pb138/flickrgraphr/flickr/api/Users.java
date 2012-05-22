@@ -120,7 +120,7 @@ public class Users extends AbstractFlickrEntity {
 			transformer.setParameter("DATE", date);
 			transformer.transform(source, result);
 		} catch (TransformerException ex) {
-			throw new FlickrEntityException("XSLT transformation of downloaded 'hot list' failed (check the input).",ex);
+			throw new FlickrEntityException("XSLT transformation of downloaded 'interestingness' failed (check the input).",ex);
 		}
 		this.outputData = outputData.toString();
 	}

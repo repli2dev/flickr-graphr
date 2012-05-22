@@ -24,10 +24,13 @@ public abstract class AbstractDatabaseQuery implements DatabaseQuery {
 	 * (Database Session can be injected independently)
 	 * @return 
 	 */
-	protected BaseXSession getDatabaseSession() {
+	protected BaseXSession getDatabaseSession() throws DatabaseQueryException {
 		if(dbSession == null && context != null) {
 			dbSession = (BaseXSession) context.getAttribute(BaseXSession.BASE_X_SESSION);
 		}
+                if (dbSession == null && context == null) {
+                    throw new DatabaseQueryException("Cannot get database - neither DB nor context is set.");
+                }
 		return dbSession;        
 	/**
 	 * Inject connection to the database

@@ -1,13 +1,13 @@
 package cz.muni.fi.pb138.flickrgraphr.flickr.api;
 
 /**
- *
- * @author martin
+ * // TODO documentation
+ * @author Martin Ukrop
  */
 public class User {
     
-    private String id;
-    private String displayName;
+        private String id;
+        private String displayName;
     
         public User(String id, String displayName) {
             this.id = id;
