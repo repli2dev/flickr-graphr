@@ -35,8 +35,8 @@ let $single_result :=
 	let $display_name := if (empty($display_name_db)) then $requested_userid else $display_name_db
 	return concat("
     {
-      ""userId:"": """,$requested_userid,""",
-      ""displayName:"": """,$display_name,""",
+      ""userId"": """,$requested_userid,""",
+      ""displayName"": """,$display_name,""",
       ""date"": """,$date,""",
       ""score"": ",$score,"
     }")
