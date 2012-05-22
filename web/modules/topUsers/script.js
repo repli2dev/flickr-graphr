@@ -2,17 +2,143 @@
  * Chart with top users
  * Must be defined here because of the onmouseover calls.
  */
-var topUsersChart;
+var usersChart;
 
 
 /**
  * Module with topUsers
  */
-FlickrGraphr.modules["topUsers"] = {
+FlickrGraphr.modules["users"] = {
 
-    title : "Top users",
+    title : "Users",
     
-    apiUrl : "topUsers",
+    scores : new Array(), // key: userId => Array(score1, score2)...;
+
+    usersToDisplay : new Array(),
+    
+    
+    userInfo : new Array(),
+    
+    dates : new Array(),
+    
+    dataTable : false,
+
+    loadScore : function(userId)
+    {
+        var module = this;
+        
+        var startDate =  $('#topUsersDateFrom').val();
+        var endDate =  $('#topUsersDateTo').val();
+
+    
+        // if not, fetch it
+        $.ajax({
+			url: FlickrGraphr.API_URL + FlickrGraphr.API_USER_SCORE,
+			data : {
+                name: userId,
+				"start-date": startDate,
+				"end-date": endDate
+			},
+            type : "get",
+			success: function(result){
+                
+                if(result.stat == FlickrGraphr.stat.OK){
+                
+                    var data = result.data;
+                    
+                    // if length = 0, generate zeros
+                    if(data.length == 0){
+                        data = module.generateZeroScores(userId);
+                    }
+                    
+                      
+                
+                    module.addScoresToGraph(result.data);
+                }
+				
+			},
+            error: function(jqXHR, textStatus, errorThrown){
+                FlickrGraphr.messageBox("Response fail", "Error while loading data from API (ID: " + userId + "): " + errorThrown);
+            },
+			dataType: "json"
+		});
+    },
+    
+    checkWhetherUserAlreadyLoaded : function(userId)
+    {
+        for(var i in this.usersToDisplay)
+        {
+            var userObject = this.usersToDisplay[i];
+            if(userObject.userId == userId){
+                return true;
+            }
+        }
+
+        return false;
+    },
+    
+    
+    searchScore : function(searchString)
+    {
+        if(searchString == ""){
+            FlickrGraphr.messageBox("Searching canceled", "String to search cannot be empty.");
+            return;
+        }
+    
+        var module = this;
+        
+        var startDate =  $('#topUsersDateFrom').val();
+        var endDate =  $('#topUsersDateTo').val();
+
+    
+        // if not, fetch it
+        $.ajax({
+			url: FlickrGraphr.API_URL + FlickrGraphr.API_USER_SCORE,
+			data : {
+                name: searchString,
+				"start-date": startDate,
+				"end-date": endDate
+			},
+            type : "get",
+			success: function(result){
+                
+                if(result.stat == FlickrGraphr.stat.OK){
+                
+                    var data = result.data;
+                    
+                    // if length = 0, generate zeros
+                    if(data.length == 0){
+                        FlickrGraphr.messageBox("No score found", "User has no score yet.");
+                        return;
+                    }
+                    
+                    $("#userSearchInput").val("");
+                      
+                    // user already loaded?
+                    if(module.checkWhetherUserAlreadyLoaded(data[0].userId)){
+                        FlickrGraphr.messageBox("User already in graph", data[0].displayName + " is already in the graph.");
+                        return;
+                    }               
+                    
+                    
+                    
+                    FlickrGraphr.messageBox("User loaded", data[0].displayName + "'s score added to the graph.");
+                    module.usersToDisplay.push(data[0]);
+                    
+                
+                    module.addScoresToGraph(result.data);
+                }else if(result.error.code == FlickrGraphr.ERROR_USER_NOT_EXISTS){
+                    FlickrGraphr.messageBox("Response fail", "User not exists.");
+                }
+				
+			},
+            error: function(jqXHR, textStatus, errorThrown){
+                FlickrGraphr.messageBox("Response fail", "Error while loading data from API: " + errorThrown);
+            },
+			dataType: "json"
+		});
+    },
+    
     
     
     load : function(){
@@ -20,7 +146,7 @@ FlickrGraphr.modules["topUsers"] = {
         // TOP NAVIGATION
         var topnav = 'Choose range: <input type="text" name="dateFrom" id="topUsersDateFrom" value=""> - ';
         topnav += '<input type="text" name="dateFrom" id="topUsersDateTo" value=""> ';
-        topnav += '<button id="topUsersRefresh">Refresh</button>';
+        topnav += '<button id="topUsersRefreshButton">Set</button>';
         $("#topnav").html(topnav);
         
         // datepicking
@@ -37,144 +163,162 @@ FlickrGraphr.modules["topUsers"] = {
         
         var module = this;
     
-    
         // refresh
-        $("#topUsersRefresh").button();
-        $("#topUsersRefresh").click(function(){
+        $("#topUsersRefreshButton").button();
+        $("#topUsersRefreshButton").click(function(){
+        
+            module.prepareScoreGraph();
+        
+            for(var i in module.usersToDisplay)
+            {
+                var userObject = module.usersToDisplay[i];
+                module.loadScore(userObject.userId);
+            }
+
+        
+        });
+    
+        // top users
+        $("#loadTopUsersButton").button();
+        $("#loadTopUsersButton").click(function(){
+            // loads top users to the table
             
             
-            module.fetchTopScores($("#topUsersDateFrom").val(), $("#topUsersDateTo").val());            
+            // the date is the center of the two dates
+            var date1 = new Date($('#topUsersDateFrom').val());
+            var date2 = new Date($('#topUsersDateTo').val());
+            
+            var date = new Date((date2.getTime() - date1.getTime()) / 2 + date1.getTime());
+            
+            
+            module.loadTopUsers(date.format("yyyy-mm-dd"));            
             return false;
         });
         
-        // fetch the top score with the default values
-        module.fetchTopScores($("#topUsersDateFrom").val(), $("#topUsersDateTo").val());
+        // search
+        $("#userSearchButton").button();
+        $("#userSearchButton").click(function(){
+            // searches the user
+            module.searchScore($("#userSearchInput").val());   
+            
+            return false;
+        });
+        
+        // graph
+        this.prepareScoreGraph();
+        
     },
     
     
     template : "",
     
     
-    
-    /**
-     * Called when user chooses the date and clicks on button
-     * Also called when page starts with default values
-     */
-    fetchTopScores : function(startDate, endDate){
-		
+    loadTopUsers : function(date){
+        
         var module = this;
         
-
-		$.ajax({
-			url: FlickrGraphr.apiUrl + this.apiUrl,
+        
+         // if not, fetch it
+        $.ajax({
+			url: FlickrGraphr.API_URL + FlickrGraphr.API_TOP_USERS_BY_DATE,
 			data : {
-				startDate: startDate,
-				endDate: endDate
+				date: date,
+				count: 10
 			},
             type : "get",
 			success: function(result){
-				module.pasteDataToPage(result);
+                
+                if(result.stat == FlickrGraphr.stat.OK){
+                    for(var i in result.data){
+                    
+                        
+                        // user already loaded?
+                        if(module.checkWhetherUserAlreadyLoaded(result.data[i].userId)){
+                            var name = result.data[i].displayName;
+                            if(typeof name == 'undefined'){
+                                name = result.data[i].userId;
+                            }
+                            FlickrGraphr.messageBox("User already in graph", name + " is already in the graph.");
+                            continue;
+                        }                   
+                    
+                    
+                    
+                        module.addUserToDisplay(result.data[i]);
+                    }
+                    
+                }           
+				
 			},
             error: function(jqXHR, textStatus, errorThrown){
-                alert("Error while loading data from API: " + errorThrown);
+                FlickrGraphr.messageBox("Response fail", "Error while loading data from API: " + errorThrown);
             },
 			dataType: "json"
 		});
-	},
-	
-	/**
-     * Internal function, called when the ajax requests finishes
-     */
-	pasteDataToPage : function(entries){
     
-        // prepare values
-        var owners = new Array();
-        var dates = new Array();
-        var entriesByDates = new Array();
+    },
+    
+    
+    
+    
+    addUserToDisplay : function(userObject){
+        this.usersToDisplay.push(userObject);
+        this.loadScore(userObject.userId);
+    },
+    
+    
+    
+    
+    
+    generateZeroScores : function(userId){
+        return {
+            userId : userId,
+            displayName : userId,
+            score: 0
+        }    
+    },
+    
+    prepareScoreGraph : function(){
+          
+        this.dates = new Array();
+        this.userInfo = new Array();
+        var startDate = new Date($('#topUsersDateFrom').val());
+        var endDate = new Date($('#topUsersDateTo').val());
         
-        // parse owners and scores
-        for(var i in entries){
-            var entry = entries[i];
-            if((jQuery.inArray(entry.ownerid, owners)) == -1){
-                owners.push(entry.ownerid);
-            }
-            
-            var date = entry.date;
-            
-            // does the date exist in scores?
-            // if not, create a new array
-            if(!(date in entriesByDates)){
-                entriesByDates[date] = new Array();
-                dates.push(date);
-            }
-            
-            // score
-            entriesByDates[date].push(entry);
-            
+      
+        // counts the dates in the interval
+        for(var date = startDate; date <= endDate; date.setDate(date.getDate() + 1))
+        {
+            this.dates.push(new Date(date.getTime()));
         }
         
-        
         // data table
-        var data = new google.visualization.DataTable();
+        this.dataTable = new google.visualization.DataTable();
+
         // add first column, date
-        data.addColumn({
+        this.dataTable.addColumn({
             type : 'date',
             label : 'Date'
         });
         
-        // add owners and their tooltip
-        for(var i in owners){
-            var owner = owners[i];
-            
-            // owners
-            data.addColumn({
-                type : 'number',
-                label : owner
-            });
-            // tooltip - in fact, the next column - ignored when the graph is drawn
-            data.addColumn({
-                type : 'string',
-                role : 'tooltip',
-                label : owner + ' details'
-            });
-        }
-        // add entries (scores)
-        for(var date in entriesByDates){
-            var entriesInDay = entriesByDates[date];
+        // add dates
+        for(var i in this.dates){
+            var dat = this.dates[i];
             
             // empty row
             var row = new Array();
             
-            // splits YYYY-MM-DD, and makes the JS object from it
-            var parts = date.split("-");
-            var dateparsed = new Date(parts[0], parts[1], parts[2]);
-            
             // add date to row
-            row.push(dateparsed);
+            row.push(dat);
             
-            // for each entry, add value and tooltip with the photo
-            for(var i in entriesInDay){
-                var entry = entriesInDay[i];
-                
-                // score
-                row.push(entry.score);
-                
-                // tooltip - HTML not available, yet
-                var tooltip ="";
-                tooltip += 'User: ' + entry.ownerid + "\n";
-                tooltip += 'Score: ' + entry.score;
-                row.push(tooltip);
-            }
-            
-            // add the row to the table
-            data.addRow(row);
+            this.dataTable.addRow(row);
         }
         
       
         // Create and draw the visualization.
-        topUsersChart = new google.visualization.LineChart(document.getElementById('visualization'));
+        usersChart = new google.visualization.LineChart(document.getElementById('visualization'));
         
-        topUsersChart.draw(data, {
+        /*usersChart.draw(this.dataTable, {
             curveType: "none",
             width: 700,
             height: 350,
@@ -187,52 +331,134 @@ FlickrGraphr.modules["topUsers"] = {
             }
         });
         
+        */
+        var module = this;
         // when user moves a mouse on the point
         // e = {column: ***, row: ***}
-        function topUsersChartOverHandler(e) {
+        function usersChartOverHandler(e) {
         
-            if(!(e.row in dates)){
-                return;
-            }
-            
-            // divided by 2 because the "non-visible columns", the tooltip columns
-            // -1 because the first is the date
-            var entry = entriesByDates[dates[e.row]][(e.column - 1) / 2];
-            FlickrGraphr.modules["topUsers"].showTooltip(entry);
+            var user = module.userInfo[e.column - 1];
+            module.showTooltip(user);
         }
 
 
-        function topUsersChartOutHandler() {
-            FlickrGraphr.modules["topUsers"].hideTooltip();
+        function usersChartOutHandler() {
+            FlickrGraphr.modules["users"].hideTooltip();
         }
         
         // adding the handlers
-        google.visualization.events.addListener(topUsersChart, 'onmouseover', topUsersChartOverHandler);
-        google.visualization.events.addListener(topUsersChart, 'onmouseout', topUsersChartOutHandler);
+        google.visualization.events.addListener(usersChart, 'onmouseover', usersChartOverHandler);
+        google.visualization.events.addListener(usersChart, 'onmouseout', usersChartOutHandler);
+        
+        
+    
+    
+    },
+    
+	/**
+     * Internal function, called when the ajax requests finishes
+     */
+	addScoresToGraph : function(scores){
+    
+        
+        // add to global scores
+        this.scores[scores[0].userId] = scores;
+    
+        // fetch name form the first score
+        this.dataTable.addColumn('number', scores[0].displayName);
+        
+        // userinfo
+        this.userInfo.push({ userId : scores[0].userId, displayName : scores[0].displayName});
+        
+        var col = this.dataTable.getNumberOfColumns() - 1;
+        var rowsFound = new Array();
+        
+        
+        // for each score, add row
+        for(var i in scores)
+        {
+            score = scores[i];
+            
+            
+           // var oldDate = score.date;
+            
+            // parse date to JS date
+            var date = new Date(score.date);
+            
+            score.date = date;
+            
+            
+            
+            // match scores with dates in the table
+            for(var row = 0; row < this.dates.length; row++)
+            {
+                // already found row
+                if(jQuery.inArray(row, rowsFound) != -1) continue;
+            
+                // reset value
+                this.dataTable.setValue(row, col, 0);
+                var dateFromTable = this.dates[row].toString();
+                
+                // if found, set value, zero otherwise
+                if(score.date.toString() == dateFromTable){
+                    rowsFound.push(row);
+                    this.dataTable.setValue(row, col, score.score);
+                    break;
+                }
+            }            
+        }
+      
+        // redraw chart
+        usersChart.draw(this.dataTable, {
+            curveType: "none",
+            width: 700,
+            height: 350,
+            chartArea:{
+                width: '80%',
+                height: '80%',
+                left: '0'
+            },
+            legend:{
+                position:"right"
+            },
+            vAxis : {
+                textPosition : "none"
+            }
+        });
 	},
     
     /**
      * Shows the tooltip
      * The format is exactly the same as specified in the API
      */
-    showTooltip : function(entry){
+    showTooltip : function(user){
     
-        var link = FlickrGraphr.getPhotoUrl(entry.photoid, entry.ownerid);
-        var linkStream = FlickrGraphr.getPhotostreamUrl(entry.ownerid);
+        //var link = FlickrGraphr.getPhotoUrl(entry.photoId, entry.userId);
+        var linkStream = FlickrGraphr.getPhotostreamUrl(user.userId);
+        var riverStream = FlickrGraphr.getFlickRiverInterestingUrl(user.userId);
         
-        var tooltip = 'User: <strong>' + entry.ownerid + "</strong><br />\n";
-        tooltip += 'Score: <strong>' + entry.score + "</strong><br />\n";
-        tooltip += 'Photo ID: <strong><a href="' + link + '">' + entry.photoid + "</a></strong><br />\n";
-        tooltip += 'Photostream: <strong><a href="' + linkStream + '">' + linkStream + "</a></strong><br />\n";
         
-        $("#topUsersInfo").html(tooltip);
+        
+        
+        var tooltip = '<p><strong>User:</strong> ' + user.displayName + "</p>\n";
+        tooltip += '<p><strong>User ID:</strong> ' + user.userId + "</p>\n";
+        tooltip += '<p><strong>Photostream:</strong> <a href="' + linkStream + '">' + linkStream + "</a></p>\n";
+        tooltip += '<p><strong>Flickriver:</strong> <a href="' + riverStream + '">' + riverStream + "</a></p>\n";
+        
+        $("#userDetail").html(tooltip);
         
     
     },
     
     hideTooltip : function(){
-    }   
-
+    },
+    
+    getEmptyScore : function(userId, date){
+        return {
+            userId : userId,
+            date : date        
+        }    
+    }
 
 }
 

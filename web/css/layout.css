@@ -8,13 +8,13 @@ body{
 }
 
 h1{
-    color:#0073ea;
-    font-size:30pt;
+    color:#444;
+    font-size:27pt;
     margin:10px 0;
 }
 
 h1 .pink{
-    color:#ff0084;
+    color:#0073ea;
 }
 
 h2{
@@ -46,7 +46,7 @@ h2{
 #module-template{
     width:750px;
     float:left;
-
+    margin-top:10px;
 }
 
 #nav ul{
@@ -60,4 +60,14 @@ h2{
     padding:0px;
     margin:10px 0;
 
+}
+
+
+#userSearchInput{
+    width:250px;
+}
+
+#visualization{
+    min-height:350px;
+    margin-top:10px;
 }

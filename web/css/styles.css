@@ -6,3 +6,28 @@ input[type='text']{
     font-family:Verdana, sans-serif;
     color:#444;
 }
+
+button{
+    font-size:10pt !important;
+    font-weight:bold !important;
+}
+
+#module-template a, #module-template a:visited{
+    color:#0073ea;
+    text-decoration:none;
+}
+
+#module-template a:hover, #module-template a:active{
+
+    color:#fff;
+    text-decoration:none;
+    background-color:#0073ea;
+}
+
+.help{
+    text-align:center;
+    margin-top:40px;
+    font-size:15pt;
+    color:#666;
+
+}

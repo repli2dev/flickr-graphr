@@ -15,9 +15,9 @@ var FlickrGraphr = {
     
     // flickr-graphr API names
     
-    API_USER_SCORE : "top-users", // adds user to the graph
-    API_TOP_USERS_BY_DATE : "top-day-ids", // returns top IDs for the selected time
-    API_TAG_SCORE : "top-tags", // for current week
+    API_USER_SCORE : "top-users.php", // adds user to the graph
+    API_TOP_USERS_BY_DATE : "top-day-ids.php", // returns top IDs for the selected time
+    API_TAG_SCORE : "top-tags.php", // for current week
     
     stat : {
         OK : "ok",

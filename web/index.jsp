@@ -7,6 +7,8 @@
         <link type="text/css" href="css/flick/jquery-ui-1.8.20.custom.css" rel="stylesheet" />
         <link type="text/css" href="css/layout.css" rel="stylesheet" />
         <link type="text/css" href="css/styles.css" rel="stylesheet" />
+		<script src="js/date.format.js"></script>
+		<script src="js/utils.js"></script>
 		<script src="js/jquery-1.7.2.min.js"></script>
 		<script src="js/jquery-ui-1.8.20.custom.min.js"></script>
 		<script src="js/jquery.ba-hashchange.min.js"></script>
@@ -28,7 +30,7 @@
 		<div id="nav">
             <ul>
                 <li><a href="#">Home</a></li>
-                <li><a href="#topUsers">Top users</a></li>
+                <li><a href="#users">Users</a></li>
                 <li><a href="#topTags">Top tags</a></li>
             </ul>
        </div>
