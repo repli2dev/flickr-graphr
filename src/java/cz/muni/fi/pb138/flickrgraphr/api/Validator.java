@@ -65,7 +65,7 @@ public class Validator {
      * @return returns true if given string is sth. like 12345678@N12
      */
     public static boolean isUserId(String id) {
-        Pattern uIdPattern = Pattern.compile("\\d{8}[@][A-Z]\\d{2}");
+        Pattern uIdPattern = Pattern.compile("\\d{7,8}[@][A-Z]\\d{2}");
         Matcher matcher = uIdPattern.matcher(id);
 
         return matcher.matches();
