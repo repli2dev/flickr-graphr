@@ -13,7 +13,7 @@ let $single_result :=
   for $userid in $all_users/user[position() <= $count]/@user-id
 	return concat("
     {
-      ""userId:"": """,$userid,""",
+      ""userId"": """,$userid,""",
       ""date"": """,$date,"""
     }")
 
