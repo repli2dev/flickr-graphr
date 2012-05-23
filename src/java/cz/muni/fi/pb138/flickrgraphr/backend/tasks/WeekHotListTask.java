@@ -23,7 +23,7 @@ public class WeekHotListTask extends TaskInContext{
 		}
 		FlickrEntity entity = new TopTags(context, "week");
 		try {
-			//entity.unload();
+			entity.unload();
 			entity.load();
 		} catch (FlickrEntityException ex) {
 			logger.log(Level.SEVERE, "Downloading of 'week hot list' failed.", ex);

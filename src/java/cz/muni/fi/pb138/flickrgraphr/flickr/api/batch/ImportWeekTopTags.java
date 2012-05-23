@@ -1,6 +1,11 @@
-package cz.muni.fi.pb138.flickrgraphr.flickr.api;
+package cz.muni.fi.pb138.flickrgraphr.flickr.api.batch;
 
 import cz.muni.fi.pb138.flickrgraphr.backend.storage.BaseXSession;
+import cz.muni.fi.pb138.flickrgraphr.flickr.api.FlickrEntity;
+import cz.muni.fi.pb138.flickrgraphr.flickr.api.FlickrEntityException;
+import cz.muni.fi.pb138.flickrgraphr.flickr.api.TopTags;
+import cz.muni.fi.pb138.flickrgraphr.tools.DateTimeHelper;
+import cz.muni.fi.pb138.flickrgraphr.tools.IOHelper;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -36,7 +41,7 @@ public class ImportWeekTopTags {
 		int count = 0;
 		if(children != null) {
 			for(String name : children) {
-				content = new Scanner(new File(new URL(DOCUMENT_PATH + name).getPath())).useDelimiter("\\A").next();
+				content = IOHelper.fileToString(new File(new URL(DOCUMENT_PATH + name).getPath()));
 				FlickrEntity entity = new TopTags("week", content);
 				((TopTags) entity).setPath(ROOT_PATH);
 				((TopTags) entity).setDatabaseSession(database);
@@ -63,8 +68,7 @@ public class ImportWeekTopTags {
 		String temp = name;
 		temp = temp.replace("hotlist-", "");
 		temp = temp.replace(".xml", "");
-		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-		return format.parse(temp);
+		return DateTimeHelper.parseDate(temp);
 	}
 }
 class XMLFilter implements FilenameFilter {

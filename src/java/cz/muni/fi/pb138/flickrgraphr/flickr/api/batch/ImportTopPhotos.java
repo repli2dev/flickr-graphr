@@ -1,6 +1,11 @@
-package cz.muni.fi.pb138.flickrgraphr.flickr.api;
+package cz.muni.fi.pb138.flickrgraphr.flickr.api.batch;
 
 import cz.muni.fi.pb138.flickrgraphr.backend.storage.BaseXSession;
+import cz.muni.fi.pb138.flickrgraphr.flickr.api.AbstractFlickrEntity;
+import cz.muni.fi.pb138.flickrgraphr.flickr.api.FlickrEntity;
+import cz.muni.fi.pb138.flickrgraphr.flickr.api.FlickrEntityException;
+import cz.muni.fi.pb138.flickrgraphr.flickr.api.TopPhotos;
+import cz.muni.fi.pb138.flickrgraphr.tools.DateTimeHelper;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -21,12 +26,11 @@ public class ImportTopPhotos {
 	public static void main(String [] args) throws ParseException {
                 BaseXSession database = new BaseXSession("localhost", 1984, "admin", "admin");
                 
-                DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                Date date = dateFormat.parse(BEGIN_DATE);
-                Date endDate = dateFormat.parse(END_DATE);
+                Date date = DateTimeHelper.parseDate(BEGIN_DATE);
+                Date endDate = DateTimeHelper.parseDate(END_DATE);
 		
                 while (!date.after(endDate)) {
-                    String stringDate = dateFormat.format(date);
+                    String stringDate = DateTimeHelper.formatDate(date);
                     FlickrEntity entity = new TopPhotos(null,stringDate);
                     ((AbstractFlickrEntity) entity).setPath(ROOT_PATH);
                     ((AbstractFlickrEntity) entity).setDatabaseSession(database);

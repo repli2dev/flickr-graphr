@@ -2,11 +2,13 @@ package cz.muni.fi.pb138.flickrgraphr.flickr.api;
 
 import cz.muni.fi.pb138.flickrgraphr.backend.downloader.Downloader;
 import cz.muni.fi.pb138.flickrgraphr.backend.downloader.DownloaderException;
+import cz.muni.fi.pb138.flickrgraphr.tools.DateTimeHelper;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.util.Date;
+import javax.print.attribute.standard.DateTimeAtCompleted;
 import javax.servlet.ServletContext;
 import javax.xml.transform.*;
 import javax.xml.transform.stream.StreamResult;
@@ -61,13 +63,13 @@ public class TopTags extends AbstractFlickrEntity {
                 transform();
                 //just double-checking, to preserve db consistency
                 validateXML(outputData,"/xml/scheme/graphr_db_tags.xsd","graphr.hot-list",true);
-                saveToDababase(DATABASE+ "-" + type, getFormattedDate(), getAsInputStream(outputData));
+                saveToDababase(DATABASE+ "-" + type, DateTimeHelper.formatDate(date), getAsInputStream(outputData));
 	}
 
 	@Override
 	public void unload() throws FlickrEntityException {
 		// Remove data older than 14 days
-                deleteFromDatabase(DATABASE+ "-" + type, getOldDate());
+                deleteFromDatabase(DATABASE+ "-" + type, DateTimeHelper.formatDate(DateTimeHelper.shiftDate(14*24*3600*1000)));
 	}
 	
         /**
@@ -117,7 +119,7 @@ public class TopTags extends AbstractFlickrEntity {
 		Transformer transformer;
 		try {
 			transformer = tfactory.newTransformer(xslt);
-			transformer.setParameter("DATE", getFormattedDate());
+			transformer.setParameter("DATE", DateTimeHelper.formatDate(date));
 			transformer.transform(source, result);
 		} catch (TransformerException ex) {
 			throw new FlickrEntityException("XSLT transformation of downloaded 'hot list' failed (check the input).",ex);
@@ -125,24 +127,9 @@ public class TopTags extends AbstractFlickrEntity {
 		this.outputData = outputData.toString();
 	}
 	
-	private String getFormattedDate() {
-		return formatDate(getDate());
-	}
-	
-        /**
-         * returns the latest "old" date for TopPhotos
-         * TopPhotos data before this date (inclusive) are no longer needed
-         * @return 
-         */
-	private String getOldDate() {
-		Date date = now();
-		date.setTime(date.getTime()-14*24*3600*1000);
-		return formatDate(date);
-	}
-	
 	public Date getDate() {
 		if(date == null) {
-			date = now();
+			date = DateTimeHelper.now();
 		}
 		return date;
 	}

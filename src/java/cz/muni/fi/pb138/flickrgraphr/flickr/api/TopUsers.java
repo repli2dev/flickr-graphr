@@ -1,6 +1,7 @@
 package cz.muni.fi.pb138.flickrgraphr.flickr.api;
 
 import cz.muni.fi.pb138.flickrgraphr.backend.storage.BaseXSession;
+import cz.muni.fi.pb138.flickrgraphr.tools.DateTimeHelper;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -44,7 +45,7 @@ public class TopUsers extends AbstractFlickrEntity {
 	 */
 	public TopUsers(ServletContext context) {
 		this.context = context;
-		this.date = getYesterdayDate();
+		this.date = DateTimeHelper.formatDate(DateTimeHelper.yesterday());
 	}
 
 	@Override
@@ -59,7 +60,7 @@ public class TopUsers extends AbstractFlickrEntity {
 	@Override
 	public void unload() throws FlickrEntityException {
 		// Remove data older than 14 days
-                deleteFromDatabase(DATABASE, getOldDate());
+                deleteFromDatabase(DATABASE, DateTimeHelper.formatDate(DateTimeHelper.shiftDate(14*24*3600*1000)));
 	}
 	
         /**
@@ -100,28 +101,6 @@ public class TopUsers extends AbstractFlickrEntity {
                 reader.close();
                 return results;
         }
-        
-        /**
-         * returns yesterday date in format YYYY-MM-DD
-         * @return 
-         */
-	private String getYesterdayDate() {
-                Date date = now();
-                date.setTime(date.getTime()-24*3600*1000);
-		return formatDate(date);
-	}
-	
-        /**
-         * returns the latest "old" date for TopPhotos
-         * TopPhotos data before this date (inclusive) are no longer needed
-         * @return 
-         */
-	private String getOldDate() {
-		Date date = now();
-		date.setTime(date.getTime()-14*24*3600*1000);
-		return formatDate(date);
-	}
-	
         
 	private ClientSession getDatabase() {
 		BaseXSession bxs = getDatabaseSession();

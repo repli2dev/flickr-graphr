@@ -1,6 +1,7 @@
 package cz.muni.fi.pb138.flickrgraphr.api.dbquery;
 
 import cz.muni.fi.pb138.flickrgraphr.backend.storage.BaseXSession;
+import cz.muni.fi.pb138.flickrgraphr.tools.IOHelper;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -70,8 +71,7 @@ public abstract class AbstractDatabaseQuery implements DatabaseQuery {
 			throw new DatabaseQueryException("Cannot load XQuery (wrong URL).",ex);
 		}
 		try {
-			BufferedReader in = new BufferedReader(new InputStreamReader(pathToXQuery.openStream()));
-			return new Scanner(in).useDelimiter("\\A").next();
+			return IOHelper.fileToString(pathToXQuery.openStream());
 		} catch (IOException ex) {
 			throw new DatabaseQueryException("Cannot load XQuery (IO problems).",ex);
 		}

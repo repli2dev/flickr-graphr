@@ -1,6 +1,7 @@
 package cz.muni.fi.pb138.flickrgraphr.flickr.api;
 
 import cz.muni.fi.pb138.flickrgraphr.backend.storage.BaseXSession;
+import cz.muni.fi.pb138.flickrgraphr.tools.DateTimeHelper;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -43,7 +44,7 @@ public abstract class AbstractFlickrEntity implements FlickrEntity {
 	 * Inject connection to the database
 	 * @param database 
 	 */
-	protected void setDatabaseSession(BaseXSession database) {
+	public void setDatabaseSession(BaseXSession database) {
 		this.database = database;
 	}
 	
@@ -51,7 +52,7 @@ public abstract class AbstractFlickrEntity implements FlickrEntity {
 	 * Set path used for searching xsd, xq, etc.
 	 * @param path
 	 */
-	protected void setPath(String path) {
+	public void setPath(String path) {
 		this.path = path;
 	}
 	
@@ -139,9 +140,9 @@ public abstract class AbstractFlickrEntity implements FlickrEntity {
                         try {			
 			    URL url = null;
 			    if(context != null) {
-				    url = new URL("file://" + context.getRealPath("/xml/error") + "/" + formatDateTime(now()) +"_"+description+".xml");
+				    url = new URL("file://" + context.getRealPath("/xml/error") + "/" + DateTimeHelper.formatDateTime(DateTimeHelper.now()) +"_"+description+".xml");
 			    } else {
-				    url = getPath("/xml/error/" + formatDateTime(now()) +"_"+description+".xml");
+				    url = getPath("/xml/error/" + DateTimeHelper.formatDateTime(DateTimeHelper.now()) +"_"+description+".xml");
 			    }
                             PrintWriter errorOut = new PrintWriter(url.getPath());
                             errorOut.println(xml);
@@ -165,27 +166,4 @@ public abstract class AbstractFlickrEntity implements FlickrEntity {
 		byte[] barray = input.getBytes();
 		return new ByteArrayInputStream(barray); 
 	}
-        
-	/**
-	 * Return current date
-	 * @return Current date
-	 */
-	protected Date now() {
-		return Calendar.getInstance().getTime();
-	}
-	
-	/**
-	 * Return date in YYYY-MM-DD format
-	 * @param date
-	 * @return  Date formatted as string
-	 */
-	protected String formatDate(Date date){
-		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		return dateFormat.format(date);
-	}
-        
-        protected String formatDateTime(Date date) {
-                DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
-                return dateFormat.format(date);
-        }
 }

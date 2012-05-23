@@ -4,6 +4,7 @@
  */
 package cz.muni.fi.pb138.flickrgraphr.backend.downloader;
 
+import cz.muni.fi.pb138.flickrgraphr.tools.IOHelper;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -45,17 +46,7 @@ public class Downloader {
 			url = new URL(requestedUrl);
 			conn = url.openConnection();
 
-			isr = new InputStreamReader(conn.getInputStream());
-			bfr = new BufferedReader(isr);
-
-			String inputLine;
-
-			while ((inputLine = bfr.readLine()) != null) {
-				result.append(inputLine+"\n");
-			}
-
-			return result.toString();
-
+			return IOHelper.fileToString(conn.getInputStream());
 
 		} catch (MalformedURLException ex) {
 			throw new DownloaderException("malformed url", ex.getCause());

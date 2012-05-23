@@ -1,6 +1,7 @@
 package cz.muni.fi.pb138.flickrgraphr.api.dbquery;
 
 import cz.muni.fi.pb138.flickrgraphr.backend.storage.BaseXSession;
+import cz.muni.fi.pb138.flickrgraphr.tools.DateTimeHelper;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -39,7 +40,7 @@ public class AddUser extends AbstractDatabaseQuery {
 			ClientQuery query = session.query(queryContent);
 			query.bind("user_id", userId);
                         query.bind("display_name", displayName);
-			query.bind("date", getYesterdayDate());
+			query.bind("date", DateTimeHelper.formatDate(DateTimeHelper.yesterday()));
 			output = query.execute();
 			session.close();
 			return output;
@@ -57,12 +58,5 @@ public class AddUser extends AbstractDatabaseQuery {
                 } else {
                     throw new DatabaseQueryException("Parameter " + name + "does not exist.");
                 }
-        }
-        
-        private String getYesterdayDate() {
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            Date date = Calendar.getInstance().getTime();
-            date.setTime(date.getTime()-1000-3600*24);
-            return dateFormat.format(date);
         }
 }

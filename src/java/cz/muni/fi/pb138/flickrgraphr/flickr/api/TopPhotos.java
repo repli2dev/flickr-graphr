@@ -2,6 +2,7 @@ package cz.muni.fi.pb138.flickrgraphr.flickr.api;
 
 import cz.muni.fi.pb138.flickrgraphr.backend.downloader.Downloader;
 import cz.muni.fi.pb138.flickrgraphr.backend.downloader.DownloaderException;
+import cz.muni.fi.pb138.flickrgraphr.tools.DateTimeHelper;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -49,7 +50,7 @@ public class TopPhotos extends AbstractFlickrEntity {
 	 */
 	public TopPhotos(ServletContext context) {
 		this.context = context;
-		this.date = getYesterdayDate();
+		this.date = DateTimeHelper.formatDate(DateTimeHelper.yesterday());
 	}
 
 	@Override
@@ -66,7 +67,7 @@ public class TopPhotos extends AbstractFlickrEntity {
 
 	@Override
 	public void unload() throws FlickrEntityException {
-                deleteFromDatabase(DATABASE, getOldDate());
+                deleteFromDatabase(DATABASE, DateTimeHelper.formatDate(DateTimeHelper.shiftDate(14*24*3600*1000)));
 	}
 	
         /**
@@ -120,27 +121,6 @@ public class TopPhotos extends AbstractFlickrEntity {
 			throw new FlickrEntityException("XSLT transformation of downloaded 'hot list' failed (check the input).",ex);
 		}
 		this.outputData = outputData.toString();
-	}
-	
-        /**
-         * returns yesterday date in format YYYY-MM-DD
-         * @return 
-         */
-	private String getYesterdayDate() {
-                Date date = now();
-                date.setTime(date.getTime()-24*3600*1000);
-		return formatDate(date);
-	}
-	
-        /**
-         * returns the latest "old" date for TopPhotos
-         * TopPhotos data before this date (inclusive) are no longer needed
-         * @return 
-         */
-	private String getOldDate() {
-		Date date = now();
-		date.setTime(date.getTime()-14*24*3600*1000);
-		return formatDate(date);
 	}
 
 }
