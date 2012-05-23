@@ -17,6 +17,7 @@
             // Load the Visualization API and the piechart package.
             google.load('visualization', '1.0', {'packages':['corechart']});
         </script>
+       <script src="js/flickr-api.js"></script>
 		<script src="js/flickr-graphr.js"></script>
 		<script src="js/autorun.js"></script>
 	</head>

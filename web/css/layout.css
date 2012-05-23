@@ -71,3 +71,9 @@ h2{
     min-height:350px;
     margin-top:10px;
 }
+
+#userDetail .iconwrapper{
+    float:left;
+    margin:10px 15px;
+    height:100px;
+}

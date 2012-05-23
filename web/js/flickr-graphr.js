@@ -11,7 +11,7 @@ var FlickrGraphr = {
     activeModule : false,
    
     // URL to the flickr-graphr API (relative path with ending slash)
-	API_URL : "api/",
+    API_URL : "api/",
     
     // flickr-graphr API names
     

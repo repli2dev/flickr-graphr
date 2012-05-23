@@ -196,11 +196,16 @@ FlickrGraphr.modules["users"] = {
         });
         
         // search
+        $("#userSearchInput").keypress(function(e) {
+            if(e.keyCode == 13) {
+                // searches the user
+                module.searchScore($("#userSearchInput").val());  
+            }
+        });
         $("#userSearchButton").button();
         $("#userSearchButton").click(function(){
             // searches the user
             module.searchScore($("#userSearchInput").val());   
-            
             return false;
         });
         
@@ -303,13 +308,13 @@ FlickrGraphr.modules["users"] = {
         
         // add dates
         for(var i in this.dates){
-            var dat = this.dates[i];
+            var date = this.dates[i];
             
             // empty row
             var row = new Array();
             
             // add date to row
-            row.push(dat);
+            row.push(date);
             
             this.dataTable.addRow(row);
         }
@@ -318,38 +323,28 @@ FlickrGraphr.modules["users"] = {
         // Create and draw the visualization.
         usersChart = new google.visualization.LineChart(document.getElementById('visualization'));
         
-        /*usersChart.draw(this.dataTable, {
-            curveType: "none",
-            width: 700,
-            height: 350,
-            chartArea:{
-                width: '80%',
-                height: '80%'
-            },
-            legend:{
-                position:"top"
-            }
-        });
-        
-        */
         var module = this;
-        // when user moves a mouse on the point
-        // e = {column: ***, row: ***}
-        function usersChartOverHandler(e) {
+       
+
         
-            var user = module.userInfo[e.column - 1];
-            module.showTooltip(user);
+        function usersChartSelectHandler() {
+        
+            var selectedItem = usersChart.getSelection()[0];
+            if(selectedItem)
+            {
+             
+                var user = module.userInfo[selectedItem.column - 1];
+                module.tooltipLoading();
+                FlickrApi.people.getInfo(user.userId, function(person){
+                    module.showTooltip(person);
+                });
+            }
         }
 
-
-        function usersChartOutHandler() {
-            FlickrGraphr.modules["users"].hideTooltip();
-        }
         
         // adding the handlers
-        google.visualization.events.addListener(usersChart, 'onmouseover', usersChartOverHandler);
-        google.visualization.events.addListener(usersChart, 'onmouseout', usersChartOutHandler);
-        
+        google.visualization.events.addListener(usersChart, 'select', usersChartSelectHandler);
+       
         
     
     
@@ -431,26 +426,38 @@ FlickrGraphr.modules["users"] = {
      * Shows the tooltip
      * The format is exactly the same as specified in the API
      */
-    showTooltip : function(user){
-    
-        //var link = FlickrGraphr.getPhotoUrl(entry.photoId, entry.userId);
-        var linkStream = FlickrGraphr.getPhotostreamUrl(user.userId);
-        var riverStream = FlickrGraphr.getFlickRiverInterestingUrl(user.userId);
+    showTooltip : function(person){
+     
+        var iconurl = FlickrApi._getIconUrl(person.nsid, person.iconfarm, person.iconserver);
         
         
+        var tooltip = "";
+        tooltip += '<h2> ' + person.username._content + "</h2>\n";
+        var realname = "";
+        if(typeof person.realname != 'undefined')
+        {
+            realname = person.realname._content;
+        }else{
+            realname = person.username._content;
+        }
+        tooltip += "<div class=\"iconwrapper\"><img alt=\"" + realname + "\" src=\"" + iconurl + "\"></div>\n";
+        tooltip += '<p><strong>Name:</strong> ' + realname + "</p>\n";
         
+        if(typeof person.location != 'undefined')
+        {
+            tooltip += '<p><strong>Location:</strong> ' + person.location._content + "</p>\n";
+        }
+        tooltip += '<p><strong>User ID:</strong> ' + person.id + "</p>\n";
+        tooltip += '<p><strong>Photostream:</strong> <a href="' + person.photosurl._content + '">' + person.photosurl._content  + "</a></p>\n";
         
-        var tooltip = '<p><strong>User:</strong> ' + user.displayName + "</p>\n";
-        tooltip += '<p><strong>User ID:</strong> ' + user.userId + "</p>\n";
-        tooltip += '<p><strong>Photostream:</strong> <a href="' + linkStream + '">' + linkStream + "</a></p>\n";
-        tooltip += '<p><strong>Flickriver:</strong> <a href="' + riverStream + '">' + riverStream + "</a></p>\n";
         
         $("#userDetail").html(tooltip);
         
     
     },
     
-    hideTooltip : function(){
+    tooltipLoading : function(){
+        $("#userDetail").html("Loading user details. <img src=\"images/loading.gif\" alt=\"Loading...\">");
     },
     
     getEmptyScore : function(userId, date){
