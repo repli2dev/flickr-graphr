@@ -23,7 +23,7 @@ public class QueryExample {
                 try {
                     query1.setParameter("beginDate", "2012-04-20");
                     query1.setParameter("endDate", "2012-04-30");
-                    query1.setParameter("userId", "00000002@N00");
+                    query1.setParameter("userId", "30428451@N05");
                     result = query1.execute();
                     System.out.println(result);
                 } catch (DatabaseQueryException ex) {
@@ -54,7 +54,7 @@ public class QueryExample {
                 ((AbstractDatabaseQuery) query3).setPath(ROOT_PATH);
                 try {
                     query3.setParameter("userId", "00000002@N00");
-                    query3.setParameter("displayName", "My Name");
+                    query3.setParameter("displayName", "My new Name");
                     result = query3.execute();
                     System.out.println(result);
                 } catch (DatabaseQueryException ex) {
@@ -78,7 +78,7 @@ public class QueryExample {
                     System.out.println(ex.getCause().getMessage());
                 }
                 
-                /*
+                
                 // query to retrieve user-id based on display-name
                 // zatial nemusis pouzivat, ale myslim si, ze bude strasne pomale pytat sa Flickru
                 DatabaseQuery query5 = new GetUserId(null);
@@ -86,13 +86,13 @@ public class QueryExample {
                 // temporary solution, to be removed
                 ((AbstractDatabaseQuery) query5).setPath(ROOT_PATH);
                 try {
-                    query5.setParameter("displayName", "My Wonderful Name");
+                    query5.setParameter("displayName", "jim_mcculloch");
                     result = query5.execute();
                     System.out.println(result);
                 } catch (DatabaseQueryException ex) {
                     System.out.println("DatabaseQueryException: " + ex.getMessage());
                     System.out.println(ex.getCause().getMessage());
                 }
-                */
+                
         }
 }

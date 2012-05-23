@@ -36,7 +36,7 @@ let $single_result :=
 	return concat("
     {
       ""userId"": """,$requested_userid,""",
-      ""displayName"": """,$display_name,""",
+      ""displayName"": """,$display_name,false(),""",
       ""date"": """,$date,""",
       ""score"": ",$score,"
     }")
