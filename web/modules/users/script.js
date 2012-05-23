@@ -166,6 +166,15 @@ FlickrGraphr.modules["users"] = {
         // refresh
         $("#topUsersRefreshButton").button();
         $("#topUsersRefreshButton").click(function(){
+            
+            var start = new Date($('#topUsersDateFrom').val());
+            var end = new Date($('#topUsersDateTo').val());
+            
+            if(end <= start){
+                FlickrGraphr.messageBox("Invalid date", "The start and end date are in collision.");
+                return;
+            }
+        
         
             module.prepareScoreGraph();
         
@@ -374,16 +383,6 @@ FlickrGraphr.modules["users"] = {
         {
             score = scores[i];
             
-            
-           // var oldDate = score.date;
-            
-            // parse date to JS date
-            var date = new Date(score.date);
-            
-            score.date = date;
-            
-            
-            
             // match scores with dates in the table
             for(var row = 0; row < this.dates.length; row++)
             {
@@ -392,10 +391,10 @@ FlickrGraphr.modules["users"] = {
             
                 // reset value
                 this.dataTable.setValue(row, col, 0);
-                var dateFromTable = this.dates[row].toString();
+                var dateFromTable = this.dates[row].format("yyyy-mm-dd");
                 
                 // if found, set value, zero otherwise
-                if(score.date.toString() == dateFromTable){
+                if(score.date == dateFromTable){
                     rowsFound.push(row);
                     this.dataTable.setValue(row, col, score.score);
                     break;

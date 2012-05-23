@@ -29,7 +29,49 @@ var FlickrApi = {
                     success(data.person);
                 }        
             })
+        }
+    },
+    
+    photos : {
+        
+        _cache : new Array(), // key = tag name, value = collection with photos
+        
+        
+        _getPhoto : function(farm_id, server_id, photo_id, secret, size)
+        {
+            return "http://farm" + farm_id + ".staticflickr.com/" + server_id + "/" + photo_id + "_" + secret + "_" + size + ".jpg";
         },
+        
+        _getPhotoUrl : function(owner_id, photo_id)
+        {
+            return "http://www.flickr.com/photos/" + owner_id + "/" + photo_id;
+        },
+    
+    
+        search : function(tag, min_upload_date, max_upload_date, per_page, success)
+        {
+            // whether in cache?
+            if(tag in FlickrApi.photos._cache){
+                 success(FlickrApi.photos._cache[tag]);
+                 return;
+            }
+        
+            // load by URL
+            var url = FlickrApi._getUrl("flickr.photos.search", "&per_page=" + per_page + "&sort=interestingness-desc&tags=" + tag + "&min_upload_date=" + min_upload_date + "&max_upload_date=" + max_upload_date);
+            
+            $.ajax({
+                dataType: "jsonp",
+                url: url,
+                jsonpCallback: "jsonFlickrApi",
+                success : function(data, textStatus, jqXHR){
+                    FlickrApi.photos._cache[tag] = data.photos.photo;
+                    success(data.photos.photo);
+                }        
+            })
+        }
+        
+        
+        
     },
     
     

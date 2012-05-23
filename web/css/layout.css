@@ -77,3 +77,26 @@ h2{
     margin:10px 15px;
     height:100px;
 }
+
+
+.topbuttons{
+    text-align:right;
+}
+
+a img{
+    border-width:0px;
+}
+
+#tagDetail{
+    margin-top:20px;
+}
+#tagDetail h2{
+    clear:both;
+}
+
+#tagDetail .photo{
+    margin:10px 10px 0 0;
+    float:left;
+}
+
+

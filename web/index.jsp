@@ -17,7 +17,7 @@
             // Load the Visualization API and the piechart package.
             google.load('visualization', '1.0', {'packages':['corechart']});
         </script>
-       <script src="js/flickr-api.js"></script>
+		<script src="js/flickr-api.js"></script>
 		<script src="js/flickr-graphr.js"></script>
 		<script src="js/autorun.js"></script>
 	</head>
@@ -32,7 +32,7 @@
             <ul>
                 <li><a href="#">Home</a></li>
                 <li><a href="#users">Users</a></li>
-                <li><a href="#topTags">Top tags</a></li>
+                <li><a href="#tags">Tags</a></li>
             </ul>
        </div>
        
