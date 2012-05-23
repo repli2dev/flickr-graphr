@@ -14,7 +14,7 @@ for $tag in $all_tags
 	let $score := if ($method = "our") then $tag/@ourScore else $tag/@theirScore
 	return concat("
     {
-      ""tag:"": """,$tag/@value,""",
+      ""tag"": """,$tag/@value,""",
       ""date"": """,$tag/../@date,""",
       ""score"": ",$score,"
     }")
