@@ -25,6 +25,7 @@ public class TopUsersTask extends TaskInContext{
 		try {
 			//entity.unload();
 			entity.load();
+			logger.log(Level.INFO, "Processing of 'top-users' finished.");
 		} catch (FlickrEntityException ex) {
 			logger.log(Level.SEVERE, "Computing of 'top-users' failed.", ex);
 		}

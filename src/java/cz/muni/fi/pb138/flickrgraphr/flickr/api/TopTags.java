@@ -119,7 +119,7 @@ public class TopTags extends AbstractFlickrEntity {
 		Transformer transformer;
 		try {
 			transformer = tfactory.newTransformer(xslt);
-			transformer.setParameter("DATE", DateTimeHelper.formatDate(date));
+			transformer.setParameter("DATE", DateTimeHelper.formatDate(getDate()));
 			transformer.transform(source, result);
 		} catch (TransformerException ex) {
 			throw new FlickrEntityException("XSLT transformation of downloaded 'hot list' failed (check the input).",ex);

@@ -25,6 +25,7 @@ public class WeekHotListTask extends TaskInContext{
 		try {
 			entity.unload();
 			entity.load();
+			logger.log(Level.INFO, "Processing of 'week hot list' finished.");
 		} catch (FlickrEntityException ex) {
 			logger.log(Level.SEVERE, "Downloading of 'week hot list' failed.", ex);
 		}

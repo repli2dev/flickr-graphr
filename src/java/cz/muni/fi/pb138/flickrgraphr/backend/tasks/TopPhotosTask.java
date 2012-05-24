@@ -25,6 +25,7 @@ public class TopPhotosTask extends TaskInContext{
 		try {
 			//entity.unload();
 			entity.load();
+			logger.log(Level.INFO, "Processing of 'top-photos' finished.");
 		} catch (FlickrEntityException ex) {
 			logger.log(Level.SEVERE, "Downloading of 'top-photos' failed.", ex);
 		}

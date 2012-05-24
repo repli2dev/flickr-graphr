@@ -25,6 +25,7 @@ public class UsersTask extends TaskInContext{
 		try {
 			//entity.unload();
 			entity.load();
+			logger.log(Level.INFO, "Processing of 'users' finished.");
 		} catch (FlickrEntityException ex) {
 			logger.log(Level.SEVERE, "Downloading of 'users' failed.", ex);
 		}
