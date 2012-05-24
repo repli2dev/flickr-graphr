@@ -23,7 +23,12 @@ public class UploadedPhotos extends AbstractDatabaseQuery {
 	@Override
 	public String execute() throws DatabaseQueryException {
 		// Get database
-		ClientSession session = getDatabaseSession().get("uploaded-photos");
+		ClientSession session;
+		try {
+			session = getDatabaseSession().get("uploaded-photos");
+		} catch (NullPointerException ex) {
+			throw new DatabaseQueryException("No database connection");
+		}
 		// Get query
 		String queryContent = getQuery("/xml/xquery/api_uploaded_photos.xq");
 		// Query the database

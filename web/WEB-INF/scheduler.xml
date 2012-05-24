@@ -2,6 +2,18 @@
 <tasks>
 	<task id="1">
 		<name>cz.muni.fi.pb138.flickrgraphr.backend.tasks.WeekHotListTask</name>
-		<time>20 20 * * *</time>
+		<time>20 4 * * *</time>
+	</task>
+	<task id="2">
+		<name>cz.muni.fi.pb138.flickrgraphr.backend.tasks.TopPhotosTask</name>
+		<time>30 4 * * *</time>
+	</task>
+	<task id="3">
+		<name>cz.muni.fi.pb138.flickrgraphr.backend.tasks.UsersTask</name>
+		<time>40 4 * * *</time>
+	</task>
+	<task id="4">
+		<name>cz.muni.fi.pb138.flickrgraphr.backend.tasks.TopUsersTask</name>
+		<time>50 4 * * *</time>
 	</task>
 </tasks>

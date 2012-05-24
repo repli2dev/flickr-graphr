@@ -28,7 +28,12 @@ public class TopTags extends AbstractDatabaseQuery {
 	@Override
 	public String execute() throws DatabaseQueryException {
 		// Get database
-		ClientSession session = getDatabaseSession().get("tags-week");
+		ClientSession session;
+		try {
+			session = getDatabaseSession().get("tags-week");
+		} catch (NullPointerException ex) {
+			throw new DatabaseQueryException("No database connection");
+		}
 		// Get query
 		String queryContent = getQuery("/xml/xquery/api_top_tags.xq");
 		// Query the database

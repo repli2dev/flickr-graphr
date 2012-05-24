@@ -24,7 +24,12 @@ public class TopUsers extends AbstractDatabaseQuery {
 	@Override
 	public String execute() throws DatabaseQueryException {
 		// Get database
-		ClientSession session = getDatabaseSession().get("top-users");
+		ClientSession session;
+		try {
+			session = getDatabaseSession().get("top-users");
+		} catch (NullPointerException ex) {
+			throw new DatabaseQueryException("No database connection");
+		}
 		// Get query
 		String queryContent = getQuery("/xml/xquery/api_top_users_data.xq");
 		// Query the database

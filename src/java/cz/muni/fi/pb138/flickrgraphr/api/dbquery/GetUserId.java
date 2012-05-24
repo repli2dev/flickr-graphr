@@ -20,7 +20,12 @@ public class GetUserId extends AbstractDatabaseQuery {
         @Override
         public String execute() throws DatabaseQueryException{
                 // Get database
-		ClientSession session = getDatabaseSession().get("users");
+		ClientSession session;
+		try {
+			session = getDatabaseSession().get("users");
+		} catch (NullPointerException ex) {
+			throw new DatabaseQueryException("No database connection");
+		}
 		// Get query
 		String queryContent = getQuery("/xml/xquery/api_get_user_id.xq");
 		// Query the database
