@@ -23,7 +23,7 @@ public class QueryExample {
                 try {
                     query1.setParameter("beginDate", "2012-04-20");
                     query1.setParameter("endDate", "2012-04-30");
-                    query1.setParameter("userId", "30428451@N05");
+                    query1.setParameter("userId", "00000002@N11");
                     result = query1.execute();
                     System.out.println(result);
                 } catch (DatabaseQueryException ex) {
@@ -53,8 +53,8 @@ public class QueryExample {
                 // temporary solution, to be removed
                 ((AbstractDatabaseQuery) query3).setPath(ROOT_PATH);
                 try {
-                    query3.setParameter("userId", "00000002@N00");
-                    query3.setParameter("displayName", "My new Name");
+                    query3.setParameter("userId", "00000002@N11");
+                    query3.setParameter("displayName", "My \"new\" Name");
                     result = query3.execute();
                     System.out.println(result);
                 } catch (DatabaseQueryException ex) {

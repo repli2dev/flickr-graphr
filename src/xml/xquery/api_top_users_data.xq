@@ -12,6 +12,17 @@ declare variable $end_date as xs:string external;
 (: user ID to retrieve data for :)
 declare variable $requested_userid as xs:string external;
 
+(:
+escapes quotes and slashes in given string
+  @param $string  string to escape
+  @return         escaped version of input
+:)
+declare function local:escape($string as xs:string) as xs:string {
+let $mid_result := replace($string,"""","\\""")
+let $mid_result2 := replace($mid_result,"/","\\/")
+return $mid_result2
+};
+
 (: 
 returns true, if given date is between dates set in $begin_date-$extend_to_past and $end_date
   @param $date  				 date to check in string form YYYY-MM-DD
@@ -36,7 +47,7 @@ let $single_result :=
 	return concat("
     {
       ""userId"": """,$requested_userid,""",
-      ""displayName"": """,$display_name,false(),""",
+      ""displayName"": """,local:escape($display_name),""",
       ""date"": """,$date,""",
       ""score"": ",$score,"
     }")
