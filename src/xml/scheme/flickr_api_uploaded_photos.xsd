@@ -1,0 +1,67 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	<!-- Elements -->
+	<xs:element name="rsp">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="photos" />
+			</xs:sequence>
+			<xs:attribute name="stat" type="statType" />
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="photos">
+		<xs:complexType>
+			<xs:sequence>
+				<!-- We don't need anything bellow total count -->
+				<xs:element name="photo" type="photoType" minOccurs="1" maxOccurs="500"/>
+			</xs:sequence>
+			<xs:attribute name="page" type="pageType" use="required" />
+			<xs:attribute name="pages" type="pagesType" use="required" />
+			<xs:attribute name="perpage" type="perpageType" use="required" />
+			<xs:attribute name="total" type="totalType" use="required" />
+		</xs:complexType>
+	</xs:element>
+	
+	<!-- type of element 'photo' -->
+	<xs:complexType name="photoType">
+		<xs:attribute name="id" use="required" type="xs:string"/>
+		<xs:attribute name="owner" use="required" type="xs:string"/>
+		<xs:attribute name="secret" use="required" type="xs:string"/>
+		<xs:attribute name="server" use="required" type="xs:string"/>
+		<xs:attribute name="farm" use="required" type="xs:string"/>
+		<xs:attribute name="title" use="required" type="xs:string"/>
+		<xs:attribute name="ispublic" use="required" type="xs:string"/>
+		<xs:attribute name="isfriend" use="required" type="xs:string"/>
+		<xs:attribute name="isfamily" use="required" type="xs:string"/>
+	</xs:complexType>
+	
+	<xs:simpleType name="statType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="ok" />
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:simpleType name="pageType">
+		<xs:restriction base="xs:integer">
+			<xs:minInclusive value="1" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="pagesType">
+		<xs:restriction base="xs:integer">
+			<xs:minInclusive value="0" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="perpageType">
+		<xs:restriction base="xs:integer">
+			<xs:minInclusive value="1" />
+			<xs:maxInclusive value="500" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="totalType">
+		<xs:restriction base="xs:integer">
+			<xs:minInclusive value="0" />
+		</xs:restriction>
+	</xs:simpleType>
+
+</xs:schema>

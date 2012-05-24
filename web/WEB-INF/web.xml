@@ -18,7 +18,10 @@
 		<servlet-name>InterestingTags</servlet-name>
 		<servlet-class>cz.muni.fi.pb138.flickrgraphr.api.InterestingTags</servlet-class>
 	</servlet>
-	
+	<servlet>
+		<servlet-name>UploadedPhotos</servlet-name>
+		<servlet-class>cz.muni.fi.pb138.flickrgraphr.api.UploadedPhotos</servlet-class>
+	</servlet>
 	<servlet>
 		<servlet-name>TopUsers</servlet-name>
 		<servlet-class>cz.muni.fi.pb138.flickrgraphr.api.TopUsers</servlet-class>
@@ -43,5 +46,9 @@
 	<servlet-mapping>
 		<servlet-name>TopDayIDs</servlet-name>
 		<url-pattern>/api/top-day-ids</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>UploadedPhotos</servlet-name>
+		<url-pattern>/api/uploaded-photos</url-pattern>
 	</servlet-mapping>
 </web-app>

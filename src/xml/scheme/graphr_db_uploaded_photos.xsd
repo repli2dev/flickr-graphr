@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Graphr -->
+<!-- XMLSchema for Graphr DB uploaded photos -->
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	<xsd:element name="day">
+		<xsd:complexType>
+			<xsd:attribute name="date" type="xsd:date" />
+			<xsd:attribute name="photosCount" type="countType" />
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:simpleType name="countType">
+		<xsd:restriction base="xsd:integer">
+			<xsd:minInclusive value="0" />
+		</xsd:restriction>
+	</xsd:simpleType>
+</xsd:schema>
