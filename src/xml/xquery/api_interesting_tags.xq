@@ -19,7 +19,7 @@ let $allTagsWithCount :=
 let $single_result := 
 	for $tag in subsequence($allTagsWithCount,$start,$records)
 	return concat("{
-      ""tag"": """,$tag/@value,""",
+      ""tag"": """,$tag/@value,"""
     }")
 
 return
