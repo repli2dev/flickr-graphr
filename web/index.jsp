@@ -12,6 +12,7 @@
 		<script src="js/jquery-1.7.2.min.js"></script>
 		<script src="js/jquery-ui-1.8.20.custom.min.js"></script>
 		<script src="js/jquery.ba-hashchange.min.js"></script>
+		<script src="js/jquery.tagcloud-2.js"></script>
        <script type="text/javascript" src="https://www.google.com/jsapi"></script>
        <script type="text/javascript">
             // Load the Visualization API and the piechart package.
@@ -33,6 +34,7 @@
                 <li><a href="#">Home</a></li>
                 <li><a href="#users">Users</a></li>
                 <li><a href="#tags2">Tags</a></li>
+                <li><a href="#uploaded-photos">Photos</a></li>
             </ul>
        </div>
        

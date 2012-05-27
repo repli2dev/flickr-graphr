@@ -17,7 +17,10 @@ var FlickrGraphr = {
     
     API_USER_SCORE : "top-users", // adds user to the graph
     API_TOP_USERS_BY_DATE : "top-day-ids", // returns top IDs for the selected time
-    API_TAG_SCORE : "top-tags", // for current week
+    API_TAG_SCORE : "top-tags", // for 2 weeks
+    API_INTERESTING_TAGS : "interesting-tags", //  for 2 weeks
+    API_UPLOADED_PHOTOS : "uploaded-photos", // photos uploaded in selected interval
+    
     
     stat : {
         OK : "ok",

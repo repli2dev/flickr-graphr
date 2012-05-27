@@ -81,6 +81,8 @@ h2{
 
 .topbuttons{
     text-align:right;
+    clear:both;
+    padding:10px 0;
 }
 
 a img{
@@ -89,6 +91,7 @@ a img{
 
 #tagDetail{
     margin-top:20px;
+    padding-bottom:20px;
 }
 #tagDetail h2{
     clear:both;
@@ -97,6 +100,7 @@ a img{
 #tagDetail .photo{
     margin:10px 10px 0 0;
     float:left;
+    width:75px;
+    height:75px;
 }
-
 
