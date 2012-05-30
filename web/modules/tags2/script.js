@@ -14,8 +14,10 @@ FlickrGraphr.modules["tags2"] = {
     
     title : "Tags",
     
-    TAGS_PER_BATCH : 40,
+    TAGS_PER_BATCH : 30,
     alreadyLoadedTags : 0,
+    
+    tagsInGraph : [],
     
     /**
      * Method called when the module is loaded
@@ -27,6 +29,10 @@ FlickrGraphr.modules["tags2"] = {
         var module = this;
     
         $("#topnav").html('');
+        
+        this.tagsInGraph = [];
+        
+        var tagsChart = false;
         
         this.prepareScoreGraph();
         
@@ -47,13 +53,25 @@ FlickrGraphr.modules["tags2"] = {
         
         
         // top tags
-        $("#loadTopRecentTagsButton").button();
-        $("#loadTopRecentTagsButton").click(function(){
+        $("#loadTopRecentTagsNextButton").button();
+        $("#loadTopRecentTagsNextButton").click(function(){
             // searches the tag
-            module.fetchTopRecentTags(module.alreadyLoadedTags);   
+            module.fetchNextRecentTags();   
             return false;
         });
-        this.fetchTopRecentTags(0);
+        
+        // prev top tags
+        $("#loadTopRecentTagsPrevButton").button();
+        $("#loadTopRecentTagsPrevButton").click(function(){
+            // searches the tag
+            module.fetchPrevRecentTags();   
+            return false;
+        });
+        
+        
+        this.fetchNextRecentTags();
+        $("#loadTopRecentTagsPrevButton").hide();
+        $("#loadTopRecentTagsNextButton").hide();
         
     },
     
@@ -79,6 +97,12 @@ FlickrGraphr.modules["tags2"] = {
      */
     searchScore : function(tagName)
     {
+        if(tagName == ""){
+            FlickrGraphr.setMessage("String to search cannot be empty.", "error");
+            return;
+        }
+    
+    
         var module = this;
         $.ajax({
 			url: FlickrGraphr.API_URL + FlickrGraphr.API_TAG_SCORE,
@@ -93,38 +117,66 @@ FlickrGraphr.modules["tags2"] = {
                     var data = result.data;
                     
                     if(data.length == 0){
-                        FlickrGraphr.messageBox("No data found", "No data found for tag: " + tagName);
+                        FlickrGraphr.setMessage("No data found for: " + tagName , "error");
                         return;
                     }
                     
+
                     module.addScoresToGraph(data);
                     
                     $("#tagSearchInput").val("");
                     
                 }else{
-                    FlickrGraphr.messageBox("Response fail", "Error while loading data: " + result.error.message);
+                    FlickrGraphr.setMessage("Error while loading data: " + result.error.message , "error");
                 }
 				
 			},
             error: function(jqXHR, textStatus, errorThrown){
-                FlickrGraphr.messageBox("Response fail", "Error while loading data from API (tag: " + tagName + "): " + errorThrown);
+                FlickrGraphr.setMessage("Error while loading data from API: "  + textStatus, "error");
             },
 			dataType: "json"
 		});
     },
     
     
+    fetchNextRecentTags : function(){
+        var start = this.alreadyLoadedTags;
+        this.fetchRecentTags(start);
+    },
+    
+    
+    fetchPrevRecentTags : function()
+    {
+    
+        var start = this.alreadyLoadedTags - 2 * this.TAGS_PER_BATCH;
+        if(start < 0){
+            start = 0;
+        }
+        this.fetchRecentTags(start);
+    
+    },
+    
     /**
-     * Loads the top tags and then, for each tag loads score
-     *
-     * @param {string} tagName
+     * Loads the top tags and creates the cloud
      */
-    fetchTopRecentTags : function(skip){
+    fetchRecentTags : function(start){
+    
+         $("#loadTopRecentTagsNextButton").fadeOut();
+         $("#loadTopRecentTagsPrevButton").fadeOut();
+    
+        
+        this.alreadyLoadedTags = start;
+        
+        
+        
+        // loading image
+        $("#tagCloud").html(FlickrGraphr.loadingWidget("recent tags"));
+    
         var module = this;
         $.ajax({
 			url: FlickrGraphr.API_URL + FlickrGraphr.API_INTERESTING_TAGS,
 			data : {
-                start: skip,
+                start: start,
 				records : module.TAGS_PER_BATCH
 			},
             type : "get",
@@ -133,12 +185,16 @@ FlickrGraphr.modules["tags2"] = {
                 if(result.stat == FlickrGraphr.stat.OK){
                     var data = result.data;
                     
+                    module.alreadyLoadedTags += data.length;
+                    
                     if(data.length == 0){
-                        FlickrGraphr.messageBox("No data found", "No more tags found, loading the first tags.");
-                        module.alreadyLoadedTags = 0;
-                        module.fetchTopRecentTags(0);
+                        FlickrGraphr.messageBox("No data found", "No more tags found.");
+                        module.updateButtons(true);
+                        
                         return;
                     }
+                    
+                    module.updateButtons(false);
                     
                     module.createTagCloud(data);
                     
@@ -152,8 +208,29 @@ FlickrGraphr.modules["tags2"] = {
             },
 			dataType: "json"
 		});
-        module.alreadyLoadedTags += module.TAGS_PER_BATCH;
+        
     
+    
+    },
+    
+    updateButtons : function(disableNext){
+    
+        if(disableNext){
+            $("#loadTopRecentTagsNextButton").fadeOut();
+        }else{
+            $("#loadTopRecentTagsNextButton").fadeIn();
+        }
+        
+        if(this.alreadyLoadedTags <= this.TAGS_PER_BATCH)
+        {
+            $("#loadTopRecentTagsPrevButton").fadeOut();
+        }
+        else
+        {
+            $("#loadTopRecentTagsPrevButton").fadeIn();
+        }
+        
+        
     
     },
     
@@ -164,7 +241,7 @@ FlickrGraphr.modules["tags2"] = {
         var maxscore = data.length * 20;
         for(var i in data){
             tags.push({tag: data[i].tag, count: maxscore});
-            maxscore = maxscore / 1.5;
+            maxscore = maxscore / 1.2;
         }
         
         
@@ -174,7 +251,8 @@ FlickrGraphr.modules["tags2"] = {
         $("#tagCloud").tagCloud(tags,{
             click: function(tag, event){
                 module.searchScore(tag);            
-            }        
+            },
+            maxFontSizeEm : 4
         });
 
     
@@ -188,12 +266,13 @@ FlickrGraphr.modules["tags2"] = {
         this.dates = new Array();
         this.tagInfo = new Array();
         
-        // START DATE - 14 days back
+        // START DATE - 15 days back
         var startDate = new Date();
-        startDate.setDate(startDate.getDate() - 14);
+        startDate.setDate(startDate.getDate() - 15);
         
-        // END DATE - now
+        // END DATE - yesterday
         var endDate = new Date();
+        endDate.setDate(endDate.getDate() - 1);
         
         // counts the dates in the interval
         for(var date = new Date(startDate.getTime()); date <= endDate; date.setDate(date.getDate() + 1))
@@ -240,11 +319,11 @@ FlickrGraphr.modules["tags2"] = {
              
                 var tag = module.tagInfo[selectedItem.column - 1];
                 module.tooltipLoading();
-                var min_upload_date = Math.round(startDate / 1000);
-                var max_upload_date = Math.round(endDate / 1000);
+                //var min_upload_date = Math.round(startDate / 1000);
+                //var max_upload_date = Math.round(endDate / 1000);
                 
                 // 16 per page
-                FlickrApi.photos.search(tag.tag, min_upload_date, max_upload_date, 16, function(photos){
+                FlickrApi.photos.search(tag.tag, "", "", 16, function(photos){
                     module.showTooltip(tag.tag, photos);
                 });
             }
@@ -284,13 +363,52 @@ FlickrGraphr.modules["tags2"] = {
     },
     
     tooltipLoading : function(){
-        $("#tagDetail").html("Loading photos for selected tag <img src=\"images/loading.gif\" alt=\"Loading...\">");
+        $("#tagDetail").html(FlickrGraphr.loadingWidget("photos for selected tag"));
     },
+    
+    
+    fillZerosToMissingData : function(scores){
+        
+        if(scores.length == this.dates.length) return;
+        
+        var tagName = scores[0].tag;
+            
+        for(var d in this.dates)
+        {
+            var dateF = this.dates[d].format("yyyy-mm-dd");
+            var scoreFound = false;
+            
+            for(var i in scores)
+            {
+                var score = scores[i];
+                if(score.date == dateF){
+                    scoreFound = true;
+                    break;
+                }
+            }
+        
+            if(!scoreFound){
+                scores.push({ date: dateF, score:0});
+            }        
+        }   
+    },
+    
+    
     
     /**
      * Internal function, called when the ajax requests finishes
      */
 	addScoresToGraph : function(scores){
+        
+        // already exists
+        if($.inArray(scores[0].tag, this.tagsInGraph) != -1){
+            return;
+        }
+        
+        this.tagsInGraph.push(scores[0].tag);
+        
+    
+        this.fillZerosToMissingData(scores);
     
         // fetch name form the first score
         this.dataTable.addColumn('number', scores[0].tag);
@@ -329,18 +447,19 @@ FlickrGraphr.modules["tags2"] = {
         // redraw chart
         tagChart.draw(this.dataTable, {
             curveType: "none",
-            width: 700,
+            width: 780,
             height: 350,
             chartArea:{
-                width: '80%',
+                width: '750px',
                 height: '80%',
-                left: '0'
+                left: '50'
             },
             legend:{
                 position:"right"
             },
             vAxis : {
-                textPosition : "none"
+                textPosition : "out",
+                title : "Score"
             }
         });
 	}

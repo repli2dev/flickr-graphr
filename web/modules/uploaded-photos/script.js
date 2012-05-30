@@ -38,7 +38,7 @@ FlickrGraphr.modules["uploaded-photos"] = {
                     
                     // if length = 0, generate zeros
                     if(data.length == 0){
-                        FlickrGraphr.messageBox("No data", "No data found for this interval.");
+                        FlickrGraphr.setMessage("No data found for this interval.", "error");
                         return;
                     }
                     
@@ -49,7 +49,7 @@ FlickrGraphr.modules["uploaded-photos"] = {
 				
 			},
             error: function(jqXHR, textStatus, errorThrown){
-                FlickrGraphr.messageBox("Response fail", "Error while loading data from API: " + errorThrown);
+                FlickrGraphr.setMessage("Error while loading data from API: " + textStatus, "error");
             },
 			dataType: "json"
 		});
@@ -64,8 +64,8 @@ FlickrGraphr.modules["uploaded-photos"] = {
         $("#topnav").html(topnav);
         
         // datepicking
-        $("#uploadedPhotosDateFrom").datepicker({ dateFormat : 'yy-mm-dd'});
-        $("#uploadedPhotosDateTo").datepicker({ dateFormat : 'yy-mm-dd'});
+        $("#uploadedPhotosDateFrom").datepicker({ dateFormat : 'yy-mm-dd', maxDate: "-1D"});
+        $("#uploadedPhotosDateTo").datepicker({ dateFormat : 'yy-mm-dd', maxDate: "-1D"});
         
         // prepare dates now and previous week
         var prevDate = new Date();
@@ -85,7 +85,7 @@ FlickrGraphr.modules["uploaded-photos"] = {
             var end = new Date($('#uploadedPhotosDateTo').val());
             
             if(end <= start){
-                FlickrGraphr.messageBox("Invalid date", "The start and end date are in collision.");
+                FlickrGraphr.setMessage("Invalid date - The start and end date are in collision.", "error");
                 return;
             }
         
@@ -152,7 +152,7 @@ FlickrGraphr.modules["uploaded-photos"] = {
             height: 400,
             chartArea:{
                 width: '80%',
-                height: '80%',
+                height: '80%'
             },
             legend:{
                 position:"top"

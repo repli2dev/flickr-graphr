@@ -106,7 +106,7 @@ var FlickrGraphr = {
     /**
      * Returns the link to the HTML page with the photo
      * @param {string} photoid Photo ID
-     * @param {string} owner Owner ID
+     * @param {string} ownerid Owner ID
      * @return {string} URL
      */
     getPhotoUrl : function(photoid, ownerid){
@@ -115,7 +115,7 @@ var FlickrGraphr = {
     
     /**
      * Returns the link to the HTML page the user's photostream
-     * @param {string} owner Owner ID
+     * @param {string} ownerid Owner ID
      * @return {string} URL
      */
     getPhotostreamUrl : function(ownerid){
@@ -124,7 +124,7 @@ var FlickrGraphr = {
     
     /**
      * Returns the link to users interesting photos on flickriver
-     * @param {string} owner Owner ID
+     * @param {string} ownerid Owner ID
      * @return {string} URL
      */
     getFlickRiverInterestingUrl : function(ownerid){
@@ -151,9 +151,36 @@ var FlickrGraphr = {
 				}
 			}
         });
-        
-    }
+    },
     
+    /**
+     * Displays a message
+     * @param {string} msg Message
+     * @param {string} msgclass Message class
+     */
+    setMessage: function(msg, msgclass){
+        var messageId = "message-" + password(10);
+        var message = "<div id=\"" + messageId + "\" style=\"display:none;\" class=\"message " + msgclass + "\">";
+        var hideString = "$('#" +messageId + "').hide('drop', {}, 200, function(){  $('#" +messageId + "').remove(); });";
+        message += "<p>" + msg + "</p>";
+        message += "<button onclick=\"" + hideString + " return false;\">X</button>";
+        message += "</div>";
+        $("#messages-inner").append(message);
+        $("#" + messageId).show("drop", {}, 200);
+        
+        setTimeout(hideString, 5000);
+    },
+    
+    
+    /**
+     * Returns a loading widget
+     * @return {string} Loading widget
+     */
+    loadingWidget: function(text){
+        return "<div class=\"loading-widget\"><p>Loading " + text + "</p>  <img src=\"images/loading-big.gif\" alt=\"loading\" /></div>";
+    
+    
+    }    
     
     
 }

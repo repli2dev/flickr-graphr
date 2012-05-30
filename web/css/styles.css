@@ -31,3 +31,62 @@ button{
     color:#666;
 
 }
+
+#messages{
+    position:absolute;
+    top:0px;
+    left:0px;
+    width:100%;
+    z-index:100;
+    
+
+}
+
+#messages-inner{
+    width:500px;
+    margin:0px auto;
+}
+
+#messages .message{
+    display:block;
+    width:100%;
+    margin:5px;
+    border-radius:5px;
+    font-size:9pt;
+    padding:5px 10px;
+    border: 1px solid #333333;
+    background-color:#fff;
+    position:relative;
+    font-weight:bold;
+    box-shadow: 1px 1px 2px #888;
+}
+
+#messages .error{
+    color: #ff0046;
+    border: 1px solid #ff0046;
+}
+
+#messages .status{
+    color: #0073ea;
+    border: 1px solid #0073ea;
+}
+
+#messages .message button{
+    position:absolute;
+    top:13px;
+    right:13px;
+    border:1px solid #ddd;
+    color:#aaa;
+    background-color:#eee;
+    border-radius:5px;
+    width:25px;
+    height:25px;
+    font-weight:normal;
+    
+}
+
+
+ul li{
+    margin:10px 0;
+
+}

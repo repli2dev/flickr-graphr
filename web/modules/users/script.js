@@ -2,7 +2,7 @@
  * Chart with top users
  * Must be defined here because of the onmouseover calls.
  */
-var usersChart;
+var usersChart = {};
 
 
 /**
@@ -10,19 +10,139 @@ var usersChart;
  */
 FlickrGraphr.modules["users"] = {
 
+    // Title shown in the browser
     title : "Users",
     
-    scores : new Array(), // key: userId => Array(score1, score2)...;
+    // Array with scores - key: userId => Array(score1, score2)...;
+    scores : new Array(), 
 
+    // Users which are displayed
     usersToDisplay : new Array(),
     
-    
+    // User info - all users
     userInfo : new Array(),
     
+    // Users display names - key = userId
+    displayNames : new Array(),
+    
+    // Selected dates
     dates : new Array(),
     
+    // Source table
     dataTable : false,
+    
+    // module template - overriden by template.html
+    template : "",
+    
+    // timer for drawing
+    drawTimeout : {},
+    
+    /**
+     * Prepares the module
+     *
+     */
+    load : function(){
+        
+        // clears the previous data
+        this.scores = new Array();
+        this.usersToDisplay = new Array();
+        this.userInfo = new Array();
+        this.dates = new Array();
+        this.dataTable = false;
+        
+        
+        
+        // TOP NAVIGATION
+        var topnav = 'Choose range: <input type="text" name="dateFrom" id="topUsersDateFrom" value=""> - ';
+        topnav += '<input type="text" name="dateFrom" id="topUsersDateTo" value=""> ';
+        topnav += '<button id="topUsersRefreshButton">Set</button>';
+        $("#topnav").html(topnav);
+        
+        // datepicking
+        $("#topUsersDateFrom").datepicker({ dateFormat : 'yy-mm-dd', maxDate: "-1D"});
+        $("#topUsersDateTo").datepicker({ dateFormat : 'yy-mm-dd', maxDate: "-1D"});
+        
+        // prepare dates now and previous week
+        var prevDate = new Date();
+        prevDate.setDate(prevDate.getDate() - 8);
+        
+        var nowDate = new Date();
+        nowDate.setDate(nowDate.getDate() - 1);
+        
+        $('#topUsersDateFrom').datepicker("setDate",  prevDate);
+        $('#topUsersDateTo').datepicker("setDate", nowDate );
+        
+        
+        var module = this;
+    
+        // refresh
+        $("#topUsersRefreshButton").button();
+        $("#topUsersRefreshButton").click(function(){
+            
+            var start = new Date($('#topUsersDateFrom').val());
+            var end = new Date($('#topUsersDateTo').val());
+            
+            if(end <= start){
+                FlickrGraphr.setMessage("Invalid date - The start and end date are in collision.", "error");
+                return;
+            }
+        
+        
+            module.prepareScoreGraph();
+        
+            for(var i in module.usersToDisplay)
+            {
+                var userObject = module.usersToDisplay[i];
+                module.loadScore(userObject.userId);
+            }
 
+        
+        });
+    
+        // top users
+        $("#loadTopUsersButton").button();
+        $("#loadTopUsersButton").click(function(){
+            // loads top users to the table
+            var date2 = new Date($('#topUsersDateTo').val());
+            module.loadTopUsers(date2.format("yyyy-mm-dd"));            
+            
+            
+            // OLD METHOD
+            // the date is the center of the two dates
+            //  var date1 = new Date($('#topUsersDateFrom').val());   
+            // var date = new Date((date2.getTime() - date1.getTime()) / 2 + date1.getTime());
+            
+            
+            return false;
+        });
+        
+        // search
+        $("#userSearchInput").keypress(function(e) {
+            if(e.keyCode == 13) {
+                // searches the user
+                module.searchScore($("#userSearchInput").val());  
+            }
+        });
+        $("#userSearchButton").button();
+        $("#userSearchButton").click(function(){
+            // searches the user
+            module.searchScore($("#userSearchInput").val());   
+            return false;
+        });
+        
+        // graph
+        this.prepareScoreGraph();
+        
+    },
+    
+    
+    
+
+    /**
+     * Loads user's score and adds it to the graph
+     *
+     * @param {string} userId
+     */
     loadScore : function(userId)
     {
         var module = this;
@@ -49,21 +169,28 @@ FlickrGraphr.modules["users"] = {
                     // if length = 0, generate zeros
                     if(data.length == 0){
                         data = module.generateZeroScores(userId);
+                        module.displayNames[userId] = userId;
+                    }else{
+                        module.displayNames[userId] = data[0].displayName;
                     }
                     
-                      
-                
-                    module.addScoresToGraph(result.data);
+                    module.addScoresToGraph(data);
                 }
 				
 			},
             error: function(jqXHR, textStatus, errorThrown){
-                FlickrGraphr.messageBox("Response fail", "Error while loading data from API (ID: " + userId + "): " + errorThrown);
+                FlickrGraphr.setMessage("Error while loading data from API: " + textStatus, "error");
             },
 			dataType: "json"
 		});
     },
     
+    /**
+     * If user already in graph - do not load
+     *
+     * @param {string} userId
+     * @return {boolean} True if user loaded, false otherwise
+     */
     checkWhetherUserAlreadyLoaded : function(userId)
     {
         for(var i in this.usersToDisplay)
@@ -78,10 +205,16 @@ FlickrGraphr.modules["users"] = {
     },
     
     
+    /**
+     * Searches the user
+     * If user found, it will add them to the graph
+     *
+     * @param {string} searchString
+     */
     searchScore : function(searchString)
     {
         if(searchString == ""){
-            FlickrGraphr.messageBox("Searching canceled", "String to search cannot be empty.");
+            FlickrGraphr.setMessage("String to search cannot be empty.", "error");
             return;
         }
     
@@ -108,7 +241,7 @@ FlickrGraphr.modules["users"] = {
                     
                     // if length = 0, generate zeros
                     if(data.length == 0){
-                        FlickrGraphr.messageBox("No score found", "User has no score yet.");
+                        FlickrGraphr.setMessage("User has no score yet.", "error");
                         return;
                     }
                     
@@ -116,123 +249,43 @@ FlickrGraphr.modules["users"] = {
                       
                     // user already loaded?
                     if(module.checkWhetherUserAlreadyLoaded(data[0].userId)){
-                        FlickrGraphr.messageBox("User already in graph", data[0].displayName + " is already in the graph.");
+                        FlickrGraphr.setMessage(data[0].displayName + " is already in the graph.", "status");
                         return;
                     }               
                     
                     
                     
-                    FlickrGraphr.messageBox("User loaded", data[0].displayName + "'s score added to the graph.");
+                    FlickrGraphr.setMessage(data[0].displayName + "'s score added to the graph.", "status");
+                    
+                    module.displayNames[data[0].userId] = data[0].displayName;
+                    
                     module.usersToDisplay.push(data[0]);
                     
                 
                     module.addScoresToGraph(result.data);
                 }else if(result.error.code == FlickrGraphr.ERROR_USER_NOT_EXISTS){
-                    FlickrGraphr.messageBox("Response fail", "User not exists.");
+                    FlickrGraphr.setMessage("User does not exist.", "error");
                 }
 				
 			},
             error: function(jqXHR, textStatus, errorThrown){
-                FlickrGraphr.messageBox("Response fail", "Error while loading data from API: " + errorThrown);
+                FlickrGraphr.setMessage("Error while loading data from API: " + textStatus, "error");
             },
 			dataType: "json"
 		});
     },
     
     
-    
-    load : function(){
-    
-        // TOP NAVIGATION
-        var topnav = 'Choose range: <input type="text" name="dateFrom" id="topUsersDateFrom" value=""> - ';
-        topnav += '<input type="text" name="dateFrom" id="topUsersDateTo" value=""> ';
-        topnav += '<button id="topUsersRefreshButton">Set</button>';
-        $("#topnav").html(topnav);
-        
-        // datepicking
-        $("#topUsersDateFrom").datepicker({ dateFormat : 'yy-mm-dd'});
-        $("#topUsersDateTo").datepicker({ dateFormat : 'yy-mm-dd'});
-        
-        // prepare dates now and previous week
-        var prevDate = new Date();
-        prevDate.setDate(prevDate.getDate() - 7);
-        
-        $('#topUsersDateFrom').datepicker("setDate",  prevDate);
-        $('#topUsersDateTo').datepicker("setDate", new Date() );
-        
-        
-        var module = this;
-    
-        // refresh
-        $("#topUsersRefreshButton").button();
-        $("#topUsersRefreshButton").click(function(){
-            
-            var start = new Date($('#topUsersDateFrom').val());
-            var end = new Date($('#topUsersDateTo').val());
-            
-            if(end <= start){
-                FlickrGraphr.messageBox("Invalid date", "The start and end date are in collision.");
-                return;
-            }
-        
-        
-            module.prepareScoreGraph();
-        
-            for(var i in module.usersToDisplay)
-            {
-                var userObject = module.usersToDisplay[i];
-                module.loadScore(userObject.userId);
-            }
-
-        
-        });
-    
-        // top users
-        $("#loadTopUsersButton").button();
-        $("#loadTopUsersButton").click(function(){
-            // loads top users to the table
-            
-            
-            // the date is the center of the two dates
-            var date1 = new Date($('#topUsersDateFrom').val());
-            var date2 = new Date($('#topUsersDateTo').val());
-            
-            var date = new Date((date2.getTime() - date1.getTime()) / 2 + date1.getTime());
-            
-            
-            module.loadTopUsers(date.format("yyyy-mm-dd"));            
-            return false;
-        });
-        
-        // search
-        $("#userSearchInput").keypress(function(e) {
-            if(e.keyCode == 13) {
-                // searches the user
-                module.searchScore($("#userSearchInput").val());  
-            }
-        });
-        $("#userSearchButton").button();
-        $("#userSearchButton").click(function(){
-            // searches the user
-            module.searchScore($("#userSearchInput").val());   
-            return false;
-        });
-        
-        // graph
-        this.prepareScoreGraph();
-        
-    },
-    
-    
-    template : "",
-    
-    
+   
+    /**
+     * Loads the top users for the date and adds them to the graph
+     *
+     * @param {string} date Date in format YYYY-MM-DD
+     */    
     loadTopUsers : function(date){
         
         var module = this;
         
-        
-         // if not, fetch it
         $.ajax({
 			url: FlickrGraphr.API_URL + FlickrGraphr.API_TOP_USERS_BY_DATE,
 			data : {
@@ -250,13 +303,11 @@ FlickrGraphr.modules["users"] = {
                         if(module.checkWhetherUserAlreadyLoaded(result.data[i].userId)){
                             var name = result.data[i].displayName;
                             if(typeof name == 'undefined'){
-                                name = result.data[i].userId;
+                                name = module.displayNames[result.data[i].userId];
                             }
-                            FlickrGraphr.messageBox("User already in graph", name + " is already in the graph.");
+                            FlickrGraphr.setMessage(name + " is already in the graph.", "status");
                             continue;
                         }                   
-                    
-                    
                     
                         module.addUserToDisplay(result.data[i]);
                     }
@@ -265,7 +316,7 @@ FlickrGraphr.modules["users"] = {
 				
 			},
             error: function(jqXHR, textStatus, errorThrown){
-                FlickrGraphr.messageBox("Response fail", "Error while loading data from API: " + errorThrown);
+                FlickrGraphr.setMessage("Error while loading data from API: " + textStatus, "error");
             },
 			dataType: "json"
 		});
@@ -273,17 +324,26 @@ FlickrGraphr.modules["users"] = {
     },
     
     
-    
+    /**
+     * Adds a user to display
+     
+     * @param {string} date Date in format YYYY-MM-DD
+     */
     
     addUserToDisplay : function(userObject){
         this.usersToDisplay.push(userObject);
         this.loadScore(userObject.userId);
+        this.displayNames[userObject.userId] = userObject.displayName;
     },
     
     
     
-    
-    
+   
+    /**
+     * Generates zero score for the user
+     * @param {string} userId
+     * @return {object} score object
+     */    
     generateZeroScores : function(userId){
         return {
             userId : userId,
@@ -292,6 +352,10 @@ FlickrGraphr.modules["users"] = {
         }    
     },
     
+    
+    /**
+     * Prepares the graph
+     */
     prepareScoreGraph : function(){
           
         this.dates = new Array();
@@ -361,6 +425,9 @@ FlickrGraphr.modules["users"] = {
     
 	/**
      * Internal function, called when the ajax requests finishes
+     * Adds scores to the table
+     *
+     * @param {array} scores Array with scores objects
      */
 	addScoresToGraph : function(scores){
     
@@ -402,28 +469,41 @@ FlickrGraphr.modules["users"] = {
             }            
         }
       
+        clearTimeout(this.drawTimer);
+        //$("#visualization").html(FlickrGraphr.loadingWidget("chart"));
+        this.drawTimer = setTimeout("FlickrGraphr.modules[\"users\"].redrawChart();", 100);
+	},
+    
+    /**
+     * Redraws the chart
+     */
+    redrawChart : function()
+    {
         // redraw chart
         usersChart.draw(this.dataTable, {
             curveType: "none",
-            width: 700,
+            width: 760,
             height: 350,
             chartArea:{
-                width: '80%',
+                width: '750px',
                 height: '80%',
-                left: '0'
+                left: '90'
             },
             legend:{
                 position:"right"
             },
             vAxis : {
-                textPosition : "none"
+                textPosition : "out",
+                title : "Score"
             }
         });
-	},
+    
+    },
     
     /**
      * Shows the tooltip
      * The format is exactly the same as specified in the API
+     * @param {object} person Person object
      */
     showTooltip : function(person){
      
@@ -455,10 +535,19 @@ FlickrGraphr.modules["users"] = {
     
     },
     
+    /** 
+     * Loading user details
+     */
     tooltipLoading : function(){
-        $("#userDetail").html("Loading user details. <img src=\"images/loading.gif\" alt=\"Loading...\">");
+        $("#userDetail").html(FlickrGraphr.loadingWidget("user details"));
     },
     
+    /**
+     * Returns empty score for the userId and date
+     * @param {string} userId
+     * @param {string} date YYYY-MM-DD
+     * @return {object} Score object
+     */
     getEmptyScore : function(userId, date){
         return {
             userId : userId,

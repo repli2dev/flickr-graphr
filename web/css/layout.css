@@ -72,6 +72,11 @@ h2{
     margin-top:10px;
 }
 
+#userDetail .iconwrapper img{
+    width:48px;
+    height:48px;
+    overflow:hidden;
+}
 #userDetail .iconwrapper{
     float:left;
     margin:10px 15px;
@@ -104,3 +109,24 @@ a img{
     height:75px;
 }
 
+
+.loading-widget{
+    height:75px;
+    background-color:#eee;
+    position:relative;
+    width:400px;
+    margin:10px auto;
+    border-radius:5px;
+}
+
+.loading-widget p{
+    position:absolute;
+    top:17px;
+    left:20px;
+}
+
+.loading-widget img{
+    position:absolute;
+    top:22px;
+    right:20px;
+}
