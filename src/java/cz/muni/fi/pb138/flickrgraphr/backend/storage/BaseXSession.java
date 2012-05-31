@@ -41,12 +41,13 @@ public class BaseXSession {
 	/**
 	 * Return working session or null on error
 	 */
-	public ClientSession get() {
+	public ClientSession get() throws NoDatabaseException{
 		ClientSession session = null;
 		try {
 			session = new ClientSession(hostname, port, username, password);
 		} catch (IOException ex) {
 			logger.log(Level.SEVERE, "Cannot establish connection to the database", ex);
+			throw new NoDatabaseException();
 		}
 		logger.log(Level.FINE, "Connection to database established.");
 		return session;
@@ -57,7 +58,7 @@ public class BaseXSession {
 	 * @param database Database to open
 	 * @return Working session
 	 */
-	public ClientSession get(String database) {
+	public ClientSession get(String database) throws NoDatabaseException {
 		return get(database,false);
 	}
 	
@@ -66,7 +67,7 @@ public class BaseXSession {
 	 * @param database Database to open/create
 	 * @param create True means create if not exists
 	 */
-	public ClientSession get(String database, boolean create) {
+	public ClientSession get(String database, boolean create) throws NoDatabaseException {
 		ClientSession session = get();
 		try {
 			// Check if database exists. Create only if wanted

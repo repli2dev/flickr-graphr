@@ -1,14 +1,11 @@
 package cz.muni.fi.pb138.flickrgraphr.flickr.api;
 
 import cz.muni.fi.pb138.flickrgraphr.backend.storage.BaseXSession;
+import cz.muni.fi.pb138.flickrgraphr.backend.storage.NoDatabaseException;
 import cz.muni.fi.pb138.flickrgraphr.tools.DateTimeHelper;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import javax.servlet.ServletContext;
 import javax.xml.XMLConstants;
 import javax.xml.transform.Source;
@@ -76,7 +73,12 @@ public abstract class AbstractFlickrEntity implements FlickrEntity {
          */
         protected void saveToDababase(String dbName, String dbFileName, InputStream data)
                                       throws FlickrEntityException {
-                ClientSession session = getDatabaseSession().get(dbName, true);
+		ClientSession session = null;
+		try {
+			session = getDatabaseSession().get(dbName, true);
+		} catch(NoDatabaseException ex) {
+			throw new FlickrEntityException("No database.", ex);
+		}
 		try {
 			if(session.execute("XQUERY db:exists(\"" + dbName + "\",\"" + dbFileName + "\")").equals("true")) {
 				session.execute("DELETE " + dbFileName);
@@ -101,7 +103,12 @@ public abstract class AbstractFlickrEntity implements FlickrEntity {
          */
         protected void deleteFromDatabase(String dbName, String dbFileName) 
                                           throws FlickrEntityException {
-                ClientSession session = getDatabaseSession().get(dbName, true);
+		ClientSession session = null;
+		try {
+			session = getDatabaseSession().get(dbName, true);
+		} catch(NoDatabaseException ex) {
+			throw new FlickrEntityException("No database.", ex);
+		}
 		try {
 			BaseXSession.enableWriteback(session);
 			session.execute("DELETE " + dbFileName);

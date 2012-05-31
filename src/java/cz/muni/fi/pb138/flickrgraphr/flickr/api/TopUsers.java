@@ -1,6 +1,7 @@
 package cz.muni.fi.pb138.flickrgraphr.flickr.api;
 
 import cz.muni.fi.pb138.flickrgraphr.backend.storage.BaseXSession;
+import cz.muni.fi.pb138.flickrgraphr.backend.storage.NoDatabaseException;
 import cz.muni.fi.pb138.flickrgraphr.tools.DateTimeHelper;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -68,7 +69,12 @@ public class TopUsers extends AbstractFlickrEntity {
          * @throws FlickrEntityException 
          */
 	private void computeData() throws FlickrEntityException {
-                ClientSession session = getDatabase();
+		ClientSession session = null;
+		try {
+			session = getDatabase();	
+		} catch(NoDatabaseException ex) {
+			throw new FlickrEntityException("No database", ex);
+		}
                 try {
                         String queryString = readFileToString(getPath("/xml/xquery/topusers_from_topphotos.xq"));
                         ClientQuery cQuery = session.query(queryString);
@@ -102,7 +108,7 @@ public class TopUsers extends AbstractFlickrEntity {
                 return results;
         }
         
-	private ClientSession getDatabase() {
+	private ClientSession getDatabase() throws NoDatabaseException {
 		BaseXSession bxs = getDatabaseSession();
 		return bxs.get(DATABASE, true);
 	}

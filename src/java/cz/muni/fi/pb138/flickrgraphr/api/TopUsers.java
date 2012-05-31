@@ -2,6 +2,7 @@ package cz.muni.fi.pb138.flickrgraphr.api;
 
 import cz.muni.fi.pb138.flickrgraphr.api.dbquery.DatabaseQuery;
 import cz.muni.fi.pb138.flickrgraphr.api.dbquery.DatabaseQueryException;
+import cz.muni.fi.pb138.flickrgraphr.backend.storage.NoDatabaseException;
 import cz.muni.fi.pb138.flickrgraphr.flickr.api.FlickrEntity;
 import cz.muni.fi.pb138.flickrgraphr.flickr.api.FlickrEntityException;
 import cz.muni.fi.pb138.flickrgraphr.flickr.api.GetUser;
@@ -98,10 +99,14 @@ public class TopUsers extends HttpServlet {
             topUsersQuery.setParameter("endDate", endDate);
             topUsersQuery.setParameter("userId", user.getId());
 
-            out.println(topUsersQuery.execute());
+	    out.println(topUsersQuery.execute());
 
 
         } catch (DatabaseQueryException ex) {
+		if(ex.getCause() instanceof NoDatabaseException) {
+			response.setStatus(500);
+			return;
+		}
             Logger.getLogger(TopUsers.class.getName()).log(Level.SEVERE, null, ex);
             response.setStatus(500);
         } finally {

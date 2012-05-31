@@ -1,5 +1,6 @@
 package cz.muni.fi.pb138.flickrgraphr.api.dbquery;
 
+import cz.muni.fi.pb138.flickrgraphr.backend.storage.NoDatabaseException;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
@@ -31,8 +32,8 @@ public class TopTags extends AbstractDatabaseQuery {
 		ClientSession session;
 		try {
 			session = getDatabaseSession().get("tags-week");
-		} catch (NullPointerException ex) {
-			throw new DatabaseQueryException("No database connection");
+		} catch (NoDatabaseException ex) {
+			throw new DatabaseQueryException("No database connection", ex);
 		}
 		// Get query
 		String queryContent = getQuery("/xml/xquery/api_top_tags.xq");

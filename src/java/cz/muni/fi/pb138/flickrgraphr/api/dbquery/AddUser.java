@@ -1,6 +1,7 @@
 package cz.muni.fi.pb138.flickrgraphr.api.dbquery;
 
 import cz.muni.fi.pb138.flickrgraphr.backend.storage.BaseXSession;
+import cz.muni.fi.pb138.flickrgraphr.backend.storage.NoDatabaseException;
 import cz.muni.fi.pb138.flickrgraphr.tools.DateTimeHelper;
 import java.io.IOException;
 import java.text.DateFormat;
@@ -30,7 +31,12 @@ public class AddUser extends AbstractDatabaseQuery {
         @Override
         public String execute() throws DatabaseQueryException{
             	// Get database
-		ClientSession session = getDatabaseSession().get("users");
+		ClientSession session = null;
+		try {
+			session = getDatabaseSession().get("users");
+		} catch (NoDatabaseException ex) {
+			throw new DatabaseQueryException("No database connection", ex);
+		}
                 BaseXSession.enableWriteback(session);
 		// Get query
 		String queryContent = getQuery("/xml/xquery/api_add_user.xq");

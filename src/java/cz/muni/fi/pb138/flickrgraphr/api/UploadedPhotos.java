@@ -3,6 +3,7 @@ package cz.muni.fi.pb138.flickrgraphr.api;
 import cz.muni.fi.pb138.flickrgraphr.api.dbquery.DatabaseQuery;
 import cz.muni.fi.pb138.flickrgraphr.api.dbquery.DatabaseQueryException;
 import cz.muni.fi.pb138.flickrgraphr.backend.storage.BaseXSession;
+import cz.muni.fi.pb138.flickrgraphr.backend.storage.NoDatabaseException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.logging.Level;
@@ -48,6 +49,10 @@ public class UploadedPhotos extends HttpServlet {
 					query.setParameter("endDate", endDate);
 					out.println(query.execute());
 				} catch (DatabaseQueryException ex) {
+					if(ex.getCause() instanceof NoDatabaseException) {
+						response.setStatus(500);
+						return;
+					}
 					out.print(JsonBuilder.getErrorJsonForError(JsonBuilder.errorType.IncorrectParameters));
 				}
 			} catch (NullPointerException ex) {
