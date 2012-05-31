@@ -54,12 +54,12 @@ public class TopTags extends HttpServlet {
 						response.setStatus(500);
 						return;
 					}
-					out.print(JsonBuilder.getErrorJson(2, "Invalid arguments"));
+					out.println(JsonBuilder.getErrorJsonForError(JsonBuilder.errorType.IncorrectParameters));
 				}
 			} catch (NullPointerException ex) {
-				out.print(JsonBuilder.getErrorJson(2, "Missing parameter"));
+				out.println(JsonBuilder.getErrorJsonForError(JsonBuilder.errorType.IncorrectParameters));
 			} catch (IllegalArgumentException ex) {
-				out.print(JsonBuilder.getErrorJson(2, "Invalid arguments"));
+				out.println(JsonBuilder.getErrorJsonForError(JsonBuilder.errorType.IncorrectParameters));
 			}
 		} finally {
 			out.close();
