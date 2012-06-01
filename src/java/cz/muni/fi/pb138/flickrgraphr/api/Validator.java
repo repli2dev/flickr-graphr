@@ -24,7 +24,7 @@ public class Validator {
 	 */
 	public static IdType getIdType(String id) {
 
-		if (id == null && id.equals("")) {
+		if (id == null || id.equals("")) {
 			return IdType.invalidId;
 		}
 
