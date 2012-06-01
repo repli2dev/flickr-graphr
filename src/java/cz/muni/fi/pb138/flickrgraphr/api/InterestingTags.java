@@ -13,6 +13,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * Graphr API - page to serve interesting tags
+ * For details @see http://code.google.com/p/flickr-graphr/wiki/GraphrAPI
+ * @author Jan Drábek
+ */
 public class InterestingTags extends HttpServlet {
 
 	/**

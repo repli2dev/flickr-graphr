@@ -10,15 +10,16 @@ import java.util.logging.Logger;
 
 /**
  * Task to compute (and delete) top users for yesterday
+ *
  * @author Jan Drabek
  */
-public class TopUsersTask extends TaskInContext{
-	
+public class TopUsersTask extends TaskInContext {
+
 	private static final Logger logger = Logger.getLogger(TopUsersTask.class.getName());
 
 	@Override
 	public void execute(TaskExecutionContext tec) throws RuntimeException {
-		if(context == null) {
+		if (context == null) {
 			throw new RuntimeException("No context, cannot continue;");
 		}
 		FlickrEntity entity = new TopUsers(context);
@@ -29,6 +30,6 @@ public class TopUsersTask extends TaskInContext{
 		} catch (FlickrEntityException ex) {
 			logger.log(Level.SEVERE, "Computing of 'top-users' failed.", ex);
 		}
-		
+
 	}
 }

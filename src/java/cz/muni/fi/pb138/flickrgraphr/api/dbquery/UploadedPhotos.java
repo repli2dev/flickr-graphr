@@ -7,16 +7,21 @@ import org.basex.server.ClientQuery;
 import org.basex.server.ClientSession;
 
 /**
- * Represents one DB query needed to process request on Graphr API
- * Gets counts of uploaded photos in given period
+ * Represents one DB query needed to process request on Graphr API Gets counts
+ * of uploaded photos in given period
+ *
  * @author Martin Ukrop, Jan Drábek
  */
 public class UploadedPhotos extends AbstractDatabaseQuery {
 
-        // parameters for XQuery
-        private String beginDate;
-        private String endDate;
-    
+	// parameters for XQuery
+	private String beginDate;
+	private String endDate;
+
+	/**
+	 * Create instance of query
+	 * @param context 
+	 */
 	public UploadedPhotos(ServletContext context) {
 		this.context = context;
 	}
@@ -37,7 +42,7 @@ public class UploadedPhotos extends AbstractDatabaseQuery {
 		try {
 			ClientQuery query = session.query(queryContent);
 			query.bind("begin_date", beginDate);
-                        query.bind("end_date", endDate);
+			query.bind("end_date", endDate);
 			output = query.execute();
 			session.close();
 			return output;
@@ -49,11 +54,11 @@ public class UploadedPhotos extends AbstractDatabaseQuery {
 	@Override
 	public void setParameter(String name, String value) throws DatabaseQueryException {
 		if (name.equals("beginDate")) {
-                    beginDate = value;
-                } else if (name.equals("endDate")) {
-                    endDate = value;
-                } else {
-                    throw new DatabaseQueryException("Parameter " + name + "does not exist.");
-                }
+			beginDate = value;
+		} else if (name.equals("endDate")) {
+			endDate = value;
+		} else {
+			throw new DatabaseQueryException("Parameter " + name + "does not exist.");
+		}
 	}
 }

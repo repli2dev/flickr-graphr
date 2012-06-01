@@ -13,16 +13,15 @@ import javax.servlet.ServletContextListener;
 import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 
-
 /**
  * Take care about initialization and proper deinit of task scheduler.
+ *
  * @author Jan Drabek
  */
 public class TaskSchedulerServletContextListener implements ServletContextListener {
+
 	private boolean schedulerRunning = false;
-	
 	final static String SCHEDULER_NAME = "scheduler.cron4j";
-	
 	private static final Logger logger = Logger.getLogger(TaskSchedulerServletContextListener.class.getName());
 
 	@Override
@@ -30,23 +29,23 @@ public class TaskSchedulerServletContextListener implements ServletContextListen
 		ServletContext context = event.getServletContext();
 		// Get and parse configuration
 		Configuration conf = null;
-		logger.log(Level.FINE,"Loading scheduler configuration.");
+		logger.log(Level.FINE, "Loading scheduler configuration.");
 		try {
-			conf = Configuration.loadConfiguration(new URI(context.getRealPath("/WEB-INF/scheduler.xml")),context.getResource("/xml/scheme/scheduler.xsd"));
+			conf = Configuration.loadConfiguration(new URI(context.getRealPath("/WEB-INF/scheduler.xml")), context.getResource("/xml/scheme/scheduler.xsd"));
 		} catch (URISyntaxException ex) {
-			logger.log(Level.SEVERE,"Scheduler configuration parser failed (wrong uri).", ex);
+			logger.log(Level.SEVERE, "Scheduler configuration parser failed (wrong uri).", ex);
 		} catch (ParserConfigurationException ex) {
-			logger.log(Level.SEVERE,"Scheduler configuration parser failed (wrong config).", ex);
+			logger.log(Level.SEVERE, "Scheduler configuration parser failed (wrong config).", ex);
 		} catch (SAXException ex) {
-			logger.log(Level.SEVERE,"Scheduler configuration parser failed (SAX).", ex);
+			logger.log(Level.SEVERE, "Scheduler configuration parser failed (SAX).", ex);
 		} catch (IOException ex) {
-			logger.log(Level.SEVERE,"File with scheduler entries was not found or openable.", ex);
+			logger.log(Level.SEVERE, "File with scheduler entries was not found or openable.", ex);
 		}
-		if(conf == null) {
+		if (conf == null) {
 			return;
 		}
 		// Create scheduler
-		logger.log(Level.FINE,"Setting up scheduler.");
+		logger.log(Level.FINE, "Setting up scheduler.");
 		Scheduler scheduler = new Scheduler();
 		TaskFactory.setContext(context);
 		scheduler.addTaskCollector(TaskFactory.collectTasks(conf));
@@ -57,14 +56,13 @@ public class TaskSchedulerServletContextListener implements ServletContextListen
 
 	@Override
 	public void contextDestroyed(ServletContextEvent event) {
-		if(!schedulerRunning) {
+		if (!schedulerRunning) {
 			return;
 		}
-		logger.log(Level.FINE,"Destroying scheduler.");
+		logger.log(Level.FINE, "Destroying scheduler.");
 		ServletContext context = event.getServletContext();
 		Scheduler scheduler = (Scheduler) context.getAttribute(SCHEDULER_NAME);
 		context.removeAttribute(SCHEDULER_NAME);
 		scheduler.stop();
 	}
-
 }

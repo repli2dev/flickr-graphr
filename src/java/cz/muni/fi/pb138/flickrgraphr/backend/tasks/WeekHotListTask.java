@@ -10,15 +10,16 @@ import java.util.logging.Logger;
 
 /**
  * Task to download (and delete) week hot list
+ *
  * @author Jan Drabek
  */
-public class WeekHotListTask extends TaskInContext{
-	
+public class WeekHotListTask extends TaskInContext {
+
 	private static final Logger logger = Logger.getLogger(WeekHotListTask.class.getName());
 
 	@Override
 	public void execute(TaskExecutionContext tec) throws RuntimeException {
-		if(context == null) {
+		if (context == null) {
 			throw new RuntimeException("No context, cannot continue;");
 		}
 		FlickrEntity entity = new TopTags(context, "week");
@@ -29,6 +30,6 @@ public class WeekHotListTask extends TaskInContext{
 		} catch (FlickrEntityException ex) {
 			logger.log(Level.SEVERE, "Downloading of 'week hot list' failed.", ex);
 		}
-		
+
 	}
 }

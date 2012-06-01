@@ -10,15 +10,16 @@ import java.util.logging.Logger;
 
 /**
  * Task to download (and delete) user names for yesterday's top photos
+ *
  * @author Jan Drabek
  */
-public class UsersTask extends TaskInContext{
-	
+public class UsersTask extends TaskInContext {
+
 	private static final Logger logger = Logger.getLogger(UsersTask.class.getName());
 
 	@Override
 	public void execute(TaskExecutionContext tec) throws RuntimeException {
-		if(context == null) {
+		if (context == null) {
 			throw new RuntimeException("No context, cannot continue;");
 		}
 		FlickrEntity entity = new Users(context);
@@ -29,6 +30,6 @@ public class UsersTask extends TaskInContext{
 		} catch (FlickrEntityException ex) {
 			logger.log(Level.SEVERE, "Downloading of 'users' failed.", ex);
 		}
-		
+
 	}
 }

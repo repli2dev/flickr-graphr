@@ -13,15 +13,20 @@ import org.basex.server.ClientQuery;
 import org.basex.server.ClientSession;
 
 /**
- * Represents one DB query needed to process request on Graphr API
- * Gets the scores for given tag, score method determined by parameter
+ * Represents one DB query needed to process request on Graphr API Gets the
+ * scores for given tag, score method determined by parameter
+ *
  * @author Jan Drabek
  */
 public class TopTags extends AbstractDatabaseQuery {
 
 	private String tag;
 	private String method;
-	
+
+	/**
+	 * Create instance of query
+	 * @param context 
+	 */
 	public TopTags(ServletContext context) {
 		this.context = context;
 	}

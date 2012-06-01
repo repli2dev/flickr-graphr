@@ -16,31 +16,32 @@ import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
 /**
+ * Import data for week top tags (from local data as Flickr past data are not
+ * available)
  *
  * @author Jan Drabek
  */
 public class ImportWeekTopTags {
-	
-	private static final String DOCUMENT_PATH = "file:///home/jan/TEMP/hotListsToImport/";	
-    
-	private static final String ROOT_PATH = "file:///home/jan/TEMP/flickr-graphr/src/";	
-    
+
+	private static final String DOCUMENT_PATH = "file:///home/jan/TEMP/hotListsToImport/";
+	private static final String ROOT_PATH = "file:///home/jan/TEMP/flickr-graphr/src/";
+
 	/**
 	 * Iterate through given dir and import import all .xml files
+	 *
 	 * @param args
-	 * @throws MalformedURLException 
+	 * @throws MalformedURLException
 	 */
-	public static void main(String [] args) throws MalformedURLException, FileNotFoundException{
+	public static void main(String[] args) throws MalformedURLException, FileNotFoundException {
 		BaseXSession database = new BaseXSession("localhost", 1984, "admin", "admin");
-		
+
 		File dir = new File(new URL(DOCUMENT_PATH).getPath());
 		String[] children = dir.list(new XMLFilter());
 		String content;
 		int count = 0;
-		if(children != null) {
-			for(String name : children) {
+		if (children != null) {
+			for (String name : children) {
 				content = IOHelper.fileToString(new File(new URL(DOCUMENT_PATH + name).getPath()));
 				FlickrEntity entity = new TopTags("week", content);
 				((TopTags) entity).setPath(ROOT_PATH);
@@ -63,7 +64,7 @@ public class ImportWeekTopTags {
 		}
 		System.out.println("DONE: imported " + count + " documents.");
 	}
-	
+
 	private static Date parseDateFromFilename(String name) throws ParseException {
 		String temp = name;
 		temp = temp.replace("hotlist-", "");
@@ -71,10 +72,11 @@ public class ImportWeekTopTags {
 		return DateTimeHelper.parseDate(temp);
 	}
 }
+
 class XMLFilter implements FilenameFilter {
+
 	@Override
 	public boolean accept(File file, String name) {
 		return name.endsWith(".xml");
 	}
-	
 }

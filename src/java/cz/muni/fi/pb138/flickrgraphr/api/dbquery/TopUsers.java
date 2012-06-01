@@ -7,17 +7,22 @@ import org.basex.server.ClientQuery;
 import org.basex.server.ClientSession;
 
 /**
- * Represents one DB query needed to process request on Graphr API
- * Gets scores for given user in given date range
+ * Represents one DB query needed to process request on Graphr API Gets scores
+ * for given user in given date range
+ *
  * @author Martin Ukrop
  */
 public class TopUsers extends AbstractDatabaseQuery {
 
-        // parameters for XQuery
-        private String beginDate;
-        private String endDate;
-        private String userId;
-    
+	// parameters for XQuery
+	private String beginDate;
+	private String endDate;
+	private String userId;
+
+	/**
+	 * Create instance of query
+	 * @param context 
+	 */
 	public TopUsers(ServletContext context) {
 		this.context = context;
 	}
@@ -38,7 +43,7 @@ public class TopUsers extends AbstractDatabaseQuery {
 		try {
 			ClientQuery query = session.query(queryContent);
 			query.bind("begin_date", beginDate);
-                        query.bind("end_date", endDate);
+			query.bind("end_date", endDate);
 			query.bind("requested_userid", userId);
 			output = query.execute();
 			session.close();
@@ -51,13 +56,13 @@ public class TopUsers extends AbstractDatabaseQuery {
 	@Override
 	public void setParameter(String name, String value) throws DatabaseQueryException {
 		if (name.equals("beginDate")) {
-                    beginDate = value;
-                } else if (name.equals("endDate")) {
-                    endDate = value;
-                } else if (name.equals("userId")) {
-                    userId = value;
-                } else {
-                    throw new DatabaseQueryException("Parameter " + name + "does not exist.");
-                }
+			beginDate = value;
+		} else if (name.equals("endDate")) {
+			endDate = value;
+		} else if (name.equals("userId")) {
+			userId = value;
+		} else {
+			throw new DatabaseQueryException("Parameter " + name + "does not exist.");
+		}
 	}
 }

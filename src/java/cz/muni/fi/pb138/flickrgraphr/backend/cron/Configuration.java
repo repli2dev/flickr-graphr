@@ -21,32 +21,38 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 /**
- * Parse configuration of task scheduler from given path to XML file (@see scheduler.xsd)
- * @author jan
+ * Parse configuration of task scheduler from given path to XML file
+ *
+ * @see scheduler.xsd
+ * @author Jan Drábek
  */
 public class Configuration {
-	private Map<TaskName,String> conf;
-	
+
+	private Map<TaskName, String> conf;
+
 	/**
 	 * Created by factory pattern
+	 *
 	 * @param conf Entries from configuration
 	 */
-	private Configuration(Map<TaskName,String> conf) {
+	private Configuration(Map<TaskName, String> conf) {
 		this.conf = conf;
 	}
-	
+
 	/**
-	 * Return parsed configuration from path to XML file. Expect file to be a valid XML.
+	 * Return parsed configuration from path to XML file. Expect file to be
+	 * a valid XML.
+	 *
 	 * @param uri URI to XML file (use path with context)
 	 * @return Parsed configuration
-	 * @throws ParserConfigurationException If parser could not be created due configuration problems
+	 * @throws ParserConfigurationException If parser could not be created
+	 * due configuration problems
 	 * @throws SAXException If parsing failed
-	 * @throws IOException  If any I/O error is done
+	 * @throws IOException If any I/O error is done
 	 */
-	public static Configuration loadConfiguration(URI uri, URL schemaLocation) throws ParserConfigurationException, SAXException, IOException{
+	public static Configuration loadConfiguration(URI uri, URL schemaLocation) throws ParserConfigurationException, SAXException, IOException {
 		// Get DOM
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		// FIXME: Ensure that only valid XML are processed
 		SchemaFactory sFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 		Schema schema = sFactory.newSchema(schemaLocation);
 		Source source = new StreamSource(new FileReader(uri.getPath()));
@@ -54,9 +60,9 @@ public class Configuration {
 		DocumentBuilder builder = factory.newDocumentBuilder();
 		Document doc = builder.parse(uri.toString());
 		// Parse the string and get it into internal format
-		Map<TaskName,String> temp = new HashMap<TaskName,String>();
+		Map<TaskName, String> temp = new HashMap<TaskName, String>();
 		NodeList tasks = doc.getElementsByTagName("task");
-		for(int i = 0; i < tasks.getLength(); i++) {
+		for (int i = 0; i < tasks.getLength(); i++) {
 			Element task = (Element) tasks.item(i);
 			NodeList name = task.getElementsByTagName("name");
 			NodeList time = task.getElementsByTagName("time");
@@ -64,11 +70,13 @@ public class Configuration {
 		}
 		return new Configuration(temp);
 	}
+
 	/**
 	 * Return all entries (Name of Task and cron-like timing)
+	 *
 	 * @return All configuration entries
 	 */
-	public Map<TaskName,String> getEntries() {
+	public Map<TaskName, String> getEntries() {
 		return Collections.unmodifiableMap(conf);
 	}
 }

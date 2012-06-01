@@ -7,13 +7,18 @@ import org.basex.server.ClientQuery;
 import org.basex.server.ClientSession;
 
 /**
- * //TODO documentation
- * @author martin
+ * Query for fetching user id from given display name
+ * 
+ * @author Martin Ukrop
  */
 public class GetUserId extends AbstractDatabaseQuery {
     
         private String displayName;
     
+	/**
+	 * Create instance of query
+	 * @param context
+	 */
     	public GetUserId(ServletContext context) {
 		this.context = context;
 	}

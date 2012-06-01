@@ -7,22 +7,27 @@ import org.basex.server.ClientQuery;
 import org.basex.server.ClientSession;
 
 /**
- * Represents one DB query needed to process request on Graphr API
- * Gets the required amount of best user IDs for given day
- * @author martin
+ * Represents one DB query needed to process request on Graphr API Gets the
+ * required amount of best user IDs for given day
+ *
+ * @author Martin Ukrop
  */
 public class TopIdsForDay extends AbstractDatabaseQuery {
-    
-        // parameters for XQuery
-        private String date;
-        private int count;
-    
-    	public TopIdsForDay(ServletContext context) {
+
+	// parameters for XQuery
+	private String date;
+	private int count;
+
+	/**
+	 * Create instance of query
+	 * @param context 
+	 */
+	public TopIdsForDay(ServletContext context) {
 		this.context = context;
 	}
-    
-        @Override
-        public String execute() throws DatabaseQueryException{
+
+	@Override
+	public String execute() throws DatabaseQueryException {
 		// Get database
 		ClientSession session;
 		try {
@@ -37,23 +42,23 @@ public class TopIdsForDay extends AbstractDatabaseQuery {
 		try {
 			ClientQuery query = session.query(queryContent);
 			query.bind("date", date);
-                        query.bind("count", count);
+			query.bind("count", count);
 			output = query.execute();
 			session.close();
 			return output;
 		} catch (IOException ex) {
 			throw new DatabaseQueryException("Problem with executing xquery 'top users'.", ex);
 		}
-        }
+	}
 
-        @Override
-        public void setParameter(String name, String value) throws DatabaseQueryException {
+	@Override
+	public void setParameter(String name, String value) throws DatabaseQueryException {
 		if (name.equals("date")) {
-                    date = value;
-                } else if (name.equals("count")) {
-                    count = Integer.parseInt(value);
-                } else {
-                    throw new DatabaseQueryException("Parameter " + name + "does not exist.");
-                }
-        }
+			date = value;
+		} else if (name.equals("count")) {
+			count = Integer.parseInt(value);
+		} else {
+			throw new DatabaseQueryException("Parameter " + name + "does not exist.");
+		}
+	}
 }

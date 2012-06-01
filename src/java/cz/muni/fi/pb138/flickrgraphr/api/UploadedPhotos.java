@@ -13,6 +13,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * Graphr API - page which serves count of uploaded photos for last week For
+ * details
+ *
+ * @see http://code.google.com/p/flickr-graphr/wiki/GraphrAPI
+ * @author Jan Drábek
+ */
 public class UploadedPhotos extends HttpServlet {
 
 	/**
@@ -34,7 +41,7 @@ public class UploadedPhotos extends HttpServlet {
 			// Fetch parameters
 			String startDate = request.getParameter("start-date");
 			String endDate = request.getParameter("end-date");
-			
+
 			if (!Validator.isDate(startDate) || !Validator.isDate(endDate)) {
 				out.println(
 					JsonBuilder.getErrorJsonForError(
@@ -49,7 +56,7 @@ public class UploadedPhotos extends HttpServlet {
 					query.setParameter("endDate", endDate);
 					out.println(query.execute());
 				} catch (DatabaseQueryException ex) {
-					if(ex.getCause() instanceof NoDatabaseException) {
+					if (ex.getCause() instanceof NoDatabaseException) {
 						response.setStatus(500);
 						return;
 					}

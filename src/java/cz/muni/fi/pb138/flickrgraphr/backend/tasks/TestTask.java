@@ -6,16 +6,16 @@ import java.util.Date;
 
 /**
  * Test task to check proper behaviour of TaskScheduler
+ *
  * @author Jan Drabek
  */
-public class TestTask extends TaskInContext{
+public class TestTask extends TaskInContext {
 
 	@Override
 	public void execute(TaskExecutionContext tec) throws RuntimeException {
-		if(context != null) {
+		if (context != null) {
 			System.out.println(context.getContextPath());
 		}
 		System.out.println("Current system time: " + new Date());
-		System.out.println("Another minute ticked away...");
 	}
 }

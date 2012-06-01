@@ -1,5 +1,9 @@
 package cz.muni.fi.pb138.flickrgraphr.flickr.api;
 
+/**
+ * Exception to be thrown when something in FlickrEntity goes wrong
+ * @author Jan Drabek
+ */
 public class FlickrEntityException extends Exception {
 
 	public FlickrEntityException() {

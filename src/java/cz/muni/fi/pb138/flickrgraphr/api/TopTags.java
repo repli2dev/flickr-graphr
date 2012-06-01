@@ -13,6 +13,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * Graphr API - page which serves top tags from week period
+ * For details @see http://code.google.com/p/flickr-graphr/wiki/GraphrAPI
+ * @author Jan Drábek
+ */
 public class TopTags extends HttpServlet {
 
 	/**

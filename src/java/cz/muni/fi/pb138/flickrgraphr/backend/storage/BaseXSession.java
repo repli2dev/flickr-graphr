@@ -9,27 +9,31 @@ import org.basex.server.ClientSession;
 /**
  * Class for providing connections (= working sessions) for BaseX database
  * Credentials to database are given in constructor
+ *
  * @author Jan Drabek
  */
 public class BaseXSession {
-	
-	/** @var Identification for storing into context variables */
+
+	/**
+	 * @var Identification for storing into context variables
+	 */
 	public final static String BASE_X_SESSION = "BASE_X_SESSION";
-	
-	/** Credentials */
+	/**
+	 * Credentials
+	 */
 	private String hostname;
 	private int port;
 	private String username;
 	private String password;
-	
 	private static final Logger logger = Logger.getLogger(BaseXSession.class.getName());
-	
+
 	/**
-	 * Create with given credentials
+	 * Create instance with given credentials
+	 *
 	 * @param hostname
 	 * @param port
 	 * @param username
-	 * @param password 
+	 * @param password
 	 */
 	public BaseXSession(String hostname, int port, String username, String password) {
 		this.hostname = hostname;
@@ -37,11 +41,11 @@ public class BaseXSession {
 		this.username = username;
 		this.password = password;
 	}
-	
+
 	/**
 	 * Return working session or null on error
 	 */
-	public ClientSession get() throws NoDatabaseException{
+	public ClientSession get() throws NoDatabaseException {
 		ClientSession session = null;
 		try {
 			session = new ClientSession(hostname, port, username, password);
@@ -52,18 +56,22 @@ public class BaseXSession {
 		logger.log(Level.FINE, "Connection to database established.");
 		return session;
 	}
-	
+
 	/**
-	 * Return working session with opened database (won't be created if not existing)
+	 * Return working session with opened database (won't be created if not
+	 * existing)
+	 *
 	 * @param database Database to open
 	 * @return Working session
 	 */
 	public ClientSession get(String database) throws NoDatabaseException {
-		return get(database,false);
+		return get(database, false);
 	}
-	
+
 	/**
-	 * Return working session with opened database (create new one only if create is true)
+	 * Return working session with opened database (create new one only if
+	 * create is true)
+	 *
 	 * @param database Database to open/create
 	 * @param create True means create if not exists
 	 */
@@ -71,8 +79,8 @@ public class BaseXSession {
 		ClientSession session = get();
 		try {
 			// Check if database exists. Create only if wanted
-			if(session.execute("XQUERY db:exists('" + database + "')").equals("false") && create) {
-				session.create(database,new FileInputStream("/dev/null"));
+			if (session.execute("XQUERY db:exists('" + database + "')").equals("false") && create) {
+				session.create(database, new FileInputStream("/dev/null"));
 			}
 			// Open database
 			session.execute("OPEN " + database);
@@ -82,7 +90,11 @@ public class BaseXSession {
 		}
 		return session;
 	}
-	
+
+	/**
+	 * Enable writeback on given connection (expects not null session)
+	 * @param session Session on which writeback should be enabled
+	 */
 	public static void enableWriteback(ClientSession session) {
 		try {
 			if (session.execute("GET WRITEBACK").equals("WRITEBACK: false\n")) {
@@ -92,6 +104,11 @@ public class BaseXSession {
 			logger.log(Level.SEVERE, "Cannot enable writeback.", ex);
 		}
 	}
+
+	/**
+	 * Disable writeback on given connection (expects not null session)
+	 * @param session Session on which writeback should be disabled
+	 */
 	public static void disableWriteback(ClientSession session) {
 		try {
 			if (session.execute("GET WRITEBACK").equals("WRITEBACK: true\n")) {

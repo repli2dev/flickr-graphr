@@ -13,15 +13,16 @@ import org.basex.server.ClientQuery;
 import org.basex.server.ClientSession;
 
 /**
- * Represents one DB query needed to process request on Graphr API
- * Gets the interesting tags (with multiple days entries)
+ * Represents one DB query needed to process request on Graphr API Gets the
+ * interesting tags (with multiple days entries)
+ *
  * @author Jan Drabek
  */
 public class InterestingTags extends AbstractDatabaseQuery {
 
 	private int start;
 	private int records;
-	
+
 	public InterestingTags(ServletContext context) {
 		this.context = context;
 	}
@@ -56,14 +57,14 @@ public class InterestingTags extends AbstractDatabaseQuery {
 		int temp = 0;
 		if (name.equals("start")) {
 			temp = Integer.parseInt(value);
-			if(temp < 0) {
-				throw new DatabaseQueryException("Parameter start must be greater or equal to 0.");	
+			if (temp < 0) {
+				throw new DatabaseQueryException("Parameter start must be greater or equal to 0.");
 			}
 			start = temp;
 		} else if (name.equals("records")) {
 			temp = Integer.parseInt(value);
-			if(temp < 0 || temp > 100) {
-				throw new DatabaseQueryException("Parameter records must be between 0 and 100.");	
+			if (temp < 0 || temp > 100) {
+				throw new DatabaseQueryException("Parameter records must be between 0 and 100.");
 			}
 			records = temp;
 		} else {

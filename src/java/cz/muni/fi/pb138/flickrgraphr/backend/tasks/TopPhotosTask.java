@@ -10,15 +10,16 @@ import java.util.logging.Logger;
 
 /**
  * Task to download (and delete) yesterday's top photos
+ *
  * @author Jan Drabek
  */
-public class TopPhotosTask extends TaskInContext{
-	
+public class TopPhotosTask extends TaskInContext {
+
 	private static final Logger logger = Logger.getLogger(TopPhotosTask.class.getName());
 
 	@Override
 	public void execute(TaskExecutionContext tec) throws RuntimeException {
-		if(context == null) {
+		if (context == null) {
 			throw new RuntimeException("No context, cannot continue;");
 		}
 		FlickrEntity entity = new TopPhotos(context);
@@ -29,6 +30,6 @@ public class TopPhotosTask extends TaskInContext{
 		} catch (FlickrEntityException ex) {
 			logger.log(Level.SEVERE, "Downloading of 'top-photos' failed.", ex);
 		}
-		
+
 	}
 }

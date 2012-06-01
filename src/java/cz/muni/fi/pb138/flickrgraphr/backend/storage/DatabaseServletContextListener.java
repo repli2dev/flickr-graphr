@@ -8,13 +8,13 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
-
 /**
  * Take care about initialization database
+ *
  * @author Jan Drabek
  */
 public class DatabaseServletContextListener implements ServletContextListener {
-	
+
 	private static final Logger logger = Logger.getLogger(DatabaseServletContextListener.class.getName());
 
 	@Override
@@ -34,7 +34,5 @@ public class DatabaseServletContextListener implements ServletContextListener {
 
 	@Override
 	public void contextDestroyed(ServletContextEvent event) {
-
 	}
-
 }
