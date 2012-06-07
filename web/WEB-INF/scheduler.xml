@@ -16,4 +16,8 @@
 		<name>cz.muni.fi.pb138.flickrgraphr.backend.tasks.TopUsersTask</name>
 		<time>50 11 * * *</time>
 	</task>
+	<task id="5">
+		<name>cz.muni.fi.pb138.flickrgraphr.backend.tasks.UploadedPhotosTask</name>
+		<time>59 11 * * *</time>
+	</task>
 </tasks>
