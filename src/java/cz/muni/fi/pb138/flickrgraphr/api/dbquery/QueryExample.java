@@ -2,13 +2,15 @@ package cz.muni.fi.pb138.flickrgraphr.api.dbquery;
 
 import cz.muni.fi.pb138.flickrgraphr.backend.storage.BaseXSession;
 
+//TODO delete entire class
+
 /**
  * Example usage of DatabaseQuery
  * @author Martin Ukrop
  */
 public class QueryExample {
 
-    	// FIXME temporary solution, set your own home when running
+    	// temporary solution, set your own home when running
 	private static final String ROOT_PATH = "file:///home/martin/Documents/flickr-graphr/src";	
     
 	public static void main(String [] args){

@@ -116,7 +116,7 @@ public class UploadedPhotos extends AbstractFlickrEntity {
 	 * @throws FlickrEntityException
 	 */
 	private void transform() throws FlickrEntityException {
-		// TODO generalise XSLT transformation (ideally to AbstractFlickrEntity)
+		// generalise XSLT transformation could be generalised (ideally to .tools package)
 		System.setProperty("javax.xml.transform.TransformerFactory", "net.sf.saxon.TransformerFactoryImpl");
 		TransformerFactory tfactory = TransformerFactory.newInstance();
 		Source source = new StreamSource(new StringReader(data));

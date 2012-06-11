@@ -1,5 +1,7 @@
 package cz.muni.fi.pb138.flickrgraphr.flickr.api;
 
+//TODO delete entire class
+
 /**
  * Example how to use GetUser FlickrEntity
  *
@@ -7,7 +9,7 @@ package cz.muni.fi.pb138.flickrgraphr.flickr.api;
  */
 public class GetUserExample {
 
-	// FIXME setting for root path to project sources
+	// setting for root path to project sources
 	private static final String ROOT_PATH = "file:///home/martin/Documents/flickr-graphr/src";
 
 	public static void main(String[] args) {

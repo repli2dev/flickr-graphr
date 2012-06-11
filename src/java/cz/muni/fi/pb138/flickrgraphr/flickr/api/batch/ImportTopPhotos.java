@@ -14,6 +14,7 @@ import java.util.Date;
 /**
  * Downloads top-photos information from Flickr for a given date range and saves
  * it to DB
+ * Prior to running, ROOT_PATH must be set correctly
  *
  * @author Martin Ukrop
  */
@@ -21,7 +22,7 @@ public class ImportTopPhotos {
 
 	private static final String BEGIN_DATE = "2012-05-18";
 	private static final String END_DATE = "2012-05-18";
-	// FIXME setting for root path to project sources
+	// setting for root path to project sources
 	private static final String ROOT_PATH = "file:///home/martin/Documents/flickr-graphr/src";
 
 	public static void main(String[] args) throws ParseException {
