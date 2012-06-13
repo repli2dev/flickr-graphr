@@ -27,7 +27,7 @@
     <!-- type of element 'photos' -->
     <xsd:complexType name="photos-type">
         <xsd:sequence>
-            <xsd:element name="photo" type="photo-type" minOccurs="0" maxOccurs="500"/>
+            <xsd:element name="photo" type="photo-type" minOccurs="1" maxOccurs="500"/>
         </xsd:sequence>
         <xsd:attribute name="page" use="required" type="positive-integer"/>
         <xsd:attribute name="pages" use="required" type="positive-integer"/>
