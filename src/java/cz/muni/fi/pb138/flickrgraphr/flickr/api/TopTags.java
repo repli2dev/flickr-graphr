@@ -74,8 +74,8 @@ public class TopTags extends AbstractFlickrEntity {
 
 	@Override
 	public void unload() throws FlickrEntityException {
-		// Remove data older than 14 days
-		deleteFromDatabase(DATABASE + "-" + type, DateTimeHelper.formatDate(DateTimeHelper.shiftDate(14 * 24 * 3600 * 1000)));
+		// Remove data older than 21 days
+		deleteFromDatabase(DATABASE + "-" + type, DateTimeHelper.formatDate(DateTimeHelper.shiftDate(21 * 24 * 3600 * 1000)));
 	}
 
 	/**
