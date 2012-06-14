@@ -20,13 +20,13 @@ import java.util.Date;
  */
 public class ImportTopPhotos {
 
-	private static final String BEGIN_DATE = "2012-05-18";
-	private static final String END_DATE = "2012-05-18";
+	private static final String BEGIN_DATE = "2012-05-21";
+	private static final String END_DATE = "2012-06-09";
 	// setting for root path to project sources
-	private static final String ROOT_PATH = "file:///home/martin/Documents/flickr-graphr/src";
+	private static final String ROOT_PATH = "file:///home/jan/TEMP/flickr-graphr/src";
 
 	public static void main(String[] args) throws ParseException {
-		BaseXSession database = new BaseXSession("localhost", 1984, "admin", "admin");
+		BaseXSession database = new BaseXSession("localhost", 1984, "admin", "bastlix24");
 
 		Date date = DateTimeHelper.parseDate(BEGIN_DATE);
 		Date endDate = DateTimeHelper.parseDate(END_DATE);

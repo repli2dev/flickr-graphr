@@ -184,4 +184,18 @@ public abstract class AbstractFlickrEntity implements FlickrEntity {
 		byte[] barray = input.getBytes();
 		return new ByteArrayInputStream(barray);
 	}
+	
+	/**
+	 * saves given String into file
+	 * @param input
+	 * @return 
+	 */
+	protected void dumpData(String input,String nameSuffix) throws Exception {
+		if (context == null) return;
+		URL url = new URL("file://" + context.getRealPath("/xml/error") + "/" + DateTimeHelper.formatDateTime(DateTimeHelper.now()) + "_" + this.getClass().getName() + "_"+ nameSuffix +".xml");
+		System.err.println(url.getPath());
+		PrintWriter errorOut = new PrintWriter(url.getPath());
+		errorOut.println(input);
+		errorOut.close();
+	}
 }

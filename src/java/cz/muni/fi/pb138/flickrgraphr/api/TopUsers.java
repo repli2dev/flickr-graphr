@@ -26,49 +26,49 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class TopUsers extends HttpServlet {
 
-	/**
-	 * Processes requests for both HTTP
-	 * <code>GET</code> and
-	 * <code>POST</code> methods.
-	 *
-	 * @param request servlet request
-	 * @param response servlet response
-	 * @throws ServletException if a servlet-specific error occurs
-	 * @throws IOException if an I/O error occurs
-	 */
-	protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-		throws ServletException, IOException {
-		response.setContentType("text/html;charset=UTF-8");
-		PrintWriter out = response.getWriter();
-		try {
+        /**
+         * Processes requests for both HTTP
+         * <code>GET</code> and
+         * <code>POST</code> methods.
+         *
+         * @param request servlet request
+         * @param response servlet response
+         * @throws ServletException if a servlet-specific error occurs
+         * @throws IOException if an I/O error occurs
+         */
+        protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+                throws ServletException, IOException {
+                response.setContentType("text/html;charset=UTF-8");
+                PrintWriter out = response.getWriter();
+                try {
 
             //validate input parameters---------------------------------
-			String userIdentification = request.getParameter("name");
-			String startDate = request.getParameter("start-date");
-			String endDate = request.getParameter("end-date");
+                        String userIdentification = request.getParameter("name");
+                        String startDate = request.getParameter("start-date");
+                        String endDate = request.getParameter("end-date");
 
-			if (userIdentification == null
-				|| startDate == null
-				|| endDate == null) {
-				out.println(
-					JsonBuilder.getErrorJsonForError(
-					JsonBuilder.errorType.IncorrectParameters));
-				return;
-			}
+                        if (userIdentification == null
+                                || startDate == null
+                                || endDate == null) {
+                                out.println(
+                                        JsonBuilder.getErrorJsonForError(
+                                        JsonBuilder.errorType.IncorrectParameters));
+                                return;
+                        }
 
-			if (!Validator.isDate(startDate) || !Validator.isDate(endDate)) {
-				out.println(
-					JsonBuilder.getErrorJsonForError(
-					JsonBuilder.errorType.IncorrectParameters));
-				return;
-			}
+                        if (!Validator.isDate(startDate) || !Validator.isDate(endDate)) {
+                                out.println(
+                                        JsonBuilder.getErrorJsonForError(
+                                        JsonBuilder.errorType.IncorrectParameters));
+                                return;
+                        }
             //---------------------------------------------------------
 
             //get input type (e-mail || display name || flickr ID)
             IdType authType = Validator.getIdType(userIdentification);
 
-			User user = null;
-			FlickrEntity entity = null;
+                        User user = null;
+                        FlickrEntity entity = null;
 
             try {
                 switch (authType) {
@@ -154,9 +154,9 @@ public class TopUsers extends HttpServlet {
             DatabaseQuery topUsersQuery =
                     new cz.muni.fi.pb138.flickrgraphr.api.dbquery.TopUsers(getServletContext());
 
-			topUsersQuery.setParameter("beginDate", startDate);
-			topUsersQuery.setParameter("endDate", endDate);
-			topUsersQuery.setParameter("userId", user.getId());
+                        topUsersQuery.setParameter("beginDate", startDate);
+                        topUsersQuery.setParameter("endDate", endDate);
+                        topUsersQuery.setParameter("userId", user.getId());
 
             out.println(topUsersQuery.execute());
             //-------------------------------------------------------------
@@ -170,50 +170,50 @@ public class TopUsers extends HttpServlet {
             response.setStatus(500);
         } finally {
 
-			out.close();
-		}
-	}
+                        out.close();
+                }
+        }
 
-	// <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-	/**
-	 * Handles the HTTP
-	 * <code>GET</code> method.
-	 *
-	 * @param request servlet request
-	 * @param response servlet response
-	 * @throws ServletException if a servlet-specific error occurs
-	 * @throws IOException if an I/O error occurs
-	 */
-	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-		throws ServletException, IOException {
-		processRequest(request, response);
-	}
+        // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+        /**
+         * Handles the HTTP
+         * <code>GET</code> method.
+         *
+         * @param request servlet request
+         * @param response servlet response
+         * @throws ServletException if a servlet-specific error occurs
+         * @throws IOException if an I/O error occurs
+         */
+        @Override
+        protected void doGet(HttpServletRequest request, HttpServletResponse response)
+                throws ServletException, IOException {
+                processRequest(request, response);
+        }
 
-	/**
-	 * Handles the HTTP
-	 * <code>POST</code> method.
-	 *
-	 * @param request servlet request
-	 * @param response servlet response
-	 * @throws ServletException if a servlet-specific error occurs
-	 * @throws IOException if an I/O error occurs
-	 */
-	@Override
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-		throws ServletException, IOException {
-		processRequest(request, response);
-	}
+        /**
+         * Handles the HTTP
+         * <code>POST</code> method.
+         *
+         * @param request servlet request
+         * @param response servlet response
+         * @throws ServletException if a servlet-specific error occurs
+         * @throws IOException if an I/O error occurs
+         */
+        @Override
+        protected void doPost(HttpServletRequest request, HttpServletResponse response)
+                throws ServletException, IOException {
+                processRequest(request, response);
+        }
 
-	/**
-	 * Returns a short description of the servlet.
-	 *
-	 * @return a String containing servlet description
-	 */
-	@Override
-	public String getServletInfo() {
-		return "Short description";
-	}// </editor-fold>
+        /**
+         * Returns a short description of the servlet.
+         *
+         * @return a String containing servlet description
+         */
+        @Override
+        public String getServletInfo() {
+                return "Short description";
+        }// </editor-fold>
 
     
     /**
