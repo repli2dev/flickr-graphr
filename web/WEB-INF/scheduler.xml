@@ -1,23 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tasks>
+	<!-- Non problematic stuff -->
 	<task id="1">
 		<name>cz.muni.fi.pb138.flickrgraphr.backend.tasks.WeekHotListTask</name>
 		<time>20 11 * * *</time>
 	</task>
-	<task id="2">
-		<name>cz.muni.fi.pb138.flickrgraphr.backend.tasks.TopPhotosTask</name>
-		<time>40 23 * * *</time>
-	</task>
-	<task id="3">
-		<name>cz.muni.fi.pb138.flickrgraphr.backend.tasks.UsersTask</name>
-		<time>45 23 * * *</time>
-	</task>
-	<task id="4">
-		<name>cz.muni.fi.pb138.flickrgraphr.backend.tasks.TopUsersTask</name>
-		<time>50 23 * * *</time>
-	</task>
 	<task id="5">
 		<name>cz.muni.fi.pb138.flickrgraphr.backend.tasks.UploadedPhotosTask</name>
 		<time>30 11 * * *</time>
+	</task>
+	<!-- Download top photos for last three days -->
+	<task id="7">
+		<name>cz.muni.fi.pb138.flickrgraphr.backend.tasks.TwoDaysBeforeYesterdayTopPhotosTask</name>
+		<time>10 23 * * *</time>
+	</task>
+	<task id="6">
+		<name>cz.muni.fi.pb138.flickrgraphr.backend.tasks.TheDayBeforeYesterdayTopPhotosTask</name>
+		<time>15 23 * * *</time>
+	</task>
+	<task id="2">
+		<name>cz.muni.fi.pb138.flickrgraphr.backend.tasks.YesterdayTopPhotosTask</name>
+		<time>20 23 * * *</time>
+	</task>
+	<!-- Download users for last three days -->
+	<task id="8">
+		<name>cz.muni.fi.pb138.flickrgraphr.backend.tasks.TwoDaysBeforeYesterdayUsersTask</name>
+		<time>25 23 * * *</time>
+	</task>
+	<task id="9">
+		<name>cz.muni.fi.pb138.flickrgraphr.backend.tasks.TheDayBeforeYesterdayUsersTask</name>
+		<time>30 23 * * *</time>
+	</task>
+	<task id="3">
+		<name>cz.muni.fi.pb138.flickrgraphr.backend.tasks.YesterdayUsersTask</name>
+		<time>35 23 * * *</time>
+	</task>
+	<!-- Compute top users -->
+	<task id="11">
+		<name>cz.muni.fi.pb138.flickrgraphr.backend.tasks.TwoDaysBeforeYesterdayTopUsersTask</name>
+		<time>40 23 * * *</time>
+	</task>
+	<task id="10">
+		<name>cz.muni.fi.pb138.flickrgraphr.backend.tasks.TheDayBeforeYesterdayTopUsersTask</name>
+		<time>45 23 * * *</time>
+	</task>
+	<task id="4">
+		<name>cz.muni.fi.pb138.flickrgraphr.backend.tasks.YesterdayTopUsersTask</name>
+		<time>50  23 * * *</time>
 	</task>
 </tasks>
