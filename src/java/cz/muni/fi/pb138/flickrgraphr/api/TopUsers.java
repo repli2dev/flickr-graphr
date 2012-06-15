@@ -22,7 +22,7 @@ import javax.servlet.http.HttpServletResponse;
  * Graphr API - page which serves top users data For details
  *
  * @see http://code.google.com/p/flickr-graphr/wiki/GraphrAPI
- * @author Martin Ukrop, manteaxx
+ * @author Josef Ludvicek
  */
 public class TopUsers extends HttpServlet {
 
@@ -73,12 +73,10 @@ public class TopUsers extends HttpServlet {
             try {
                 switch (authType) {
                     case email:
-                        /*
-                         * - dotaz na Flickr, aby si zistil ID
-                         * (GetUser.fromEmail) - ak user neexistuje, vracias
-                         * Vaskovi user does not exist - ak esxituje, vlozis
-                         * jeho displayName do DB (AddUser) - dotaz na
-                         * topUsersData, vracias Vaskovi JSON
+                        /* - query Flickr for userID (GetUser.fromEmail)
+                         * - return "not-existent" if so
+                         * - otherwise add display-name to DB (AddUser)
+                         * - get & return topUserData
                          */
 
                         entity = new GetUser(getServletContext(), userIdentification, true);
@@ -95,14 +93,12 @@ public class TopUsers extends HttpServlet {
                         break;
 
                     case name:
-                        /*
-                         * - dotaz na nasu databazu, ci tohto usera uz mame
-                         * (getUserId) - ak mame, dotaz na topUsersData, vracias
-                         * Vaskovi JSON - ak nemame, dotaz na Flickr, aby si
-                         * zistil ID (GetUser.fromName) - ak user neexistuje,
-                         * vracias Vaskovi user does not exist - ak esxituje,
-                         * vlozis jeho displayName do DB (AddUser) - dotaz na
-                         * topUsersData, vracias Vaskovi JSON
+                        /* - query Graphr DB to see if user already known (getUserId)
+                         * - if known, skip next 3 steps
+                         * - if not known, query Flickr (GetUser.fromName)
+                         * - return "not-existent" if it is so
+                         * - add name+ID to database (AddUser)
+                         * - get & return topUserData
                          */
 
                         GetUserId getUserId = new GetUserId(getServletContext());
@@ -127,12 +123,8 @@ public class TopUsers extends HttpServlet {
                         break;
 
                     case flickrId:
-                        /*
-                         * - (tu by to malo byt inak, ale strasne by sa to tym
-                         * komplikovalo, takze to bude len takto jednoducho) -
-                         * predpokladas, ze ID je vzdy spravne (existujuce),
-                         * teda nepytas sa Flickra ani nikoho ineho - rovno
-                         * dotaz na topUsersData, vracias Vaskovi JSON
+                        /* - supposing every ID is correct (for simplicity)
+                         * - get & return topUserData
                          */
                         user = new User(userIdentification, null);
                         break;

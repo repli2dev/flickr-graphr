@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Date;
 import javax.servlet.ServletContext;
 import org.basex.server.ClientQuery;
 import org.basex.server.ClientSession;
@@ -112,6 +111,12 @@ public class TopUsers extends AbstractFlickrEntity {
 		return results;
 	}
 
+        /**
+         * returns current database session
+         * 
+         * @return current ClientSession
+         * @throws NoDatabaseException 
+         */
 	private ClientSession getDatabase() throws NoDatabaseException {
 		BaseXSession bxs = getDatabaseSession();
 		return bxs.get(DATABASE, true);

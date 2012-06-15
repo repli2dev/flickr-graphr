@@ -1,13 +1,7 @@
 package cz.muni.fi.pb138.flickrgraphr.api.dbquery;
 
 import cz.muni.fi.pb138.flickrgraphr.backend.storage.NoDatabaseException;
-import java.io.*;
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.io.IOException;
 import javax.servlet.ServletContext;
 import org.basex.server.ClientQuery;
 import org.basex.server.ClientSession;

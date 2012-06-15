@@ -4,6 +4,7 @@ import cz.muni.fi.pb138.flickrgraphr.backend.downloader.Downloader;
 import cz.muni.fi.pb138.flickrgraphr.backend.downloader.DownloaderException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import javax.servlet.ServletContext;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -11,7 +12,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.*;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
-import java.net.URLEncoder;
 
 /**
  * Represents one processing of Flickr API - getting 'user-id' from either email

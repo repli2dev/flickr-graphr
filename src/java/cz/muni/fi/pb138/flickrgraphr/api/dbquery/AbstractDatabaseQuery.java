@@ -2,12 +2,9 @@ package cz.muni.fi.pb138.flickrgraphr.api.dbquery;
 
 import cz.muni.fi.pb138.flickrgraphr.backend.storage.BaseXSession;
 import cz.muni.fi.pb138.flickrgraphr.tools.IOHelper;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Scanner;
 import javax.servlet.ServletContext;
 
 /**
@@ -68,6 +65,13 @@ public abstract class AbstractDatabaseQuery implements DatabaseQuery {
 		return new URL(path + what);
 	}
 
+        /**
+         * Gets contents of the XQuery file as String
+         * 
+         * @param name filename
+         * @return XQuery
+         * @throws DatabaseQueryException 
+         */
 	protected String getQuery(String name) throws DatabaseQueryException {
 		URL pathToXQuery = null;
 		try {

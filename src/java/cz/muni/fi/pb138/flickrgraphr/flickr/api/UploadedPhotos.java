@@ -8,7 +8,6 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.util.Date;
-import java.util.regex.Pattern;
 import javax.servlet.ServletContext;
 import javax.xml.transform.*;
 import javax.xml.transform.stream.StreamResult;

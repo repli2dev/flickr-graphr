@@ -3,7 +3,6 @@ package cz.muni.fi.pb138.flickrgraphr.backend.tasks;
 import cz.muni.fi.pb138.flickrgraphr.backend.cron.TaskInContext;
 import cz.muni.fi.pb138.flickrgraphr.flickr.api.FlickrEntity;
 import cz.muni.fi.pb138.flickrgraphr.flickr.api.FlickrEntityException;
-import cz.muni.fi.pb138.flickrgraphr.flickr.api.TopTags;
 import cz.muni.fi.pb138.flickrgraphr.flickr.api.UploadedPhotos;
 import cz.muni.fi.pb138.flickrgraphr.tools.DateTimeHelper;
 import it.sauronsoftware.cron4j.TaskExecutionContext;

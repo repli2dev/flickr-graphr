@@ -3,25 +3,12 @@ package cz.muni.fi.pb138.flickrgraphr.api;
 /**
  * Helper class which builds JSON objects to be used in Graphr API
  *
- * @author mantaexx
+ * @author Josef Ludvicek
  */
 public class JsonBuilder {
 
-//    public static String getErrorJson(int errCode, String errMessage) {
-//
-//        StringBuilder sb = new StringBuilder();
-//        sb.append("{");
-//        sb.append("\"stat\" : \"fail\",");
-//        sb.append("\"error\": {");
-//        sb.append("\"code\" : ").append(errCode).append(",");
-//        sb.append("\"message\" : \"").append(errMessage).append("\"");
-//        sb.append("}");
-//        sb.append("}");
-//
-//        return sb.toString();
-//    }
     /**
-     * Enum of error types
+     * Enumeration of error types
      */
     public static enum errorType {
 
@@ -50,10 +37,8 @@ public class JsonBuilder {
         }
     }
 
-
-
     /**
-     * This method creates JSON representation of errror
+     * This method creates JSON representation of error
      *
      * @param type error type
      * @return string containing JSON
@@ -89,6 +74,5 @@ public class JsonBuilder {
                 return "Undefined error";
         }
     }
-
 
 }

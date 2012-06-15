@@ -1,7 +1,6 @@
 package cz.muni.fi.pb138.flickrgraphr.backend.cron;
 
 import it.sauronsoftware.cron4j.Scheduler;
-import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -14,7 +13,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 
 /**
- * Take care about initialization and proper deinit of task scheduler.
+ * Take care about initialisation and proper de-initialisation of task scheduler.
  *
  * @author Jan Drabek
  */

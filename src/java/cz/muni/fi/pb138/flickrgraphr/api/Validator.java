@@ -7,18 +7,18 @@ import org.apache.commons.validator.routines.DateValidator;
 import org.apache.commons.validator.routines.EmailValidator;
 
 /**
- * This class can recognize type of user identification
+ * This class can recognise type of user identification
  *
- * @author mantaexx
+ * @author Josef Ludvicek
  */
 public class Validator {
 
 	public static final String DATE_FORMAT = "yyyy-MM-dd";
 
 	/**
-	 * This method recognizes id type from string
+	 * This method recognises id type from string
 	 *
-	 * @param id string with user identification - eg. display name or
+	 * @param id string with user identification - e.g. display name or
 	 * e-mail
 	 * @return id type, or invalidId
 	 */
@@ -55,7 +55,7 @@ public class Validator {
 	}
 
 	/**
-	 * Determines if given string is flickr user ID
+	 * Determines if given string is Flickr user ID
 	 *
 	 * @param id string with id
 	 * @return returns true if given string is sth. like 12345678@N12

@@ -148,8 +148,7 @@ public abstract class AbstractFlickrEntity implements FlickrEntity {
 		//File test = new File(context.getResource("/").getPath());
 		try {
 			Source source = new StreamSource(new StringReader(xml));
-			Schema schema = null;
-			schema = sFactory.newSchema(getPath(xmlSchema));
+			Schema schema = sFactory.newSchema(getPath(xmlSchema));
 			Validator validator = schema.newValidator();
 			validator.validate(source);
 		} catch (Exception ex) { //IOEXception, SAXException, MalformedURLException

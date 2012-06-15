@@ -1,16 +1,12 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package cz.muni.fi.pb138.flickrgraphr.backend.cron;
 
 import org.junit.AfterClass;
-import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.BeforeClass;
+import org.junit.Test;
 
 /**
- * Test TaskName class
+ * Test of TaskName class
  * @author Jan Drábek
  */
 public class TaskNameTest {

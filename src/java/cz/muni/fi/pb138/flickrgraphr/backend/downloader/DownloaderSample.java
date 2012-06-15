@@ -1,12 +1,8 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package cz.muni.fi.pb138.flickrgraphr.backend.downloader;
 
 /**
  * Small sample of how to use downloader...
- * @author mantaexx
+ * @author Josef Ludvicek
  */
 public class DownloaderSample {
 

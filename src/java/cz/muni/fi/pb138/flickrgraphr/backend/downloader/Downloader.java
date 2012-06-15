@@ -3,7 +3,6 @@ package cz.muni.fi.pb138.flickrgraphr.backend.downloader;
 import cz.muni.fi.pb138.flickrgraphr.tools.IOHelper;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -11,7 +10,7 @@ import java.net.URLConnection;
 /**
  * This is simple class with static method for downloading web content
  *
- * @author mantaexx
+ * @author Josef Ludvicek
  */
 public class Downloader {
 
@@ -35,8 +34,6 @@ public class Downloader {
 		URL url = null;
 		URLConnection conn = null;
 		BufferedReader bfr = null;
-		InputStreamReader isr = null;
-		StringBuilder result = new StringBuilder();
 
 		try {
 			url = new URL(requestedUrl);

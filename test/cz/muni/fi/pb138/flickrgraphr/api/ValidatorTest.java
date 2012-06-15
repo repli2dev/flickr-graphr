@@ -1,13 +1,12 @@
 package cz.muni.fi.pb138.flickrgraphr.api;
 
-import java.util.Calendar;
 import org.junit.AfterClass;
-import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.BeforeClass;
+import org.junit.Test;
 
 /**
- * Test of validator class
+ * Test of Validator class
  *
  * @author Jan Drabek
  */
@@ -122,6 +121,6 @@ public class ValidatorTest {
 	@Test
 	public void testGetDate() {
 		// Not tested...
-		// What was first the egg or the chicken
+		// What was first, the egg or the chicken?
 	}
 }

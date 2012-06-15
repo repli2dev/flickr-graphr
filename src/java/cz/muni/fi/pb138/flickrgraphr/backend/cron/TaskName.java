@@ -28,7 +28,7 @@ public class TaskName {
 			return false;
 		}
 		TaskName temp = (TaskName) o;
-		return (id == temp.id && temp.name == name);
+		return (id == temp.id && temp.name.equals(name));
 	}
 
 	@Override

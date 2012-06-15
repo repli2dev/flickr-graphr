@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletResponse;
  * Graphr API - page which serves ID of today's top users For details
  *
  * @see http://code.google.com/p/flickr-graphr/wiki/GraphrAPI
- * @author mantaexx
+ * @author Josef Ludvicek
  */
 public class TopDayIDs extends HttpServlet {
 

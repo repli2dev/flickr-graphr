@@ -6,15 +6,13 @@ import cz.muni.fi.pb138.flickrgraphr.flickr.api.FlickrEntityException;
 import cz.muni.fi.pb138.flickrgraphr.flickr.api.TopTags;
 import cz.muni.fi.pb138.flickrgraphr.tools.DateTimeHelper;
 import cz.muni.fi.pb138.flickrgraphr.tools.IOHelper;
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FilenameFilter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Import data for week top tags (from local data as Flickr past data are not
@@ -24,6 +22,7 @@ import java.util.logging.Logger;
  */
 public class ImportWeekTopTags {
 
+        // setting for root path to project sources
 	private static final String DOCUMENT_PATH = "file:///home/jan/TEMP/hotListsToImport/";
 	private static final String ROOT_PATH = "file:///home/jan/TEMP/flickr-graphr/src/";
 
@@ -65,6 +64,12 @@ public class ImportWeekTopTags {
 		System.out.println("DONE: imported " + count + " documents.");
 	}
 
+        /**
+         * Parses date from filemane of imported HotList files (format hotlist-YYYY-MM-DD.xml)
+         * @param name
+         * @return parsed date
+         * @throws ParseException 
+         */
 	private static Date parseDateFromFilename(String name) throws ParseException {
 		String temp = name;
 		temp = temp.replace("hotlist-", "");

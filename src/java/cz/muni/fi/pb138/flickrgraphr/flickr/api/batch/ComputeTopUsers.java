@@ -6,9 +6,7 @@ import cz.muni.fi.pb138.flickrgraphr.flickr.api.FlickrEntity;
 import cz.muni.fi.pb138.flickrgraphr.flickr.api.FlickrEntityException;
 import cz.muni.fi.pb138.flickrgraphr.flickr.api.TopUsers;
 import cz.muni.fi.pb138.flickrgraphr.tools.DateTimeHelper;
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -19,8 +17,10 @@ import java.util.Date;
  */
 public class ComputeTopUsers {
 
+        // setting for dates for which to get data (format YYYY-MM-DD)
 	private static final String BEGIN_DATE = "2012-05-14";
 	private static final String END_DATE = "2012-06-10";
+        
 	// setting for root path to project sources
 	private static final String ROOT_PATH = "file:///home/jan/TEMP/flickr-graphr/src";
 

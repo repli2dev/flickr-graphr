@@ -1,17 +1,14 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package cz.muni.fi.pb138.flickrgraphr.backend.downloader;
 
 import org.junit.AfterClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
 import org.junit.BeforeClass;
+import org.junit.Test;
 
 /**
- *
- * @author jan
+ * Test of Downloader class
+ * 
+ * @author Jan Drabek
  */
 public class DownloaderTest {
 

@@ -1,7 +1,7 @@
 package cz.muni.fi.pb138.flickrgraphr.flickr.api;
 
 /**
- * User entity - for tuple od id and displayName
+ * User entity - for tuple of id and displayName
  *
  * @author Martin Ukrop
  */
