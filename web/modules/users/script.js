@@ -64,10 +64,10 @@ FlickrGraphr.modules["users"] = {
         
         // prepare dates now and previous week
         var prevDate = new Date();
-        prevDate.setDate(prevDate.getDate() - 8);
+        prevDate.setDate(prevDate.getDate() - 9);
         
         var nowDate = new Date();
-        nowDate.setDate(nowDate.getDate() - 1);
+        nowDate.setDate(nowDate.getDate() - 2);
         
         $('#topUsersDateFrom').datepicker("setDate",  prevDate);
         $('#topUsersDateTo').datepicker("setDate", nowDate );
