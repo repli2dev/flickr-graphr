@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<article>
+  <articleinfo>
+    <title>Závěrečná zpráva projektu Flickr-graphr</title>
+
+    <author>
+      <firstname>Jan</firstname>
+
+      <surname>Drábek</surname>
+
+      <affiliation>
+        <orgname>Fakulta Informatiky Masarykovy univerzity</orgname>
+      </affiliation>
+    </author>
+
+    <pubdate>17. 6. 2012</pubdate>
+  </articleinfo>
+
+  <section>
+    <title>Analýza a návrh</title>
+
+    <para>Na první týmové schůzce na mě připadl úkol analýzy a návrhu
+    architektury systému. Původní zadání mělo za úkol vizualizovat tredny z
+    Twitteru, nicméně náš průzkum ukázal, že data nutná pro takovou
+    vizualizaci nejsou dostupná a kromě toho již existují stejné vizualizace
+    (očividně využívající jinak nedostupná data).</para>
+
+    <para>V týmu padl návrh vizualizovat data z Flickeru, který má bohatší
+    API. Na první schůzce se zadavatelem jsme tento návrh přednesli a byl
+    schválen. První schůzka a následně upravené zadání sloužily jako podklady pro
+    vypracování specifikace projektu a návrhu systému, které jsem měl na
+    starosti. Výsledkem jsou stránky: <ulink
+    url="http://code.google.com/p/flickr-graphr/wiki/Specifikace">Specifikace</ulink>
+    a <ulink
+    url="http://code.google.com/p/flickr-graphr/wiki/Navrh">Návrh</ulink>
+    dostupné na <ulink url="http://code.google.com/p/flickr-graphr/">wiki
+    projektu</ulink> (na návrhu jsem spolupracoval s Martinem, který měl nastarosti vymýšlení jednotlivých vizualizací).</para>
+
+    <para>V návrhu jsem rozčlenil projekt do následujících podčástí:</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>Sdílená vrstva</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>Slouží pro práci s databází (protože je využívána jak crawlerem, tak REST API)</para>
+          </listitem>
+        </itemizedlist>
+      </listitem>
+
+      <listitem>
+        <para>Crawler - pro stahování dat z Flickeru</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>Automatické provádění načasovaných úloh</para>
+          </listitem>
+        </itemizedlist>
+      </listitem>
+
+      <listitem>
+        <para>REST API - poskytuje zpracovaná data z naší databáze</para>
+      </listitem>
+
+      <listitem>
+        <para>Uživatelské rozhraní - prezentační vrstva zobrazující data
+        získaná z REST API</para>
+      </listitem>
+    </itemizedlist>
+  </section>
+
+  <section>
+    <title>Implementace</title>
+
+    <para>Při druhé týmové poradě jsme vybrali Javu jako základní technologii
+    a rozdělili si další úlohy. Na mě připadlo zajištění automatického provádění
+    úloh a vrstvy pro práci s databázi.</para>
+
+    <para>Pro implementaci automatizovaného spouštění úloh jsem použil
+    knihovnu cron4j, k jejímuž zapojení do projektu bylo zapotřebí vytvořit
+    konfigurační soubor (XML), ve kterém je uvedeno časování jednotlivých úloh.
+    Následně bylo potřeba vytvořit parser konfigurace a zařídit instanciaci
+    úloh. Poslední úlohou bylo spuštění scheduleru při nasazení aplikace do
+    kontejneru.</para>
+
+    <para>Druhým úkolem bylo vytvoření vrstvy pro práci s databází.
+    Problematická se ukázala instanciace přes kontejner (málo dokumentace,
+    většina nepočítala s využitím samostatně běžícího serveru). Bylo tedy
+    potřeba vytvořit vlastní obálku, která získává při nasazení serveru údaje
+    pro autentizaci z patřičného XML souboru. Z této obálky lze získat nové
+    spojení na databázi a případně na něm rovnou otevřít/vytvořit konkrétní
+    databázi.</para>
+
+    <para>Po třetí týmové poradě bylo mým dalším úkolem vytvoření prvních tříd pro
+    Crawler a REST API vrstvu. Vybral jsem si pro implementaci vizualizaci
+    TopTags. Vytvořil jsem třídu, která zajišťovala stažení, transformaci a
+    uložení dat pro metodu Flickr API (hotList), příslušnou úlohu pro Crawler a
+    příslušnou REST API stránku, která zajišťuje zpracování požadavků - tedy
+    zpracování parametrů, validace a zavolání dotazu nad databází. Nezbytností
+    tohoto úkolu bylo vytvoření XSD, XSLT a XQuery, viz <ulink
+    url="http://code.google.com/p/flickr-graphr/wiki/vyvojarska_dokumentace">Vývojářská
+    dokumentace</ulink>.</para>
+
+    <para>Zbytek projektu jsem se věnoval dohlížení průběhu implementace, tvorbou vývojářské dokumentace a jednotkových testů. Měl jsem na starosti pravidelné nasazení projektu na produkční server, během níž jsme objevili problémy s Flickr API. Flickr totiž nezaručuje zveřejnění dat některých metod API v krátké době po skončení sledovaného období (například zajímavé fotky z 13. 6. 2012 zveřejnil s dvoudenním zpožděním). Museli jsme tomu přizpůsobit stahování dat a vytvořit redundantní úlohy, jejichž úkolem je znovu stahovat i starší data.
+    </para>
+  </section>
+
+  <section>
+    <title>Závěr</title>
+
+    <para>Zajímavý projekt jehož provedení
+    vyžadovalo jistou dávku netriválního kreativního přístupu. Ve spolupráci s týmem, jehož
+    zkušenosti pomohly předejít slepým uličkám v návrhu i vývoji (obzvláště
+    Twitter) byl tento projekt úspěšně dokončen v rozsahu požadovaném zadáním.</para>
+  </section>
+</article>

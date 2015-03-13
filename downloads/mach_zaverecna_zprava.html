@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+   <head>
+      <title>Závěrečná zpráva projektu Flickr-graphr</title>
+      <meta name="generator" content="DocBook XSL Stylesheets V1.77.1"/>
+   </head>
+   <body bgcolor="white"
+         text="black"
+         link="#0000FF"
+         vlink="#840084"
+         alink="#0000FF">
+      <div lang="cs" class="article">
+         <div class="titlepage">
+            <div>
+               <div>
+                  <h2 class="title">
+                     <a name="d54e1"/>Závěrečná zpráva projektu Flickr-graphr</h2>
+               </div>
+               <div>
+                  <div class="author">
+                     <h3 class="author">
+                        <span class="firstname">Václav</span> 
+                        <span class="surname">Mach</span>
+                     </h3>
+                     <div class="affiliation">
+                        <span class="orgname">Fakulta informatiky Masarykovy univerzity<br/>
+                        </span>
+                     </div>
+                  </div>
+               </div>
+               <div>
+                  <p class="pubdate">17. 6. 2012</p>
+               </div>
+            </div>
+            <div/>
+            <hr/>
+         </div>
+         <div class="toc">
+            <p>
+               <b>Obsah</b>
+            </p>
+            <dl>
+               <dt>
+                  <span class="section">
+                     <a href="#d54e19">Uživatelské rozhraní</a>
+                  </span>
+               </dt>
+               <dt>
+                  <span class="section">
+                     <a href="#d54e42">Použité technologie</a>
+                  </span>
+               </dt>
+               <dd>
+                  <dl>
+                     <dt>
+                        <span class="section">
+                           <a href="#d54e58">jQuery, jQuery UI, pluginy HashChange a Tagcloud</a>
+                        </span>
+                     </dt>
+                     <dt>
+                        <span class="section">
+                           <a href="#d54e65">Google Charts</a>
+                        </span>
+                     </dt>
+                     <dt>
+                        <span class="section">
+                           <a href="#d54e70">Flickr API</a>
+                        </span>
+                     </dt>
+                  </dl>
+               </dd>
+               <dt>
+                  <span class="section">
+                     <a href="#d54e75">Shrnutí</a>
+                  </span>
+               </dt>
+            </dl>
+         </div>
+         <div class="section">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title" style="clear: both">
+                        <a name="d54e19"/>Uživatelské rozhraní</h2>
+                  </div>
+               </div>
+               <div/>
+            </div>
+            <p>Při návrhu projektu byly zvoleny technologie HTML + JavaScript, které umožňují vyšší interaktivitu než staticky generovaný obsah. Uživatelské rozhraní komunikuje se serverovou částí pomocí REST API, data jsou posílána pomocí JSON objektů.</p>
+            <p>Z důvodu security policy mají prohlížeče zakázány dotazy na bázi <code class="code">XmlHttpRequest</code> na jiný server, než ze kterého je generovaná statická stránka, proto musí být UI i serverová část přítomna na jednom serveru. Toto omezení by bylo možné vyřešit pomocí technologie JSONP, ovšem za cenu snížení možnosti reagovat na případné na straně serveru.</p>
+            <p>Webové rozhraní se dělí do jednotlivých modulů (users, tags, photos), kde každý modul obsahuje jednu vizualizaci. Moduly se načítají asynchronně kliknutím na odkaz v menu, v budoucnu lze moduly upravovat i přidávat moduly nové.</p>
+            <p>Modul se skládá ze statické stránky (<code class="code">template.html</code>) a ze souboru se skripty (<code class="code">script.js</code>), konkrétní struktura je popsaná ve <a class="ulink"
+                  href="http://code.google.com/p/flickr-graphr/wiki/vyvojarska_dokumentace_gui"
+                  target="_top">Vývojářské
+    dokumentaci ke GUI</a>.</p>
+         </div>
+         <div class="section">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title" style="clear: both">
+                        <a name="d54e42"/>Použité technologie</h2>
+                  </div>
+               </div>
+               <div/>
+            </div>
+            <div class="itemizedlist">
+               <ul class="itemizedlist" style="list-style-type: disc; ">
+                  <li class="listitem">
+                     <p>jQuery + pluginy, jQuery UI</p>
+                  </li>
+                  <li class="listitem">
+                     <p>Google Charts</p>
+                  </li>
+                  <li class="listitem">
+                     <p>Flickr API</p>
+                  </li>
+                  <li class="listitem">
+                     <p>knihovna date.format pro JavaScript</p>
+                  </li>
+               </ul>
+            </div>
+            <div class="section">
+               <div class="titlepage">
+                  <div>
+                     <div>
+                        <h3 class="title">
+                           <a name="d54e58"/>jQuery, jQuery UI, pluginy HashChange a Tagcloud</h3>
+                     </div>
+                  </div>
+                  <div/>
+               </div>
+               <p>jQuery, jeden z nejrozšířenějších JavaScript frameworků, zajišťuje načítání jednotlivých modulů webového rozhraní a prostředky pro komunikaci s REST API. jQuery UI poskytuje připravené základní prvky uživatelského rozhraní (date picker, tlačítko, ...). Všechny použité pluginy do jQuery jsou volně šířitelné.</p>
+               <p>Plugin HashChange umožňuje jednodušší obsluhování události změny URL, používá se při načítání modulů, Tagcloud generuje objekt se štítky, u kterého je velikost názvu štítku dána počtem jeho výskytů.</p>
+            </div>
+            <div class="section">
+               <div class="titlepage">
+                  <div>
+                     <div>
+                        <h3 class="title">
+                           <a name="d54e65"/>Google Charts</h3>
+                     </div>
+                  </div>
+                  <div/>
+               </div>
+               <p>Ze široké nabídky vizualizací je použit interaktivní Line Chart, pro který jsou data získaná z REST API speciálně upravena (API data posílá v objektech, ze kterých je generovaná tabulka - zdroj pro Charts). Přidáním položky do grafu se graf znovu vykreslí.</p>
+            </div>
+            <div class="section">
+               <div class="titlepage">
+                  <div>
+                     <div>
+                        <h3 class="title">
+                           <a name="d54e70"/>Flickr API</h3>
+                     </div>
+                  </div>
+                  <div/>
+               </div>
+               <p>Flickr API je použito přímo i v UI. Kliknutím na položky v některých grafech jsou načítány doplňující informace (uživatelé, fotografie) přímo z Flickru.</p>
+            </div>
+         </div>
+         <div class="section">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title" style="clear: both">
+                        <a name="d54e75"/>Shrnutí</h2>
+                  </div>
+               </div>
+               <div/>
+            </div>
+            <p>Projekt Flickr-graphr byl rozdělen do několika částí, kde každou měl přidělen některý z členů týmu. To se osvědčilo. Výsledkem je funkční, uživatelsky přívětivá, webová aplikace, která má šanci uplatnit se v praxi.</p>
+         </div>
+      </div>
+   </body>
+</html>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="http://www.oasis-open.org/docbook/xml/5.0/rng/docbook.rng" schematypens="http://relaxng.org/ns/structure/1.0"?>
+
+<article xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.0" xml:lang="cs">
+    <info>
+        <title>flickr-graphr</title>
+        <subtitle>závěrečná zpráva</subtitle>
+        <author>
+            <personname>Josef Ludvíček</personname>
+            <email>ludvicek@mail.muni.cz</email>
+        </author>
+    </info>
+    <sect1>
+        <title>Výběr databáze</title>
+        <para>V tomto projektu uživateli zprostředkováváme statistický pohled na způsob využívání
+            serveru flickr. Požadovaná data stahujeme a ukládáme v databázi. Zvolili jsme xml
+            databázi, protože projekt řešíme v rámci předmětu PB138 Moderní značkovací jazyky a
+            jejich aplikace a jedním z požadavků bylo použití tohoto typu databáze. </para>
+        <para>První podmínkou výběru databáze byla cena. Hledal jsem tedy mezi nekomerčními
+            řešeními. Protože jsme se s xml databází setkali poprvé, musel jsem najít produkt, který
+            je dobře zdokumentovaný a jednoduše nasaditelný. Našim požadavkům dobře vyhovoval
+            produkt <link xlink:title="domovská stránka BaseX" xlink:href="http://basex.org/home/"
+                >BaseX</link>.  </para>
+        <para>Zmíněný produkd je šířen pod licencí <link xlink:title="BSD licence" xlink:href="http://basex.org/open-source/">BSD</link> a je distribuován jako spustitelný jar archiv. BaseX je možné spustit v několika režimech, z nichž využíváme režim databázového serveru a GUI. Zejména díky grafickému rozhraní je konfigurace databáze jednoduchá a intuitivní. Pomocí GUI je také možné procházet obsah databáze a vyhodnocovat nad ním XPath/XQuery 3.0. Příjemným bonusem tohoto řešení byla i dobrá wiki a ukázkové kusy kódu pro základní typy operací s databází. jar </para>
+        
+    </sect1>
+    <sect1>
+        <title>Zřízení serveru</title>
+        <para>Většinu dat z flickru jde stáhnout kdykoliv, ovšem něco lze stáhnout pouze v určitou
+            dobu. Tímto je například žebříček nejzajímavějších uživatelů za daný den. Tuto informaci
+            lze zjistit pouze pro aktuální den. Aplikace tedy musí každý den stáhnout tento žebříček
+            a informace si uložit. Tento přístup vyžaduje server, kam se budou tato data průběžně
+            stahovat a shromažďovat.</para>
+        <para>Mým úkolem bylo server zajistit. První variantou bylo použití cloudového řešení <link
+                xlink:title="OPENSHIFT home page" xlink:href="https://openshift.redhat.com/app/"
+                >OPENSHIFT</link>. Při nasazování jsem ale narážel na problémy s nastavením portů na
+            kterých má databáze naslouchat. BaseX se ale na definované porty nedokázal připojit.
+            Proto jsem se správci IT na FI vyjednal zřízení virtuálního serveru. Bohužel jsem
+            nedostali veřejnou IP, ale server je schován za NATem, takže jsem musel připravit
+            skripty, které po startu stroje vytvoří reverzní ssh tunely na aisu a také skript pro
+            spuštění databáze. </para>
+        <para>Nastavení aisy neumožňuje přístup zvenčí, takže je ještě třeba mít ssh tunel z
+            klientského počítače na aisu na příslušný port. Server dostal příznačné pojmenování
+            BastliX. Na wiki stránkách projektu jsou popsané postupy jak se na server připojit a
+            také mapování portů na jednotlivé služby. </para>
+    </sect1>
+    <sect1>
+        <title>Implementace Graphr API</title>
+        <subtitle>REST API pro moduly uživatelského rozhraní</subtitle>
+        <para>Dále jsem implementoval API pro přístup k datům z grafického rozhraní aplikace. Toto
+            je realizováno jako Java Servlet. Pomocí HTTP Get je možné si vyžádat data z databáze,
+            která jsou vrácena ve formátu JSON. Tento formát jsme zvolili proto, že grafické
+            rozhraní je napsané v JavaScriptu. Dokumentace k API je opět na wiki stránkách
+            projektu.</para>
+        <para>V předávaných parametrech je také možné dotázat se na konkrétního uživatele. Servlet
+            potom dokáže rozpoznat, jestli se jedná o e-mail, flickr ID, a nebo display name. Podle
+            toho pak volá příslušné metody pro práci s databází. Pokud daného uživatele nenalezne v
+            databázi, tak následuje ještě dotaz na flickr, jestli uživatel existuje a pokud ano, je
+            záznam uložen do databáze a požadovaná data vrácena. </para>
+    </sect1>
+    <sect1>
+        <title>Shrnutí</title>
+        <para>Při práci na tomto projektu jsem se poprvé setkal s xml databází a výraznějším
+            používání značkovacích jazyků. Myslím si, že pro tento projekt by bylo vhodnější použít
+            relační databázi jednak proto, že s nimi už umíme pracovat a také proto, že ukládaná
+            data mají spíš povahu tabulek a provádíme nad nimi další výpočty pro vytovření "žebříčků
+            zajímavosti". </para>
+        <para>Myslím, že náš tým dobře organizovaný. Komunikaci jsme řešili pomocí Google groups a
+            Google code. Práci jsme měli rozčleněnou a z těchto zdrojů bylo dobře patrné, kdo na čem
+            pracuje, takže nedocházelo ke konfliktům ve zdrojových kódech.</para>
+    </sect1>
+</article>

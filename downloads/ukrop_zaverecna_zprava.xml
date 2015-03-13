@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<article>
+  <articleinfo>
+    <title>Záverečná správa projektu Flickr-graphr</title>
+    <author>
+      <firstname>Martin</firstname>
+      <surname>Ukrop</surname>
+      <affiliation>
+        <orgname>Fakulta Informatiky, Masarykova univerzita, Brno</orgname>
+      </affiliation>
+    </author>
+    <pubdate>17. 6. 2012</pubdate>
+  </articleinfo>
+
+  <section>
+    <title>Analýza a návrh</title>
+
+	<para>Po dohode na téme projektu bolo za prvý krok stanovený prieskum, aké dáta sú dostupné a akým spôsobom je možné ich vhodne vyzualizovať. Po preskúmaní API služby Twitter som dospel k záveru, že vytvárať netriviálne vizualizácie z ich dát bude dosť problematické. Základné štatistické údaje totiž neposkytovali priamo a dotazovať sa na ne postupne nebolo možné kvôli obmedzeniam na počet dotazov na Twitter API pochádzajúcich od jednej aplikácie.</para>
+	
+	<para>Prišli sme s návrhom použiť radšej službu Flickr, ktorý nám konzultant schválil. Mojou úlohou v tejto fáze riešenia bolo vymyslieť, čo všetko by bolo možné vyzualizovať (vychádzajúc z dát, ktoré nám Flickr API vie poskytnúť). Výsledný zoznam je možné nájsť na príslušnej <ulink url="http://code.google.com/p/flickr-graphr/wiki/napady_na_vizualizacie">wiki stránke</ulink>.</para>
+	
+  </section>
+
+  <section>
+    <title>Implementácia</title>
+
+    <para>Pri rozdeľovaní prác na implementácií som si vybral spracovanie dát pred uložením do databázy a ich následný výber na základe parametrov dodaných cez Graphr API. Spôsoby komunikácie medzi jednotlivými triedami a vrstvami boli dôsledne dohodnuté na spoločnom stretnutí. Na tomto stretnutí spoločnou prácou taktiež vznikla všeobecná schéma znázorňujúca komunikáciu medzi všetkými vrstvami, zjednotil sa systém pomenovania objektov a dát, spresnilo sa, kto bude ktoré chyby spracovávať a ktoré propagovať vyššie a rozdelila sa práca na zostávajúcich nedoimplementovaných triedach. Túto schému je možné nájsť aj v dokumentácii projektu (fotografiu tabule v repozitári a vektorové prevedenie v sekcii Downloads).</para>
+
+	<para>Keďže dáta sme ukladali do natívnej XML databázy (BaseX), ich spracovanie prebiehalo pomocou technológií príbuzných XML - validácie pomocou XML Schémat, využitie XSL transformácií a netriviálne XQuery dotazy na vytvorenie výslednej štruktúry odosielanej cez Graphr API ako odpoveď na daný dotaz. Vymyslený systém spracovania som implementoval pre zložitejšie dotazy týkajúce sa najlepších používateľov Flickr-u. Triedy pre jednoduchšie dotazy (TopTags, DownloadedPhotos) vytvoril na základe mojich Honza.</para>
+	
+	<para>Spracovanie zdrojových dát som rozdelil do niekoľkých častí: stiahnutie z Flickr-u (pomocou tried, ktoré vytváral Pepa), validácia stiahnutých dát, transformácia do formátu našej databáze a ďalšia validácia (fungujúca ako zábezpeka na udržanie konzistencie dát v databázach).</para>
+	
+	<para>Vytváranie odpovedí na dotazy cez Graphr API bolo z väčšej časti postavené netriviálnych XQuery dotazoch na našu databázu. Spomínané dotazy využívali množstvo konštrukcií od vlastných funkcií až po spájanie dotazov na viacero databáz.</para>
+	
+	<para>Na záver projektu som prekreslil vyššie spomínanú schému do vektorovej podoby a urobil záverečnú revíziu všetkej JavaDoc-ovej dokumentácie.</para>
+	
+  </section>
+
+  <section>
+    <title>Záver</title>
+
+    <para>Cieľavedomé vedenie týmu a vzájomné konzultácie a diskusie nám pomohli dokončiť projekt v plnom plánovanom rozsahu. Každý člen zodpovedne rozpracoval dohodnutú časť pričom dobrá organizácia zabezpečila bezproblémovú interoperabilitu jednotlivých súčastí.</para>
+	
+  </section>
+</article>

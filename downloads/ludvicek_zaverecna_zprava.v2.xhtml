@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><title>flickr-graphr</title><meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/></head><body><div xml:lang="cs" class="article" title="flickr-graphr"><div class="titlepage"><div><div><h1 class="title"><a id="d5e1"/>flickr-graphr</h1></div><div><h3 class="subtitle"><em>závěrečná zpráva</em></h3></div><div><div class="author"><h3 class="author">Josef Ludvíček</h3><code class="email">&lt;<a class="email" href="mailto:ludvicek@mail.muni.cz">ludvicek@mail.muni.cz</a>&gt;</code></div></div></div><hr/></div><div class="toc"><p><strong>Obsah</strong></p><dl><dt><span class="sect1"><a href="#d5e8">Výběr databáze</a></span></dt><dt><span class="sect1"><a href="#d5e15">Zřízení serveru</a></span></dt><dt><span class="sect1"><a href="#d5e21">Implementace Graphr API</a></span></dt><dt><span class="sect1"><a href="#d5e26">Shrnutí</a></span></dt></dl></div><div class="sect1" title="Výběr databáze"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="d5e8"/>Výběr databáze</h2></div></div></div><p>V tomto projektu uživateli zprostředkováváme statistický pohled na způsob využívání
+            serveru flickr. Požadovaná data stahujeme a ukládáme v databázi. Zvolili jsme xml
+            databázi, protože projekt řešíme v rámci předmětu PB138 Moderní značkovací jazyky a
+            jejich aplikace a jedním z požadavků bylo použití tohoto typu databáze. </p><p>První podmínkou výběru databáze byla cena. Hledal jsem tedy mezi nekomerčními
+            řešeními. Protože jsme se s xml databází setkali poprvé, musel jsem najít produkt, který
+            je dobře zdokumentovaný a jednoduše nasaditelný. Našim požadavkům dobře vyhovoval
+            produkt <a class="link" href="http://basex.org/home/" title="domovská stránka BaseX" target="_top">BaseX</a>.  </p><p>Zmíněný produkd je šířen pod licencí <a class="link" href="http://basex.org/open-source/" title="BSD licence" target="_top">BSD</a> a je distribuován jako spustitelný jar archiv. BaseX je možné spustit v několika režimech, z nichž využíváme režim databázového serveru a GUI. Zejména díky grafickému rozhraní je konfigurace databáze jednoduchá a intuitivní. Pomocí GUI je také možné procházet obsah databáze a vyhodnocovat nad ním XPath/XQuery 3.0. Příjemným bonusem tohoto řešení byla i dobrá wiki a ukázkové kusy kódu pro základní typy operací s databází. jar </p></div><div class="sect1" title="Zřízení serveru"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="d5e15"/>Zřízení serveru</h2></div></div></div><p>Většinu dat z flickru jde stáhnout kdykoliv, ovšem něco lze stáhnout pouze v určitou
+            dobu. Tímto je například žebříček nejzajímavějších uživatelů za daný den. Tuto informaci
+            lze zjistit pouze pro aktuální den. Aplikace tedy musí každý den stáhnout tento žebříček
+            a informace si uložit. Tento přístup vyžaduje server, kam se budou tato data průběžně
+            stahovat a shromažďovat.</p><p>Mým úkolem bylo server zajistit. První variantou bylo použití cloudového řešení <a class="link" href="https://openshift.redhat.com/app/" title="OPENSHIFT home page" target="_top">OPENSHIFT</a>. Při nasazování jsem ale narážel na problémy s nastavením portů na
+            kterých má databáze naslouchat. BaseX se ale na definované porty nedokázal připojit.
+            Proto jsem se správci IT na FI vyjednal zřízení virtuálního serveru. Bohužel jsem
+            nedostali veřejnou IP, ale server je schován za NATem, takže jsem musel připravit
+            skripty, které po startu stroje vytvoří reverzní ssh tunely na aisu a také skript pro
+            spuštění databáze. </p><p>Nastavení aisy neumožňuje přístup zvenčí, takže je ještě třeba mít ssh tunel z
+            klientského počítače na aisu na příslušný port. Server dostal příznačné pojmenování
+            BastliX. Na wiki stránkách projektu jsou popsané postupy jak se na server připojit a
+            také mapování portů na jednotlivé služby. </p></div><div class="sect1" title="Implementace Graphr API"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="d5e21"/>Implementace Graphr API</h2></div><div><h3 class="subtitle">REST API pro moduly uživatelského rozhraní</h3></div></div></div><p>Dále jsem implementoval API pro přístup k datům z grafického rozhraní aplikace. Toto
+            je realizováno jako Java Servlet. Pomocí HTTP Get je možné si vyžádat data z databáze,
+            která jsou vrácena ve formátu JSON. Tento formát jsme zvolili proto, že grafické
+            rozhraní je napsané v JavaScriptu. Dokumentace k API je opět na wiki stránkách
+            projektu.</p><p>V předávaných parametrech je také možné dotázat se na konkrétního uživatele. Servlet
+            potom dokáže rozpoznat, jestli se jedná o e-mail, flickr ID, a nebo display name. Podle
+            toho pak volá příslušné metody pro práci s databází. Pokud daného uživatele nenalezne v
+            databázi, tak následuje ještě dotaz na flickr, jestli uživatel existuje a pokud ano, je
+            záznam uložen do databáze a požadovaná data vrácena. </p></div><div class="sect1" title="Shrnutí"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="d5e26"/>Shrnutí</h2></div></div></div><p>Při práci na tomto projektu jsem se poprvé setkal s xml databází a výraznějším
+            používání značkovacích jazyků. Myslím si, že pro tento projekt by bylo vhodnější použít
+            relační databázi jednak proto, že s nimi už umíme pracovat a také proto, že ukládaná
+            data mají spíš povahu tabulek a provádíme nad nimi další výpočty pro vytovření "žebříčků
+            zajímavosti". </p><p>Myslím, že náš tým dobře organizovaný. Komunikaci jsme řešili pomocí Google groups a
+            Google code. Práci jsme měli rozčleněnou a z těchto zdrojů bylo dobře patrné, kdo na čem
+            pracuje, takže nedocházelo ke konfliktům ve zdrojových kódech.</p></div></div></body></html>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<article xmlns="http://docbook.org/ns/docbook" version="5.0" xml:lang="cs">
+    <articleinfo>
+        <title>Závěrečná zpráva projektu Flickr-graphr</title>
+        <author>
+          <firstname>Václav</firstname>
+          <surname>Mach</surname>
+          <affiliation>
+                <orgname>Fakulta informatiky Masarykovy univerzity</orgname>
+          </affiliation>
+        </author>
+        <pubdate>17. 6. 2012</pubdate>
+    </articleinfo>
+    
+    
+    <section>
+        <title>Uživatelské rozhraní</title>
+        <para>Při návrhu projektu byly zvoleny technologie HTML + JavaScript, které umožňují vyšší interaktivitu než staticky generovaný obsah. Uživatelské rozhraní komunikuje se serverovou částí pomocí REST API, data jsou posílána pomocí JSON objektů.</para>
+        <para>Z důvodu security policy mají prohlížeče zakázány dotazy na bázi <code>XmlHttpRequest</code> na jiný server, než ze kterého je generovaná statická stránka, proto musí být UI i serverová část přítomna na jednom serveru. Toto omezení by bylo možné vyřešit pomocí technologie JSONP, ovšem za cenu snížení možnosti reagovat na případné na straně serveru.</para>      
+
+        <para>Webové rozhraní se dělí do jednotlivých modulů (users, tags, photos), kde každý modul obsahuje jednu vizualizaci. Moduly se načítají asynchronně kliknutím na odkaz v menu, v budoucnu lze moduly upravovat i přidávat moduly nové.</para>      
+        <para>Modul se skládá ze statické stránky (<code>template.html</code>) a ze souboru se skripty (<code>script.js</code>), konkrétní struktura je popsaná ve <ulink
+    url="http://code.google.com/p/flickr-graphr/wiki/vyvojarska_dokumentace_gui">Vývojářské
+    dokumentaci ke GUI</ulink>.</para>      
+        
+    </section>
+    
+    
+    <section>
+        <title>Použité technologie</title>
+        <itemizedlist>
+            <listitem>
+                <para>jQuery + pluginy, jQuery UI</para>
+            </listitem>
+            <listitem>
+                <para>Google Charts</para>
+            </listitem>
+            <listitem>
+                <para>Flickr API</para>
+            </listitem>
+            <listitem>
+                <para>knihovna date.format pro JavaScript</para>
+            </listitem>
+        </itemizedlist>
+
+        <section>
+            <title>jQuery, jQuery UI, pluginy HashChange a Tagcloud</title>
+            <para>jQuery, jeden z nejrozšířenějších JavaScript frameworků, zajišťuje načítání jednotlivých modulů webového rozhraní a prostředky pro komunikaci s REST API. jQuery UI poskytuje připravené základní prvky uživatelského rozhraní (date picker, tlačítko, ...). Všechny použité pluginy do jQuery jsou volně šířitelné.</para>
+            <para>Plugin HashChange umožňuje jednodušší obsluhování události změny URL, používá se při načítání modulů, Tagcloud generuje objekt se štítky, u kterého je velikost názvu štítku dána počtem jeho výskytů.</para>
+        </section>    
+        
+        <section>
+            <title>Google Charts</title>
+            <para>Ze široké nabídky vizualizací je použit interaktivní Line Chart, pro který jsou data získaná z REST API speciálně upravena (API data posílá v objektech, ze kterých je generovaná tabulka - zdroj pro Charts). Přidáním položky do grafu se graf znovu vykreslí.</para>
+        </section>    
+        
+        <section>
+            <title>Flickr API</title>
+            <para>Flickr API je použito přímo i v UI. Kliknutím na položky v některých grafech jsou načítány doplňující informace (uživatelé, fotografie) přímo z Flickru.</para>
+        </section>    
+    </section>
+    <section>
+       <title>Shrnutí</title>
+       <para>Projekt Flickr-graphr byl rozdělen do několika částí, kde každou měl přidělen některý z členů týmu. To se osvědčilo. Výsledkem je funkční, uživatelsky přívětivá, webová aplikace, která má šanci uplatnit se v praxi.</para>
+    </section>    
+    
+</article>
